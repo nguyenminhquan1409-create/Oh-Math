@@ -4696,6 +4696,168 @@ html[class*="math-cursor-"] textarea {
  vertical-align: middle;
 }
 
+
+/* ===== CẬP NHẬT V25: XÓA HẲN VÒNG QUAY Ở TK HỌC SINH · GIÃN RỘNG BẢNG & MODAL · CĂN GIỮA TIÊU ĐỀ · 2 HÀNG NÚT CÂN ĐỐI ===== */
+
+/* 3. Khóa độ ưu tiên CSS để [hidden] luôn ẩn tuyệt đối nút vòng quay trên tài khoản học sinh */
+#nav button.nav-wheel-icon[hidden],
+#nav button[hidden] {
+ display: none!important;
+}
+
+/* 1. Giãn rộng Modal "Theo dõi nộp bài & chấm tự động" & sửa màu kicker rõ nét */
+.modal-box .kicker {
+ color: #2857f0!important;
+ font-size: 13px!important;
+ letter-spacing: 1px;
+}
+.ad-modal-wide {
+ width: min(1320px, 96vw)!important;
+ padding: clamp(20px, 2.4vw, 30px)!important;
+}
+.ad-data-table {
+ min-width: 960px!important;
+}
+
+/* 2. Bảng danh sách học sinh & admin: giãn thoáng, căn giữa toàn bộ tiêu đề và nội dung tương ứng */
+.data-table {
+ min-width: 1080px!important;
+}
+.data-table th {
+ text-align: center!important;
+ padding: 14px 16px!important;
+ vertical-align: middle!important;
+}
+.data-table td {
+ text-align: center!important;
+ padding: 14px 15px!important;
+ vertical-align: middle!important;
+}
+.nowrap-cell {
+ white-space: nowrap!important;
+}
+.stu-name-text {
+ display: inline-block;
+ white-space: nowrap;
+ font-size: 15px;
+ color: #162a68;
+}
+.cell-stack,
+.cell-class-stack,
+.cell-account-stack {
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ justify-content: center;
+ gap: 5px;
+}
+.class-pill {
+ white-space: nowrap!important;
+ display: inline-block;
+ font-size: 13px!important;
+ padding: 5px 12px!important;
+}
+.grade-sub {
+ display: block;
+ white-space: nowrap;
+ font-size: 13px;
+ font-weight: 700;
+ color: #586c94;
+ line-height: 1.2;
+}
+.pill-ok,
+.pill-lock,
+.pill-gv {
+ white-space: nowrap!important;
+}
+
+/* Mật khẩu bấm hiện/ẩn trực tiếp cho GV và Admin */
+.pw-toggle-btn {
+ display: inline-flex;
+ align-items: center;
+ justify-content: center;
+ gap: 5px;
+ border: 1.5px solid #cbd8ff;
+ background: #f1f5ff;
+ color: #1e3a8a;
+ padding: 4px 10px;
+ border-radius: 9px;
+ font-family: ui-monospace, Consolas, monospace;
+ font-size: 13px;
+ font-weight: 700;
+ white-space: nowrap;
+ cursor: pointer;
+ transition: background .14s, border-color .14s, transform .12s;
+}
+.pw-toggle-btn:hover {
+ background: #e0ecff;
+ border-color: #6b93ff;
+ transform: translateY(-1px);
+}
+.pw-toggle-btn.is-open {
+ background: #ecfdf5;
+ border-color: #6ee7b7;
+ color: #065f46;
+}
+.pw-toggle-btn .pw-eye {
+ font-family: var(--app-font);
+ font-size: 13px;
+ line-height: 1;
+}
+
+/* Cột Tiến độ học tập giãn rộng cân đối */
+.prog-mini {
+ min-width: 220px!important;
+ max-width: 260px;
+ margin: 0 auto!important;
+ gap: 6px!important;
+}
+.prog-mini-top {
+ gap: 12px;
+ white-space: nowrap;
+}
+
+/* Cột Thao tác 2 hàng cân đối tuyệt đối: Hàng 1 (2 nút) = chiều rộng Hàng 2 (3 nút Sửa - Khóa - Thùng rác) */
+.tbl-actions-2row {
+ width: 256px;
+ margin: 0 auto;
+ display: flex;
+ flex-direction: column;
+ gap: 7px;
+}
+.tbl-actions-2row.tbl-actions-adm {
+ width: 224px;
+}
+.tbl-act-r1 {
+ display: grid;
+ grid-template-columns: 1fr 1fr;
+ gap: 7px;
+}
+.tbl-act-r1-single {
+ display: grid;
+ grid-template-columns: 1fr;
+}
+.tbl-act-r2 {
+ display: grid;
+ grid-template-columns: 1fr 1fr 46px;
+ gap: 7px;
+}
+.tbl-act-r2-pair {
+ display: grid;
+ grid-template-columns: 1fr 48px;
+ gap: 7px;
+}
+.tbl-actions-2row .tbl-btn {
+ width: 100%;
+ padding: 7px 8px!important;
+ font-size: 13px!important;
+ display: inline-flex;
+ align-items: center;
+ justify-content: center;
+ gap: 4px;
+ text-align: center;
+}
+
 </style>
 </head>
 <body>
@@ -5819,7 +5981,7 @@ html[class*="math-cursor-"] textarea {
 
 <!-- MODAL GIÁO VIÊN XEM CHI TIẾT NỘP BÀI CỦA LỚP -->
 <div class="slideback" id="assignDetailOverlay" style="z-index:1450">
-  <div class="modal-box" style="width:min(980px,100%)">
+  <div class="modal-box ad-modal-wide">
     <div class="slidehead" style="margin-bottom:12px;border-bottom:2px solid #dce6ff;padding-bottom:10px">
       <div>
         <div class="kicker" style="color:var(--blue)">THEO DÕI NỘP BÀI &amp; CHẤM TỰ ĐỘNG</div>
@@ -5843,7 +6005,7 @@ html[class*="math-cursor-"] textarea {
       </div>
     </div>
     <div class="table-wrap">
-      <table class="data-table" style="min-width:680px">
+      <table class="data-table ad-data-table">
         <thead>
           <tr>
             <th>STT</th>
@@ -7162,7 +7324,13 @@ async function applyUserSession(user, isFreshLogin=false){
  const wsNav=$(`#nav button[data-page="worksheet"]`);
  if(wsNav)wsNav.hidden=isStu;
  const wheelNav=$('#btnNavWheel');
- if(wheelNav)wheelNav.hidden=isStu;
+ if(wheelNav){
+  wheelNav.hidden=isStu;
+  wheelNav.style.setProperty('display',isStu?'none':'inline-flex','important');
+ }
+ const slideWheelBtn=$('#btnOpenWheel');
+ if(slideWheelBtn)slideWheelBtn.hidden=isStu;
+ if(isStu&&$('#wheelOverlay'))$('#wheelOverlay').classList.remove('show');
  const homeSlideBtn=$(`[data-go="slides"]`);
  if(homeSlideBtn)homeSlideBtn.hidden=isStu;
  const homeWsBtn=$(`[data-go="worksheet"]`);
@@ -7204,6 +7372,7 @@ function logoutUser(){
  if($('#navAssigned')){$('#navAssigned').hidden=true;$('#navAssigned').classList.remove('has-pending-hw');}
  if($('#navAssignedBadge'))$('#navAssignedBadge').hidden=true;
  if($('#studentHomeworkBox'))$('#studentHomeworkBox').hidden=true;
+ if($('#btnNavWheel')){$('#btnNavWheel').hidden=false;$('#btnNavWheel').style.removeProperty('display');}
  $('#loginPass').value='';$('#loginErr').hidden=true;
  $('#authOverlay').hidden=false;
  updateCloudBadge();
@@ -7227,6 +7396,21 @@ async function loadTeacherStudents(silent=false,force=false){
  }
 }
 
+function bindInlinePwToggles(root){
+ if(!root)return;
+ root.querySelectorAll('[data-inline-pw]').forEach(btn=>{
+  btn.onclick=e=>{
+   e.stopPropagation();
+   const open=btn.dataset.pwOpen==='1';
+   const next=!open;
+   btn.dataset.pwOpen=next?'1':'0';
+   btn.classList.toggle('is-open',next);
+   const valEl=btn.querySelector('.pw-val'), eyeEl=btn.querySelector('.pw-eye');
+   if(valEl)valEl.textContent=next?(btn.dataset.inlinePw||''):'••••••';
+   if(eyeEl)eyeEl.textContent=next?'🙈':'👁️';
+  };
+ });
+}
 function renderTeacherStudents(){
  const list=teacherStudentsCache;
  const total=list.length;
@@ -7261,32 +7445,52 @@ function renderTeacherStudents(){
  $('#teacherStudentRows').innerHTML=shown.length?shown.map((s,idx)=>{
   const sm=s.summary||{attempts:0,doneCount:0,masteredCount:0,accuracy:0,avgScore:0,lastActive:''};
   const pct=Math.min(100,Math.round((sm.doneCount||0)/345*100));
-  const pwView=showTeacherStuPw?esc(s.password):'••••••';
+  const isPwOpen=!!showTeacherStuPw;
+  const pwView=isPwOpen?esc(s.password):'••••••';
   const lastTxt=sm.lastActive?new Date(sm.lastActive).toLocaleString('vi-VN',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):'Chưa luyện';
   return `<tr>
    <td><b>${idx+1}</b></td>
-   <td><b>${esc(s.fullName)}</b></td>
-   <td><span class="badge">Lớp ${esc(s.className||'—')}</span> <small class="muted">Khối ${s.grade||1}</small></td>
-   <td><b>${esc(s.username)}</b><br><span class="pw-mask">MK: ${pwView}</span></td>
+   <td><b class="stu-name-text">${esc(s.fullName)}</b></td>
+   <td>
+    <div class="cell-class-stack">
+     <span class="badge class-pill">Lớp ${esc(s.className||'—')}</span>
+     <span class="grade-sub">Khối ${s.grade||1}</span>
+    </div>
+   </td>
+   <td>
+    <div class="cell-account-stack">
+     <b>${esc(s.username)}</b>
+     <button type="button" class="pw-mask pw-toggle-btn ${isPwOpen?'is-open':''}" data-inline-pw="${esc(s.password||'')}" data-pw-open="${isPwOpen?'1':'0'}" title="Bấm để hiện hoặc ẩn mật khẩu">
+      <span>MK:</span> <span class="pw-val">${pwView}</span> <span class="pw-eye">${isPwOpen?'🙈':'👁️'}</span>
+     </button>
+    </div>
+   </td>
    <td>
     <div class="prog-mini">
      <div class="prog-mini-top"><span>${sm.doneCount||0} bài luyện · ${sm.masteredCount||0} vững</span><span>${sm.attempts||0} lượt</span></div>
      <div class="prog-mini-bar"><span style="width:${pct}%"></span></div>
     </div>
    </td>
-   <td><b>${sm.attempts?sm.accuracy+'%':'—'}</b><br><small class="muted">ĐTB: ${sm.attempts?sm.avgScore+'/10':'—'}</small></td>
-   <td><small>${esc(lastTxt)}</small></td>
-   <td>${s.active===false?'<span class="pill-lock">Đã khóa</span>':'<span class="pill-ok">Hoạt động</span>'}</td>
-   <td><div class="tbl-actions">
-    <button type="button" class="tbl-btn good" data-stu-detail="${esc(s.username)}" data-stu-teacher="${esc(currentUser.username)}">📊 Tiến độ</button>
-    <button type="button" class="tbl-btn" data-stu-zalo="${esc(s.username)}" data-stu-teacher="${esc(currentUser.username)}" title="Tạo &amp; sao chép nhanh phiếu nhận xét gửi Zalo phụ huynh">💬 Nhận xét PH</button>
-    <button type="button" class="tbl-btn" data-stu-edit="${esc(s.username)}">✏️ Sửa</button>
-    <button type="button" class="tbl-btn warn" data-stu-toggle="${esc(s.username)}">${s.active===false?'🔓 Mở':'🔒 Khóa'}</button>
-    <button type="button" class="tbl-btn danger" data-stu-del="${esc(s.username)}">🗑️</button>
-   </div></td>
+   <td class="nowrap-cell"><b>${sm.attempts?sm.accuracy+'%':'—'}</b><br><small class="muted">ĐTB: ${sm.attempts?sm.avgScore+'/10':'—'}</small></td>
+   <td class="nowrap-cell"><small>${esc(lastTxt)}</small></td>
+   <td class="nowrap-cell">${s.active===false?'<span class="pill-lock">Đã khóa</span>':'<span class="pill-ok">Hoạt động</span>'}</td>
+   <td>
+    <div class="tbl-actions-2row">
+     <div class="tbl-act-r1">
+      <button type="button" class="tbl-btn good" data-stu-detail="${esc(s.username)}" data-stu-teacher="${esc(currentUser.username)}">📊 Tiến độ</button>
+      <button type="button" class="tbl-btn" data-stu-zalo="${esc(s.username)}" data-stu-teacher="${esc(currentUser.username)}" title="Tạo &amp; sao chép nhanh phiếu nhận xét gửi Zalo phụ huynh">💬 Nhận xét PH</button>
+     </div>
+     <div class="tbl-act-r2">
+      <button type="button" class="tbl-btn" data-stu-edit="${esc(s.username)}">✏️ Sửa</button>
+      <button type="button" class="tbl-btn warn" data-stu-toggle="${esc(s.username)}">${s.active===false?'🔓 Mở':'🔒 Khóa'}</button>
+      <button type="button" class="tbl-btn danger" data-stu-del="${esc(s.username)}" title="Xóa học sinh">🗑️</button>
+     </div>
+    </div>
+   </td>
   </tr>`;
  }).join(''):'<tr><td colspan="9"><div class="empty">Chưa có học sinh nào trong danh sách. Hãy tạo tài khoản ở khung phía trên.</div></td></tr>';
 
+ bindInlinePwToggles($('#teacherStudentRows'));
  $$('[data-stu-detail]').forEach(b=>b.onclick=()=>openStudentDetail(b.dataset.stuTeacher,b.dataset.stuDetail));
  $$('[data-stu-zalo]').forEach(b=>b.onclick=()=>quickCopyStudentZaloReport(b.dataset.stuTeacher,b.dataset.stuDetail));
  $$('[data-stu-edit]').forEach(b=>b.onclick=()=>openEditStudentModal(b.dataset.stuEdit));
@@ -7542,23 +7746,38 @@ function renderAdminDashboard(){
   const cnt=countByGv[t.username]||0;
   const maxTxt=Number(t.maxStudents)>0?`${cnt} / ${t.maxStudents}`:`${cnt} HS`;
   const exp=t.expireDate?(isExpired(t.expireDate)?`<span class="pill-lock">Hết hạn ${esc(t.expireDate)}</span>`:esc(t.expireDate)):'Vĩnh viễn';
-  const pwView=showAdminGvPw?esc(t.password):'••••••';
+  const isPwOpen=!!showAdminGvPw;
+  const pwView=isPwOpen?esc(t.password):'••••••';
   return `<tr>
    <td><b>${idx+1}</b></td>
-   <td><b>${esc(t.fullName)}</b></td>
+   <td><b class="stu-name-text">${esc(t.fullName)}</b></td>
    <td>${esc(t.school||'—')}</td>
-   <td><b>${esc(t.username)}</b><br><span class="pw-mask">MK: ${pwView}</span></td>
-   <td><span class="pill-gv">${maxTxt}</span></td>
-   <td>${exp}</td>
-   <td>${t.active===false?'<span class="pill-lock">Đã khóa</span>':'<span class="pill-ok">Hoạt động</span>'}</td>
-   <td><div class="tbl-actions">
-    <button type="button" class="tbl-btn good" data-adm-view-stu="${esc(t.username)}">👁️ Xem HS (${cnt})</button>
-    <button type="button" class="tbl-btn" data-adm-edit-gv="${esc(t.username)}">✏️ Sửa</button>
-    <button type="button" class="tbl-btn warn" data-adm-toggle-gv="${esc(t.username)}">${t.active===false?'🔓 Mở':'🔒 Khóa'}</button>
-    <button type="button" class="tbl-btn danger" data-adm-del-gv="${esc(t.username)}">🗑️</button>
-   </div></td>
+   <td>
+    <div class="cell-account-stack">
+     <b>${esc(t.username)}</b>
+     <button type="button" class="pw-mask pw-toggle-btn ${isPwOpen?'is-open':''}" data-inline-pw="${esc(t.password||'')}" data-pw-open="${isPwOpen?'1':'0'}" title="Bấm để hiện hoặc ẩn mật khẩu">
+      <span>MK:</span> <span class="pw-val">${pwView}</span> <span class="pw-eye">${isPwOpen?'🙈':'👁️'}</span>
+     </button>
+    </div>
+   </td>
+   <td class="nowrap-cell"><span class="pill-gv">${maxTxt}</span></td>
+   <td class="nowrap-cell">${exp}</td>
+   <td class="nowrap-cell">${t.active===false?'<span class="pill-lock">Đã khóa</span>':'<span class="pill-ok">Hoạt động</span>'}</td>
+   <td>
+    <div class="tbl-actions-2row tbl-actions-adm">
+     <div class="tbl-act-r1-single">
+      <button type="button" class="tbl-btn good" data-adm-view-stu="${esc(t.username)}">👁️ Xem HS (${cnt})</button>
+     </div>
+     <div class="tbl-act-r2">
+      <button type="button" class="tbl-btn" data-adm-edit-gv="${esc(t.username)}">✏️ Sửa</button>
+      <button type="button" class="tbl-btn warn" data-adm-toggle-gv="${esc(t.username)}">${t.active===false?'🔓 Mở':'🔒 Khóa'}</button>
+      <button type="button" class="tbl-btn danger" data-adm-del-gv="${esc(t.username)}" title="Xóa giáo viên">🗑️</button>
+     </div>
+    </div>
+   </td>
   </tr>`;
  }).join(''):'<tr><td colspan="8"><div class="empty">Chưa có tài khoản Giáo viên nào. Hãy cấp quyền Giáo viên ở khung phía trên.</div></td></tr>';
+ bindInlinePwToggles($('#adminTeacherRows'));
 
  $$('[data-adm-view-stu]').forEach(b=>b.onclick=()=>{
   $('#auditTeacherFilter').value=b.dataset.admViewStu;
@@ -7593,27 +7812,49 @@ function renderAdminAudit(){
   const sm=s.summary||{attempts:0,doneCount:0,masteredCount:0,accuracy:0,avgScore:0,lastActive:''};
   const pct=Math.min(100,Math.round((sm.doneCount||0)/345*100));
   const created=s.createdAt?new Date(s.createdAt).toLocaleDateString('vi-VN'):'—';
+  const isPwOpen=!!showAdminGvPw;
+  const pwView=isPwOpen?esc(s.password||''):'••••••';
   return `<tr>
    <td><b>${idx+1}</b></td>
-   <td><b>${esc(s.fullName)}</b><br><small class="muted">TK: ${esc(s.username)}</small></td>
-   <td><span class="badge">Lớp ${esc(s.className||'—')}</span> <small class="muted">Khối ${s.grade||1}</small></td>
-   <td><span class="pill-gv">👩‍🏫 ${esc(s.teacherName)}</span><br><small class="muted">(${esc(s.teacherId)})</small></td>
+   <td>
+    <div class="cell-account-stack">
+     <b class="stu-name-text">${esc(s.fullName)}</b>
+     <small class="muted">TK: ${esc(s.username)}</small>
+     <button type="button" class="pw-mask pw-toggle-btn ${isPwOpen?'is-open':''}" data-inline-pw="${esc(s.password||'')}" data-pw-open="${isPwOpen?'1':'0'}" title="Bấm để hiện hoặc ẩn mật khẩu">
+      <span>MK:</span> <span class="pw-val">${pwView}</span> <span class="pw-eye">${isPwOpen?'🙈':'👁️'}</span>
+     </button>
+    </div>
+   </td>
+   <td>
+    <div class="cell-class-stack">
+     <span class="badge class-pill">Lớp ${esc(s.className||'—')}</span>
+     <span class="grade-sub">Khối ${s.grade||1}</span>
+    </div>
+   </td>
+   <td><div class="cell-class-stack"><span class="pill-gv">👩‍🏫 ${esc(s.teacherName)}</span><small class="muted">(${esc(s.teacherId)})</small></div></td>
    <td>
     <div class="prog-mini">
      <div class="prog-mini-top"><span>${sm.doneCount||0} bài · ${sm.masteredCount||0} vững</span><span>${sm.attempts||0} lượt</span></div>
      <div class="prog-mini-bar"><span style="width:${pct}%"></span></div>
     </div>
    </td>
-   <td><b>${sm.attempts?sm.accuracy+'%':'—'}</b><br><small class="muted">ĐTB: ${sm.attempts?sm.avgScore+'/10':'—'}</small></td>
-   <td><small>${esc(created)}</small></td>
-   <td>${s.active===false?'<span class="pill-lock">Đã khóa</span>':'<span class="pill-ok">Hoạt động</span>'}</td>
-   <td><div class="tbl-actions">
-    <button type="button" class="tbl-btn good" data-aud-detail="${esc(s.username)}" data-aud-teacher="${esc(s.teacherId)}">📊 Tiến độ</button>
-    <button type="button" class="tbl-btn warn" data-aud-toggle="${esc(s.username)}" data-aud-teacher="${esc(s.teacherId)}">${s.active===false?'🔓 Mở':'🔒 Khóa'}</button>
-    <button type="button" class="tbl-btn danger" data-aud-del="${esc(s.username)}" data-aud-teacher="${esc(s.teacherId)}">🗑️</button>
-   </div></td>
+   <td class="nowrap-cell"><b>${sm.attempts?sm.accuracy+'%':'—'}</b><br><small class="muted">ĐTB: ${sm.attempts?sm.avgScore+'/10':'—'}</small></td>
+   <td class="nowrap-cell"><small>${esc(created)}</small></td>
+   <td class="nowrap-cell">${s.active===false?'<span class="pill-lock">Đã khóa</span>':'<span class="pill-ok">Hoạt động</span>'}</td>
+   <td>
+    <div class="tbl-actions-2row tbl-actions-adm">
+     <div class="tbl-act-r1-single">
+      <button type="button" class="tbl-btn good" data-aud-detail="${esc(s.username)}" data-aud-teacher="${esc(s.teacherId)}">📊 Tiến độ</button>
+     </div>
+     <div class="tbl-act-r2-pair">
+      <button type="button" class="tbl-btn warn" data-aud-toggle="${esc(s.username)}" data-aud-teacher="${esc(s.teacherId)}">${s.active===false?'🔓 Mở':'🔒 Khóa'}</button>
+      <button type="button" class="tbl-btn danger" data-aud-del="${esc(s.username)}" data-aud-teacher="${esc(s.teacherId)}" title="Xóa học sinh">🗑️</button>
+     </div>
+    </div>
+   </td>
   </tr>`;
  }).join(''):'<tr><td colspan="9"><div class="empty">Chưa có học sinh nào khớp bộ lọc.</div></td></tr>';
+ bindInlinePwToggles($('#adminAuditRows'));
 
  $$('[data-aud-detail]').forEach(b=>b.onclick=()=>openStudentDetail(b.dataset.audTeacher,b.dataset.audDetail));
  $$('[data-aud-toggle]').forEach(b=>b.onclick=()=>toggleStudentActive(b.dataset.audTeacher,b.dataset.audToggle,true));
@@ -8995,6 +9236,7 @@ function drawWheelSvg(names){
  </svg>`;
 }
 async function openWheelModal(){
+ if(currentUser?.role==='student')return;
  const ov=$('#wheelOverlay');
  const sb=$('#slideBack');
  if(ov){
@@ -9321,15 +9563,16 @@ function renderAssignDetailTable(){
    else statusBadge=late?'<span class="pill-gv" style="background:#fef3c7;color:#92400e">⚠️ Nộp trễ</span>':'<span class="pill-ok">✅ Đã nộp</span>';
   }
   const actBtn=sub?`<button type="button" class="tbl-btn good" data-sub-review="${esc(s.username)}">👁️ Xem &amp; Chấm lại</button>`:'<span class="small muted">—</span>';
+  const timeStr=sub&&sub.submittedAt?new Date(sub.submittedAt).toLocaleString('vi-VN',{hour:'2-digit',minute:'2-digit',second:'2-digit',day:'2-digit',month:'2-digit',year:'numeric'}):'—';
   return `<tr>
-   <td>${i+1}</td>
-   <td><b>${esc(s.fullName)}</b><br><small class="muted">${esc(s.username)}</small></td>
-   <td>Lớp ${esc(s.className||'—')}</td>
+   <td><b>${i+1}</b></td>
+   <td><div class="cell-stack"><b>${esc(s.fullName)}</b><small class="muted">${esc(s.username)}</small></div></td>
+   <td><span class="badge class-pill">Lớp ${esc(s.className||'—')}</span></td>
    <td>${statusBadge}</td>
-   <td>${sub?`<b>${sub.correct}/${sub.total}</b> câu (${sub.accuracy}%)`:'—'}</td>
-   <td>${sub?`<span class="score">${sub.score}/10</span>`:'—'}</td>
-   <td>${sub&&sub.submittedAt?new Date(sub.submittedAt).toLocaleString('vi-VN'):'—'}</td>
-   <td>${actBtn}</td>
+   <td class="nowrap-cell">${sub?`<b>${sub.correct}/${sub.total}</b> câu <span class="muted">(${sub.accuracy}%)</span>`:'—'}</td>
+   <td class="nowrap-cell">${sub?`<span class="score">${sub.score}/10</span>`:'—'}</td>
+   <td class="nowrap-cell"><small>${esc(timeStr)}</small></td>
+   <td class="nowrap-cell">${actBtn}</td>
   </tr>`;
  }).join('');
  tbody.querySelectorAll('[data-sub-review]').forEach(b=>b.onclick=()=>openHomeworkReviewModal(a,subMap[b.dataset.subReview],true));
