@@ -5261,6 +5261,87 @@ html[class*="math-cursor-"] textarea {
  }
 }
 
+
+/* ===== CẬP NHẬT V28: SINH ĐỀ KIỂM TRA BÁM SÁT SGK KẾT NỐI TRI THỨC ===== */
+.mt-scope-note {
+ margin: 4px 0 12px;
+ padding: 9px 12px;
+ border-radius: 11px;
+ background: #eef6ff;
+ border: 1.5px solid #bfd7ff;
+ color: #1e3a8a;
+ font-size: 13px;
+ line-height: 1.45;
+}
+.mt-q-src-row {
+ display: flex;
+ align-items: center;
+ justify-content: space-between;
+ gap: 8px;
+ flex-wrap: wrap;
+ margin-bottom: 5px;
+}
+.mt-src-pill {
+ display: inline-flex;
+ align-items: center;
+ gap: 4px;
+ padding: 2px 9px;
+ border-radius: 999px;
+ background: #e8f0ff;
+ color: #1d4ed8;
+ font-size: 11.5px;
+ font-weight: 700;
+}
+.mt-strand-pill {
+ display: inline-flex;
+ align-items: center;
+ padding: 2px 8px;
+ border-radius: 999px;
+ background: #ecfdf5;
+ color: #047857;
+ font-size: 11px;
+ font-weight: 700;
+}
+
+
+/* ===== CẬP NHẬT V29: CHỦ ĐỘNG NHẬP SỐ CÂU TN/TL & TỚI 10 MÃ ĐỀ ===== */
+.mt-quick-presets {
+ display: flex;
+ flex-wrap: wrap;
+ gap: 6px;
+ margin: 10px 0 6px;
+}
+.mt-preset-btn {
+ border: 1.5px solid #cbd8ff;
+ background: #f8fbff;
+ color: #1e3a8a;
+ border-radius: 999px;
+ padding: 5px 11px;
+ font-size: 12px;
+ font-weight: 700;
+ transition: background .14s, border-color .14s, transform .12s;
+}
+.mt-preset-btn:hover {
+ background: #e0ecff;
+ border-color: #4f73f5;
+ transform: translateY(-1px);
+}
+.mt-struct-note {
+ margin: 4px 0 10px;
+ padding: 8px 11px;
+ border-radius: 10px;
+ background: #f0fdf4;
+ border: 1.5px solid #86efac;
+ color: #065f46;
+ font-size: 12.5px;
+ line-height: 1.45;
+}
+.mt-struct-note.is-warn {
+ background: #fff1f2;
+ border-color: #fda4af;
+ color: #9f1239;
+}
+
 </style>
 </head>
 <body>
@@ -5671,7 +5752,7 @@ html[class*="math-cursor-"] textarea {
   <section class="page" id="page-worksheet">
     <div class="pagetitle">
       <h2>Công cụ tạo phiếu bài tập &amp; Đề kiểm tra A4</h2>
-      <p>Chọn tạo phiếu luyện tập theo bài/chủ đề hoặc sinh bộ đề kiểm tra Giữa kì / Cuối kì gồm 2–4 mã đề khác số liệu chuẩn khổ giấy A4.</p>
+      <p>Chọn tạo phiếu luyện tập theo bài/chủ đề hoặc sinh bộ đề kiểm tra Giữa kì / Cuối kì gồm 1–10 mã đề khác số liệu chuẩn khổ giấy A4, tự do nhập số câu Trắc nghiệm / Tự luận.</p>
     </div>
     <div class="subtabs" id="wsSubtabs">
       <button type="button" class="subtab active" data-wtab="regular">📄 Phiếu bài tập thường</button>
@@ -5697,14 +5778,26 @@ html[class*="math-cursor-"] textarea {
             </select>
           </div>
           <div class="field">
-            <label for="mtTerm">Kì kiểm tra</label>
+            <label for="mtTerm">Kì kiểm tra / Phạm vi SGK</label>
             <select id="mtTerm">
               <option value="ghk1">Giữa học kì 1 (nửa đầu Tập 1)</option>
               <option value="chk1">Cuối học kì 1 (toàn bộ Tập 1)</option>
               <option value="ghk2">Giữa học kì 2 (nửa đầu Tập 2)</option>
-              <option value="chk2" selected>Cuối năm học (tổng hợp cả năm)</option>
+              <option value="chk2" selected>Cuối năm học (trọng tâm HK2 + ôn HK1)</option>
+              <option value="custom">🎯 Tùy chọn phạm vi (Từ Bài … đến Bài …)</option>
             </select>
           </div>
+          <div class="form-grid" id="mtCustomRangeBox" hidden style="margin-bottom:10px">
+            <div class="field" style="margin:0">
+              <label for="mtFromLesson">Từ bài</label>
+              <select id="mtFromLesson"></select>
+            </div>
+            <div class="field" style="margin:0">
+              <label for="mtToLesson">Đến bài</label>
+              <select id="mtToLesson"></select>
+            </div>
+          </div>
+          <div class="mt-scope-note" id="mtScopeNote">📚 Phạm vi chuẩn SGK Kết nối tri thức: đang tải…</div>
           <div class="field">
             <label for="mtSchool">Tên trường (hiển thị trên đầu đề)</label>
             <input id="mtSchool" placeholder="VD: Trường Tiểu học An Khánh" value="Trường Tiểu học …">
@@ -5713,36 +5806,41 @@ html[class*="math-cursor-"] textarea {
             <div class="field" style="margin:0">
               <label for="mtCodes">Số mã đề khác nhau</label>
               <select id="mtCodes">
+                <option value="1">1 mã đề (101)</option>
                 <option value="2" selected>2 mã đề (101, 102)</option>
                 <option value="3">3 mã đề (101–103)</option>
                 <option value="4">4 mã đề (101–104)</option>
+                <option value="6">6 mã đề (101–106)</option>
+                <option value="8">8 mã đề (101–108)</option>
+                <option value="10">10 mã đề (101–110)</option>
               </select>
             </div>
             <div class="field" style="margin:0">
               <label for="mtMinutes">Thời gian làm bài</label>
               <select id="mtMinutes">
+                <option value="15">15 phút</option>
                 <option value="35">35 phút</option>
                 <option value="40" selected>40 phút</option>
                 <option value="45">45 phút</option>
+                <option value="60">60 phút</option>
               </select>
             </div>
             <div class="field" style="margin:0">
-              <label for="mtMcqQty">Phần I: Trắc nghiệm</label>
-              <select id="mtMcqQty">
-                <option value="4">4 câu</option>
-                <option value="6" selected>6 câu</option>
-                <option value="8">8 câu</option>
-              </select>
+              <label for="mtMcqQty">Trắc nghiệm (0–40 câu)</label>
+              <input id="mtMcqQty" type="number" min="0" max="40" step="1" value="6" inputmode="numeric" placeholder="0 = bỏ phần TN">
             </div>
             <div class="field" style="margin:0">
-              <label for="mtEssayQty">Phần II: Tự luận</label>
-              <select id="mtEssayQty">
-                <option value="3">3 bài</option>
-                <option value="4" selected>4 bài</option>
-                <option value="5">5 bài</option>
-              </select>
+              <label for="mtEssayQty">Tự luận (0–20 bài)</label>
+              <input id="mtEssayQty" type="number" min="0" max="20" step="1" value="4" inputmode="numeric" placeholder="0 = bỏ phần TL">
             </div>
           </div>
+          <div class="mt-quick-presets" id="mtQuickPresets" aria-label="Mẫu cấu trúc nhanh">
+            <button type="button" class="mt-preset-btn" data-pmcq="6" data-pessay="4" data-piq="1">📋 Chuẩn 6 TN + 4 TL</button>
+            <button type="button" class="mt-preset-btn" data-pmcq="10" data-pessay="0" data-piq="0">☑️ Chỉ Trắc nghiệm (10)</button>
+            <button type="button" class="mt-preset-btn" data-pmcq="20" data-pessay="0" data-piq="0">☑️ Chỉ Trắc nghiệm (20)</button>
+            <button type="button" class="mt-preset-btn" data-pmcq="0" data-pessay="5" data-piq="0">✍️ Chỉ Tự luận (5)</button>
+          </div>
+          <div class="mt-struct-note" id="mtStructureNote">⚖️ Cấu trúc dự kiến: đang tính thang điểm 10…</div>
           <div style="display:grid;gap:8px;margin:12px 0">
             <label class="small" style="display:flex;align-items:center;gap:7px;cursor:pointer"><input id="mtIncludeIQ" type="checkbox" checked> Thêm 1 câu Toán IQ nâng cao (1,0 điểm) cuối đề</label>
             <label class="small" style="display:flex;align-items:center;gap:7px;cursor:pointer"><input id="mtIncludeKey" type="checkbox" checked> In kèm Đáp án &amp; Biểu điểm tất cả mã đề</label>
@@ -6615,7 +6713,51 @@ const curriculum={};
 for(let g=1;g<=5;g++){curriculum[g]={books:[[],[]]};raw[g].forEach((book,bi)=>book.forEach((t,ti)=>{curriculum[g].books[bi].push({name:t[0],index:ti+1,lessons:t[1].split('|').map((title,i)=>({number:0,title:title.trim(),id:`g${g}b${bi+1}t${ti+1}l${i+1}`}))})}));let num=0;curriculum[g].books.forEach((book,bi)=>book.forEach(t=>t.lessons.forEach(l=>{l.number=++num;l.grade=g;l.book=bi+1;l.topic=t.name;l.topicIndex=t.index;l.kind=inferKind(l.title,t.name,g)})));}
 const totalLessons=Object.values(curriculum).reduce((s,g)=>s+g.books.flat().reduce((n,t)=>n+t.lessons.length,0),0);
 if(totalLessons!==345)console.warn('Danh mục có',totalLessons,'bài, cần kiểm tra lại.');
-function inferKind(title,topic,g){let s=(title+' '+topic).toLowerCase();if(/đồng hồ|ngày trong tuần|ngày – tháng|ngày - tháng|thời gian/.test(s))return'clock';if(/góc|thước đo góc/.test(s))return'angle';if(/tia số|số liền trước|số liền sau/.test(s))return'numberline';if(/đếm|kiểm đếm/.test(s))return'count';if(/biểu đồ hình quạt|biểu đồ.*quạt/.test(s))return'pie';if(/biểu đồ tranh|biểu đồ hình ảnh/.test(s))return'pictograph';if(/biểu đồ|thống kê|kiểm đếm|bảng số liệu|thu thập|dãy số liệu/.test(s))return'bar';if(/xác suất|khả năng xảy ra|chắc chắn|có thể, không thể|sự kiện/.test(s))return'probability';if(/khối lập phương|khối hộp|khối trụ|khối cầu|hình khai triển|thể tích|hình khối/.test(s))return'3d';if(/hình vuông|hình tròn|hình tam giác|hình chữ nhật|hình thang|hình bình hành|hình thoi|chu vi|diện tích|đường tròn|hình phẳng/.test(s))return'geometry';if(/phân số|hỗn số/.test(s))return'fraction';if(/phần trăm|tỉ số|tỉ lệ bản đồ/.test(s))return'percent';if(/số thập phân/.test(s))return'decimal';if(/vận tốc|quãng đường|chuyển động đều/.test(s))return'motion';if(/đơn vị|độ dài|mi-li-mét|gam|ki-lô-gam|lít|tấn|tạ|yến|thế kỉ|tiền việt|đo lường|diện tích/.test(s))return'measure';if(/nhân|chia|thừa số|tích|thương/.test(s))return'muldiv';if(/so sánh|làm tròn|số chẵn|số lẻ|hàng và lớp|các số|số có|đếm|một phần mấy/.test(s))return'number';if(/biểu thức/.test(s))return'expression';if(/cộng|trừ|tìm thành phần|nhiều hơn|ít hơn|hơn, kém/.test(s))return'addsub';if(/luyện tập chung|ôn tập/.test(s))return'mixed';return'word';}
+function inferKind(title,topic,g){
+ const t=String(title||'').toLowerCase(), tp=String(topic||'').toLowerCase();
+ // 1. Khớp chính xác theo TÊN BÀI HỌC trước (không để tên chủ đề che mất tên bài cụ thể)
+ if(g>=5&&/đơn vị đo thời gian|số đo thời gian/.test(t))return 'timecalc';
+ if(/vận tốc|quãng đường|chuyển động đều/.test(t))return 'motion';
+ if(g>=5&&/thể tích|khai triển|diện tích xung quanh|diện tích toàn phần|xăng-ti-mét khối|đề-xi-mét khối|mét khối/.test(t))return 'solidcalc';
+ if(/biểu đồ hình quạt|biểu đồ.*quạt/.test(t))return 'pie';
+ if(/biểu đồ tranh|biểu đồ hình ảnh/.test(t))return 'pictograph';
+ if(/xác suất|khả năng xảy ra|chắc chắn|có thể, không thể|sự kiện|số lần lặp lại|số lần xuất hiện|lựa chọn khả năng/.test(t))return 'probability';
+ if(/biểu đồ|thống kê|kiểm đếm|bảng số liệu|thu thập|dãy số liệu/.test(t))return 'bar';
+ if(/giây, thế kỉ/.test(t))return 'measure';
+ if(/đồng hồ|ngày trong tuần|ngày – tháng|ngày - tháng|ngày – giờ|tháng – năm|xem lịch/.test(t))return 'clock';
+ if(/góc|thước đo góc/.test(t)&&!/vuông góc/.test(t))return 'angle';
+ if(/vuông góc|song song/.test(t))return 'geometry';
+ if(/tia số|số liền trước|số liền sau/.test(t))return 'numberline';
+ if(g===1&&/các số 0, 1, 2, 3, 4, 5|các số 6, 7, 8, 9, 10|nhiều hơn, ít hơn, bằng nhau|mấy và mấy/.test(t))return 'count';
+ if(/ki-lô-mét vuông|héc-ta|đơn vị đo diện tích|đề-xi-mét vuông|mét vuông|mi-li-mét vuông|xăng-ti-mét vuông|ki-lô-gam|lít|mi-li-mét|mi-li-lít|\bgam\b|nhiệt độ|độ c|đề-xi-mét|mét\.|ki-lô-mét|tiền việt|yến, tạ, tấn|độ dài|đo lường|đơn vị đo đại lượng/.test(t))return 'measure';
+ if(/khối lập phương|khối hộp|khối trụ|khối cầu|hình khối|vị trí, định hướng/.test(t))return '3d';
+ if(/hình vuông|hình tròn|hình tam giác|hình chữ nhật|hình thang|hình bình hành|hình thoi|hình tứ giác|đường gấp khúc|điểm ở giữa|trung điểm|đoạn thẳng|chu vi|diện tích|đường tròn|hình phẳng|hình học|lắp ghép|gấp, cắt/.test(t))return 'geometry';
+ if(/tỉ số|phần trăm|tỉ lệ bản đồ/.test(t))return 'percent';
+ if(/phân số thập phân|phân số|hỗn số/.test(t))return 'fraction';
+ if(/số thập phân/.test(t))return 'decimal';
+ if(/biểu thức/.test(t))return 'expression';
+ if(/tổng và hiệu|trung bình cộng|rút về đơn vị|hai bước tính|ba bước tính|gấp một số|giảm một số|so sánh số lớn gấp|thêm, bớt|bài toán về nhiều hơn|hơn, kém nhau/.test(t))return 'word';
+ if(/nhân|chia|thừa số|tích|thương|số bị chia|một phần mấy/.test(t))return 'muldiv';
+ if(/cộng|trừ|tìm thành phần/.test(t))return 'addsub';
+ if(/la mã|chẵn, số lẻ|làm tròn|so sánh|hàng và lớp|dãy số tự nhiên|viết số thành tổng|tròn trăm|tròn chục|bảng các số|số có.*chữ số|các số.*đến|lớp triệu|số tự nhiên/.test(t)&&!/phép tính/.test(t))return 'number';
+
+ // 2. Fallback theo CHỦ ĐỀ (cho các bài "Luyện tập chung", "Ôn tập chung", "Thực hành...")
+ if(/chuyển động đều|vận tốc/.test(tp))return 'motion';
+ if(g>=5&&/thể tích|diện tích và thể tích/.test(tp))return 'solidcalc';
+ if(/tỉ số|phần trăm/.test(tp))return 'percent';
+ if(/số thập phân/.test(tp))return 'decimal';
+ if(/phân số/.test(tp))return 'fraction';
+ if(/thống kê|xác suất/.test(tp))return 'bar';
+ if(/đồng hồ|thời gian|ngày – giờ|ngày – tháng/.test(tp))return 'clock';
+ if(/góc/.test(tp)&&!/vuông góc/.test(tp))return 'angle';
+ if(/độ dài|khối lượng|dung tích|đo lường|đại lượng|đơn vị đo diện tích/.test(tp))return 'measure';
+ if(/hình khối/.test(tp)&&!/hình phẳng/.test(tp))return '3d';
+ if(/hình phẳng|chu vi|diện tích|vuông góc|song song/.test(tp))return 'geometry';
+ if(/nhân|chia/.test(tp))return 'muldiv';
+ if(/cộng|trừ/.test(tp))return 'addsub';
+ if(/các số|số có nhiều chữ số/.test(tp))return 'number';
+ return 'mixed';
+}
 function allTopics(g,b){return curriculum[g].books[b-1]||[]}
 function allLessons(g,b){return allTopics(g,b).flatMap(t=>t.lessons)}
 function topicLessons(g,b,idx){return allTopics(g,b)[idx]?.lessons||[]}
@@ -6687,34 +6829,82 @@ function alertLesson(l){let panel=document.createElement('div');panel.className=
 $('#lessonSlide').onclick=()=>{panel.remove();setSelectionsForLesson(l,'slide');go('slides');startSlide()};$('#lessonWorksheet').onclick=()=>{panel.remove();setSelectionsForLesson(l,'print');go('worksheet');buildWorksheet()};}
 
 function gameOptions(q){
+ if(Array.isArray(q.customOptions)&&q.customOptions.length>=4){
+  return shuffleArray(q.customOptions.slice(0,4).map(String));
+ }
  const answer=String(q.answer),n=normalize(answer),out=[answer];
- const add=v=>{v=String(v);if(!out.some(x=>normalize(x)===normalize(v)))out.push(v)};
+ const add=v=>{v=String(v).trim();if(v&&!out.some(x=>normalize(x)===normalize(v)))out.push(v);};
+ const romList=['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII','XIII','XIV','XV','XVI','XVII','XVIII','XIX','XX'];
+ const weekdays=['Thứ Hai','Thứ Ba','Thứ Tư','Thứ Năm','Thứ Sáu','Thứ Bảy','Chủ nhật'];
+
  if(q.type==='angle'){
   ['nhọn','vuông','tù','bẹt'].forEach(add);
- }else if(q.type==='number' && ['>','<','='].includes(answer)){
-  ['>','<','='].forEach(add);
- }else if(q.type==='probability'){
-  ['chắc chắn','có thể','không thể'].forEach(add);
+ }else if(['>','<','='].includes(answer)){
+  ['>','<','=','không so sánh được'].forEach(add);
+ }else if(q.type==='probability'&&['chắc chắn','có thể','không thể'].includes(answer.toLowerCase())){
+  ['chắc chắn','có thể','không thể','ít khi'].forEach(add);
  }else if(q.type==='3d'){
   ['khối lập phương','khối hộp chữ nhật','khối trụ','khối cầu'].forEach(add);
- }else if(q.type==='geometry' && /hình/.test(answer)){
-  ['hình vuông','hình tròn','hình tam giác','hình chữ nhật','hình thang','hình bình hành','hình thoi'].forEach(add);
+ }else if(['chẵn','lẻ'].includes(answer.toLowerCase())){
+  ['số chẵn','số lẻ','vừa chẵn vừa lẻ','không xác định'].forEach(x=>add(answer.startsWith('số')?x:x.replace(/^số /,'')));
+ }else if(['song song','vuông góc'].includes(answer.toLowerCase())){
+  ['song song','vuông góc','cắt nhau không vuông góc','trùng nhau'].forEach(add);
+ }else if(['góc vuông','góc không vuông'].includes(answer.toLowerCase())){
+  ['góc vuông','góc không vuông','góc bẹt','không phải góc'].forEach(add);
+ }else if(weekdays.includes(answer)){
+  shuffleArray(weekdays).forEach(add);
+ }else if(romList.includes(answer)){
+  const ri=romList.indexOf(answer);
+  [ri-1,ri+1,ri-2,ri+2,ri+3,ri-3].filter(k=>k>=0&&k<romList.length).forEach(k=>add(romList[k]));
+ }else if(q.type==='geometry'&&/hình/.test(answer)){
+  ['hình vuông','hình tròn','hình tam giác','hình chữ nhật','hình tứ giác','hình thang','hình bình hành','hình thoi'].forEach(add);
  }else if(q.type==='pictograph'||q.type==='bar'){
   ['A','B','C','D'].forEach(add);
- }else if(q.type==='clock' && /^\d{1,2}:\d{2}$/.test(answer)){
-  let [h,m]=answer.split(':').map(Number);[0,15,30,45].forEach(x=>add(`${h}:${String(x).padStart(2,'0')}`));
+ }else if(/^\d{1,2}:\d{2}$/.test(answer)){
+  let [h,m]=answer.split(':').map(Number);
+  if(m===0){[(h%12)+1,((h+10)%12)+1,((h+1)%12)+1].forEach(x=>add(`${x}:00`));}
+  else{[0,15,30,45].forEach(x=>add(`${h}:${String(x).padStart(2,'0')}`));add(`${(h%12)+1}:${String(m).padStart(2,'0')}`);}
+ }else if(/^\d+\s+giờ\s+\d+\s+phút$/.test(answer)){
+  const mt=answer.match(/^(\d+)\s+giờ\s+(\d+)\s+phút$/);
+  const hh=Number(mt[1]),mm=Number(mt[2]);
+  add(`${hh+1} giờ ${mm} phút`);
+  add(`${Math.max(0,hh-1)} giờ ${mm} phút`);
+  add(`${hh} giờ ${(mm+10)%60} phút`);
+  add(`${hh} giờ ${Math.max(0,mm-10)} phút`);
+ }else if(/^\d+\s+phút\s+\d+\s+giây$/.test(answer)){
+  const mt=answer.match(/^(\d+)\s+phút\s+(\d+)\s+giây$/);
+  const mm=Number(mt[1]),ss=Number(mt[2]);
+  add(`${mm+1} phút ${ss} giây`);
+  add(`${Math.max(0,mm-1)} phút ${ss} giây`);
+  add(`${mm} phút ${(ss+10)%60} giây`);
+  add(`${mm} phút ${Math.max(0,ss-10)} giây`);
+ }else if(/^\d+\s+\d+\/\d+$/.test(answer)){
+  const mt=answer.match(/^(\d+)\s+(\d+)\/(\d+)$/);
+  const w=Number(mt[1]),a=Number(mt[2]),b=Number(mt[3]);
+  add(`${w+1} ${a}/${b}`);add(`${Math.max(1,w-1)} ${a}/${b}`);add(`${w} ${Math.min(b-1,a+1)}/${b}`);add(`${w} ${Math.max(1,a-1)}/${b}`);
  }else if(/^\d+\/\d+$/.test(answer)){
-  let [a,b]=answer.split('/').map(Number);add(`${a+1}/${b}`);add(`${Math.max(1,a-1)}/${b}`);add(`${a}/${b+1}`);add(`${a+2}/${b}`);
+  let [a,b]=answer.split('/').map(Number);
+  add(`${a+1}/${b}`);if(a>1)add(`${a-1}/${b}`);add(`${a}/${b+1}`);add(`${a+2}/${b}`);add(`${a}/${Math.max(2,b-1)}`);
+ }else if(/^-?\d+(?:[.,]\d+)?%$/.test(answer.trim())){
+  let v=Number(answer.replace('%','').replace(',','.'));
+  let step=v<10?1:5;
+  [step,-step,step*2,-step*2,10].forEach(d=>{if(v+d>0)add(numfmt(v+d)+'%');});
  }else if(/^-?\d+(?:[.,]\d+)?$/.test(n)){
-  let v=Number(n),step=Math.abs(v)<10?1:Math.abs(v)<100?2:Math.abs(v)<1000?10:100;
-  [step,-step,step*2,-step*2,step*3,-step*3].forEach(d=>add(numfmt(v+d)));
+  let v=Number(n);
+  const isDec=!Number.isInteger(v);
+  let step=isDec?0.5:(Math.abs(v)<=10?1:Math.abs(v)<50?2:Math.abs(v)<200?5:Math.abs(v)<1000?10:Math.abs(v)<10000?100:1000);
+  const deltas=isDec?[0.1,-0.1,0.5,-0.5,1,-1,0.2]:[step,-step,step*2,-step*2,step*3,1,-1,10,-10];
+  deltas.forEach(d=>{
+   const cand=Number((v+d).toFixed(2));
+   if(v>=0&&cand<0)return;
+   add(numfmt(cand));
+  });
  }else{
   ['hình vuông','hình tròn','hình tam giác','hình chữ nhật'].forEach(add);
-  ['nhọn','vuông','tù','bẹt','chắc chắn','có thể','không thể'].forEach(add);
  }
- let choices=out.slice(0,4);while(choices.length<4){add(String(rand(1,20)));choices=out.slice(0,4)}
- for(let i=choices.length-1;i>0;i--){let j=rand(0,i);[choices[i],choices[j]]=[choices[j],choices[i]]}
- return choices;
+ let choices=out.slice(0,4),guard=0;
+ while(choices.length<4&&guard<30){guard++;add(String(rand(1,20)));choices=out.slice(0,4);}
+ return shuffleArray(choices);
 }
 function shuffleArray(arr){const a=arr.slice();for(let i=a.length-1;i>0;i--){const j=rand(0,i);[a[i],a[j]]=[a[j],a[i]]}return a}
 function makeUniqueMatchPairs(l,diff,count=3){
@@ -7083,30 +7273,842 @@ function visualSvg(v){
  return s;
 }
 function makeQ(prompt,answer,explanation,visual,type){return{prompt,answer:String(answer),explanation,visual,type}}
+function makeQOpt(prompt,answer,explanation,visual,type,customOptions){
+ const q=makeQ(prompt,answer,explanation,visual,type);
+ if(Array.isArray(customOptions)&&customOptions.length>=4)q.customOptions=customOptions;
+ return q;
+}
+function fmtInt(n){return Number(n).toLocaleString('vi-VN');}
+function toRoman(n){
+ const map=[[20,'XX'],[19,'XIX'],[18,'XVIII'],[17,'XVII'],[16,'XVI'],[15,'XV'],[14,'XIV'],[13,'XIII'],[12,'XII'],[11,'XI'],[10,'X'],[9,'IX'],[8,'VIII'],[7,'VII'],[6,'VI'],[5,'V'],[4,'IV'],[3,'III'],[2,'II'],[1,'I']];
+ const f=map.find(x=>x[0]===n);return f?f[1]:String(n);
+}
+function addNoCarry2(twoBoth){
+ // Lớp 1 Tập 2: Phép cộng KHÔNG NHỚ trong phạm vi 100
+ const a1=rand(1,8), a0=rand(0,8);
+ const b1=twoBoth?rand(1,9-a1):0;
+ const b0=rand(1,9-a0);
+ return [a1*10+a0, b1*10+b0];
+}
+function subNoBorrow2(twoBoth){
+ // Lớp 1 Tập 2: Phép trừ KHÔNG NHỚ trong phạm vi 100
+ const a1=rand(twoBoth?2:1,9), a0=rand(1,9);
+ const b1=twoBoth?rand(1,a1-1):0;
+ const b0=rand(1,a0);
+ return [a1*10+a0, b1*10+b0];
+}
+function addWithCarry2(twoBoth){
+ // Lớp 2 Tập 1: Phép cộng CÓ NHỚ trong phạm vi 100
+ const a0=rand(2,9), b0=rand(10-a0,9);
+ const a1=rand(1,twoBoth?7:8);
+ const b1=twoBoth?rand(1,8-a1):0;
+ return [a1*10+a0, b1*10+b0];
+}
+function subWithBorrow2(twoBoth){
+ // Lớp 2 Tập 1: Phép trừ CÓ NHỚ trong phạm vi 100
+ const a0=rand(0,8), b0=rand(a0+1,9);
+ const a1=rand(twoBoth?3:2,9);
+ const b1=twoBoth?rand(1,a1-2):0;
+ return [a1*10+a0, b1*10+b0];
+}
+function makeFractionSimp(n,d){
+ if(n===0)return '0';
+ const gg=gcd(n,d);
+ const nn=n/gg, dd=d/gg;
+ return dd===1?String(nn):`${nn}/${dd}`;
+}
+
 function makeQuestion(l,diff='easy'){
-let g=l.grade,k=l.kind,lo=diff==='easy'?1:diff==='medium'?10:20,hi=diff==='easy'?10:diff==='medium'?50:100;
-if(g===1){hi=diff==='easy'?10:100;lo=0}if(g===2){hi=diff==='easy'?20:diff==='medium'?100:999;lo=1}if(g===3){hi=diff==='easy'?100:diff==='medium'?1000:10000}if(g===4){hi=diff==='easy'?1000:diff==='medium'?100000:999999}if(g===5){hi=diff==='easy'?100:diff==='medium'?1000:100000}
-if(k==='clock'){let h=rand(1,12),m=pick([0,15,30,45]);let htext=m===0?'giờ đúng':m===30?'giờ rưỡi':`${m} phút`;return makeQ(`Đồng hồ đang chỉ mấy giờ?`,`${h}:${String(m).padStart(2,'0')}`,`Kim ngắn chỉ gần số ${h}; kim dài chỉ ${m===0?'số 12':m===15?'số 3':m===30?'số 6':'số 9'}. Thời gian là ${h}:${String(m).padStart(2,'0')}.`,{type:'clock',h,m},'clock')}
-if(k==='angle'){let d=pick([30,45,60,75,90,110,120,135,150,180]);return makeQ(`Góc trong hình có số đo ${d}°. Đây là góc gì? (nhọn / vuông / tù / bẹt)`,d<90?'nhọn':d===90?'vuông':d<180?'tù':'bẹt',`Góc nhỏ hơn 90° là góc nhọn; bằng 90° là góc vuông; lớn hơn 90° và nhỏ hơn 180° là góc tù; bằng 180° là góc bẹt.`,{type:'angle',deg:d},'angle')}
-if(k==='numberline'){let start=0,step=pick([1,2,5,10]),mark=rand(2,8),ans=start+mark*step;return makeQ(`Số còn thiếu ở vị trí dấu hỏi trên tia số là số nào?`,ans,`Mỗi vạch cách nhau ${step} đơn vị. Đếm từ ${start}, ta được ${ans}.`,{type:'numberline',start,step,mark},'numberline')}
-if(k==='3d'){let shapes=[['khối lập phương','cube'],['khối hộp chữ nhật','cuboid'],['khối trụ','cylinder'],['khối cầu','sphere']],item=pick(shapes);return makeQ(`Khối hình trong hình minh họa có tên là gì?`,item[0],`Quan sát đặc điểm của hình khối: đây là ${item[0]}.`,{type:'3d',shape:item[1]},'3d')}
-if(k==='geometry'){let title=(l.title+' '+l.topic).toLowerCase(),a=rand(3,15),b=rand(2,12);if(/đường tròn|hình tròn/.test(title)&&g>=4){let r=rand(2,10),area=/diện tích/.test(title),ans=area?Number((3.14*r*r).toFixed(2)):Number((2*3.14*r).toFixed(2));return makeQ(`Hình tròn có bán kính ${r} cm. Tính ${area?'diện tích':'chu vi'} (lấy π = 3,14).`,numfmt(ans),area?`Diện tích = 3,14 × ${r} × ${r} = ${numfmt(ans)} cm².`:`Chu vi = 2 × 3,14 × ${r} = ${numfmt(ans)} cm.`,{type:'shape',shape:'circle'},'geometry')}if(/tam giác/.test(title)){let ans=a*b/2;return makeQ(`Tam giác có đáy ${a*2} cm và chiều cao ${b} cm. Tính diện tích tam giác.`,ans,`Diện tích = đáy × chiều cao : 2 = ${a*2} × ${b} : 2 = ${ans} cm².`,{type:'shape',shape:'triangle'},'geometry')}if(/hình vuông/.test(title)){let side=rand(3,15),area=/diện tích/.test(title),ans=area?side*side:4*side;return makeQ(`Hình vuông có cạnh ${side} cm. Tính ${area?'diện tích':'chu vi'}.`,ans,area?`Diện tích = ${side} × ${side} = ${ans} cm².`:`Chu vi = ${side} × 4 = ${ans} cm.`,{type:'shape',shape:'square'},'geometry')}if(/hình thang/.test(title)){let top=rand(4,10),bottom=top+rand(2,6),height=rand(2,8),ans=(top+bottom)*height/2;return makeQ(`Hình thang có hai đáy ${top} cm và ${bottom} cm, chiều cao ${height} cm. Tính diện tích.`,ans,`Diện tích = (đáy lớn + đáy bé) × chiều cao : 2 = (${top} + ${bottom}) × ${height} : 2 = ${ans} cm².`,{type:'shape',shape:'trapezoid'},'geometry')}if(/hình bình hành/.test(title)){let base=rand(4,14),height=rand(2,9),ans=base*height;return makeQ(`Hình bình hành có đáy ${base} cm, chiều cao ${height} cm. Tính diện tích.`,ans,`Diện tích = đáy × chiều cao = ${base} × ${height} = ${ans} cm².`,{type:'shape',shape:'parallelogram'},'geometry')}if(/hình thoi/.test(title)){let d1=rand(4,12),d2=rand(2,10),ans=d1*d2/2;return makeQ(`Hình thoi có hai đường chéo ${d1*2} cm và ${d2} cm. Tính diện tích.`,ans,`Diện tích = tích hai đường chéo : 2 = ${d1*2} × ${d2} : 2 = ${ans} cm².`,{type:'shape',shape:'rhombus'},'geometry')}if(/chu vi|diện tích/.test(title)||g>=3){let area=/diện tích/.test(title)||pick([true,false]);let ans=area?a*b:2*(a+b);return makeQ(`Hình chữ nhật dài ${a} cm, rộng ${b} cm. Tính ${area?'diện tích':'chu vi'}.`,ans,area?`Diện tích = ${a} × ${b} = ${ans} cm².`:`Chu vi = (${a} + ${b}) × 2 = ${ans} cm.`,{type:'shape',shape:'rect'},'geometry')}
-let sh=pick(['circle','square','triangle','rect']),vn={circle:'hình tròn',square:'hình vuông',triangle:'hình tam giác',rect:'hình chữ nhật'};return makeQ(`Hình minh họa là hình gì?`,vn[sh],`Quan sát đường bao và đặc điểm của hình để nhận biết ${vn[sh]}.`,{type:'shape',shape:sh},'geometry')}
-if(k==='fraction'){let d=pick([3,4,5,6,8,10,12]),a=rand(1,d-1),b=rand(1,d-1),op=pick(['+','−']);if(op==='−'&&a<b)[a,b]=[b,a];let n=op==='+'?a+b:a-b,gg=gcd(n,d),ans=`${n/gg}/${d/gg}`;return makeQ(`Tính và viết kết quả tối giản: ${a}/${d} ${op} ${b}/${d}`,ans,`Hai phân số cùng mẫu: ${a} ${op} ${b} trên ${d}. Rút gọn kết quả được ${ans}.`,null,'fraction')}
-if(k==='decimal'){let a=rand(10,999)/10,b=rand(5,300)/10;let op=pick(['+','−']);if(op==='−'&&a<b)[a,b]=[b,a];let ans=op==='+'?a+b:a-b;return makeQ(`Tính: ${numfmt(a)} ${op} ${numfmt(b)} = ?`,numfmt(ans),`Đặt các chữ số cùng hàng thẳng cột rồi tính. Kết quả ${numfmt(a)} ${op} ${numfmt(b)} = ${numfmt(ans)}.`,null,'decimal')}
-if(k==='percent'){let p=pick([5,10,15,20,25,30,40,50,75]),base=rand(2,20)*20,ans=base*p/100;return makeQ(`Tính ${p}% của ${base}.`,numfmt(ans),`${base} × ${p}/100 = ${numfmt(ans)}.`,null,'percent')}
-if(k==='bar'||k==='pie'||k==='pictograph'){let labels=['A','B','C','D'],vals=shuffleArray([2,3,4,5,6,7,8]).slice(0,4),max=Math.max(...vals),idx=vals.indexOf(max);if(k==='pie'){let x=rand(2,8),y=rand(2,8);let v={type:'pie',parts:[x,y],total:x+y};return makeQ(`Biểu đồ quạt tròn minh họa hai nhóm có ${x} và ${y} phần. Tổng số phần là bao nhiêu?`,x+y,`Cộng số phần hai nhóm: ${x} + ${y} = ${x+y}.`,v,'pie')}if(k==='pictograph'){let unit=pick([1,2,5]),v={type:'pictograph',labels,values:vals,unit};return makeQ(`Dựa vào biểu đồ tranh, nhóm nào có số lượng lớn nhất?`,labels[idx],`Nhóm ${labels[idx]} có ${max} hình; mỗi hình biểu thị ${unit} đơn vị, nên có ${max*unit} đơn vị.`,v,'pictograph')}let v={type:'bar',labels,values:vals};return makeQ(`Dựa vào biểu đồ cột, nhóm nào có giá trị lớn nhất?`,labels[idx],`Cột cao nhất là nhóm ${labels[idx]}, có giá trị ${max}.`,v,'bar')}
-if(k==='probability'){let cases=[['Mặt Trời mọc ở hướng Đông','chắc chắn'],['Một con cá sống trên cây','không thể'],['Ngày mai có mưa','có thể']];let c=pick(cases);return makeQ(`Nhận xét sau thuộc khả năng nào: “${c[0]}”? (chắc chắn / có thể / không thể)`,c[1],`Đây là ${c[1]} trong tình huống được nêu.`,null,'probability')}
-if(k==='measure'){let a=rand(2,15),b=rand(2,9);let variants=[()=>makeQ(`Đổi ${a} m ra xăng-ti-mét.`,a*100,`1 m = 100 cm nên ${a} m = ${a*100} cm.`,{type:'ruler'},'measure'),()=>makeQ(`Một đoạn dây dài ${a*10} cm. Độ dài đó bằng bao nhiêu mét?`,numfmt(a/10),`${a*10} cm = ${a/10} m.`,{type:'ruler'},'measure'),()=>makeQ(`Có ${a} túi, mỗi túi nặng ${b} kg. Tổng khối lượng là bao nhiêu kg?`,a*b,`${a} × ${b} = ${a*b} kg.`,null,'measure')];return pick(variants)()}
-if(k==='motion'){let v=rand(20,80),t=rand(2,5),ans=v*t;return makeQ(`Một xe đi đều với vận tốc ${v} km/giờ trong ${t} giờ. Xe đi được quãng đường bao nhiêu ki-lô-mét?`,ans,`Quãng đường = vận tốc × thời gian = ${v} × ${t} = ${ans} km.`,null,'motion')}
-if(k==='count'){let n=rand(g===1?1:2,g===1?10:g===2?20:30);return makeQ(`Quan sát hình và cho biết có tất cả bao nhiêu đồ vật?`,n,`Đếm lần lượt từng đồ vật. Có tất cả ${n} đồ vật.`,{type:'count',n},'count')}
-if(k==='number'){let a=rand(Math.max(0,lo),Math.max(2,hi-20)),b=rand(1,Math.max(2,Math.min(hi-a,99)));if(/so sánh/.test(l.title.toLowerCase())){let c=rand(lo,hi),d=rand(lo,hi);return makeQ(`Điền dấu thích hợp: ${c} □ ${d} (>, < hoặc =)`,c>d?'>':c<d?'<':'=',`So sánh hai số: ${c} ${c>d?'>':c<d?'<':'='} ${d}.`,null,'number')}if(/làm tròn/.test(l.title.toLowerCase())){let v=rand(120,9999),unit=pick([10,100,1000]),ans=Math.round(v/unit)*unit;return makeQ(`Làm tròn ${v.toLocaleString('vi-VN')} đến hàng ${unit===10?'chục':unit===100?'trăm':'nghìn'}.`,ans,`Xét chữ số ngay bên phải hàng cần làm tròn để quyết định tăng hay giữ nguyên. Kết quả là ${ans}.`,null,'number')}let n=rand(lo,hi);return makeQ(`Số ${n} có chữ số hàng đơn vị là bao nhiêu?`,n%10,`Chữ số hàng đơn vị là chữ số cuối cùng của số ${n}, đó là ${n%10}.`,null,'number')}
-if(k==='expression'){let a=rand(2,20),b=rand(2,12),c=rand(2,9),ans=a+b*c;return makeQ(`Tính giá trị biểu thức: ${a} + ${b} × ${c}`,ans,`Thực hiện phép nhân trước: ${b} × ${c} = ${b*c}; sau đó ${a} + ${b*c} = ${ans}.`,null,'expression')}
-if(k==='muldiv'){let a=rand(2,Math.max(8,Math.min(99,Math.floor(hi/5)))),b=rand(2,9);if(/chia|thương|số bị chia/.test(l.title.toLowerCase())){let ans=a;let div=b;let dividend=ans*div;return makeQ(`Tính: ${dividend} : ${div} = ?`,ans,`Vì ${ans} × ${div} = ${dividend} nên ${dividend} : ${div} = ${ans}.`,null,'muldiv')}return makeQ(`Tính: ${a} × ${b} = ?`,a*b,`${a} × ${b} = ${a*b}.`,null,'muldiv')}
-if(k==='addsub'||k==='mixed'||k==='word'){let a=rand(Math.max(1,lo),Math.max(10,Math.floor(hi*.65))),b=rand(1,Math.max(5,Math.floor(hi*.3))),op=pick(['+','−']);if(op==='−'&&a<b)[a,b]=[b,a];let ans=op==='+'?a+b:a-b;let p=`Tính: ${a} ${op} ${b} = ?`;if(k==='word'||diff==='hard'){p=op==='+'?`Thư viện có ${a} quyển truyện, được tặng thêm ${b} quyển. Thư viện có tất cả bao nhiêu quyển truyện?`:`Có ${a} nhãn vở, đã dùng ${b} nhãn. Còn lại bao nhiêu nhãn vở?`}return makeQ(p,ans,`Phép tính: ${a} ${op} ${b} = ${ans}.`,null,'addsub')}
-return makeQ(`Tính: ${rand(2,9)} + ${rand(1,9)} = ?`,10,'Thực hiện phép cộng theo quy tắc đã học.',null,'general')}
-function renderQ(q,i,show=false,disabled=false){let vis=q.visual?visualSvg(q.visual):'';return `<article class="qcard" data-q="${i}"><div class="qtop"><small>CÂU ${i+1}</small><span class="badge">${esc(q.type||'Bài tập')}</span></div><div class="qtext">${esc(q.prompt)}</div>${vis?`<div class="qvisual">${vis}</div>`:''}<div class="answer"><input ${disabled?'disabled':''} data-ans="${i}" placeholder="Nhập đáp án" value="${esc(q.user||'')}" autocomplete="off"><span class="small muted">${q.type==='angle'?'Nhập tên loại góc':q.type==='fraction'?'Ví dụ: 1/2':'Nhập kết quả'}</span></div>${show?`<div class="feedback ${q.correct?'good fx-pop-correct':'bad fx-shake-wrong'}"><b>${q.correct?'Chính xác!':'Đáp án: '+esc(q.answer)}</b><br>${esc(q.explanation)}</div>`:''}</article>`}
-function normalize(a){return String(a??'').trim().toLowerCase().replace(/\s+/g,'').replace(/,/g,'.').replace(/(đồng|cm²|cm|m²|m|kg|g|lít|lit|quyển|quả|giờ|phút|độ|km)$/g,'')}
+ const g=Number(l.grade)||1, bk=Number(l.book)||1, k=l.kind||'mixed';
+ const title=(l.title||'').toLowerCase(), topic=(l.topic||'').toLowerCase(), full=title+' '+topic;
+
+ // ==================== 1. ĐẾM ĐỒ VẬT & TÁCH GỘP (LỚP 1) ====================
+ if(k==='count'){
+  if(/0, 1, 2, 3, 4, 5/.test(title)){
+   const n=rand(1,5);
+   return makeQ(`Quan sát hình và cho biết có bao nhiêu quả táo?`,n,`Đếm lần lượt từ trái sang phải, có ${n} quả táo.`,{type:'count',n},'count');
+  }
+  if(/6, 7, 8, 9, 10/.test(title)){
+   const n=rand(6,10);
+   return makeQ(`Quan sát hình và đếm xem có tất cả bao nhiêu quả táo?`,n,`Đếm lần lượt từng quả táo, có tất cả ${n} quả táo.`,{type:'count',n},'count');
+  }
+  if(/nhiều hơn, ít hơn/.test(title)){
+   const a=rand(2,9); let b=rand(2,9); while(b===a)b=rand(2,9);
+   const askMore=pick([true,false]);
+   const ans=askMore?(a>b?'nhiều hơn':'ít hơn'):(a<b?'nhiều hơn':'ít hơn');
+   return makeQOpt(`Rổ thứ nhất có ${a} quả cam, rổ thứ hai có ${b} quả cam. Số cam ở rổ thứ ${askMore?'nhất':'hai'} … số cam ở rổ còn lại.`,ans,`So sánh ${a} và ${b}: ${a>b?`${a} > ${b}`:`${a} < ${b}`}, nên đáp án là "${ans}".`,null,'count',['nhiều hơn','ít hơn','bằng nhau','gấp đôi']);
+  }
+  if(/mấy và mấy/.test(title)){
+   const tot=rand(4,10), p1=rand(1,tot-1), p2=tot-p1;
+   return makeQ(`Tách số: ${tot} gồm ${p1} và mấy?`,p2,`Ta có ${p1} + ${p2} = ${tot}, nên ${tot} gồm ${p1} và ${p2}.`,null,'count');
+  }
+  const n=rand(1,g===1?10:20);
+  return makeQ(`Quan sát hình và cho biết có tất cả bao nhiêu đồ vật?`,n,`Đếm lần lượt từng đồ vật, có tất cả ${n} đồ vật.`,{type:'count',n},'count');
+ }
+
+ // ==================== 2. ĐỒNG HỒ, LỊCH, NGÀY – THÁNG (LỚP 1–3) ====================
+ if(k==='clock'){
+  if(/các ngày trong tuần/.test(title)){
+   const days=['Thứ Hai','Thứ Ba','Thứ Tư','Thứ Năm','Thứ Sáu','Thứ Bảy','Chủ nhật'];
+   const idx=rand(0,6), next=pick([true,false]);
+   const ans=next?days[(idx+1)%7]:days[(idx+6)%7];
+   return makeQOpt(`Nếu hôm nay là ${days[idx]} thì ${next?'ngày mai':'hôm qua'} là thứ mấy?`,ans,`Theo thứ tự các ngày trong tuần, ${next?'sau':'trước'} ${days[idx]} là ${ans}.`,null,'clock',shuffleArray([ans,...days.filter(d=>d!==ans).slice(0,3)]));
+  }
+  if(/ngày – tháng|tháng – năm/.test(title)&&pick([true,false])){
+   const m31=[1,3,5,7,8,10,12], m30=[4,6,9,11];
+   const m=rand(1,12);
+   const ans=m===2?28:(m31.includes(m)?31:30);
+   return makeQOpt(`Trong năm thường, tháng ${m} có bao nhiêu ngày?`,ans,`Tháng ${m} ${m===2?'có 28 ngày (năm nhuận có 29 ngày)':`có ${ans} ngày`}.`,null,'number',['28','29','30','31']);
+  }
+  if(g===1){
+   const h=rand(1,12);
+   return makeQ(`Quan sát đồng hồ và cho biết đồng hồ chỉ mấy giờ đúng?`,`${h}:00`,`Kim ngắn chỉ số ${h}, kim dài chỉ số 12. Đồng hồ chỉ ${h} giờ đúng (${h}:00).`,{type:'clock',h,m:0},'clock');
+  }
+  const mins=g===2?[0,15,30]:[0,5,10,15,20,25,30,35,40,45,50,55];
+  const h=rand(1,12), m=pick(mins);
+  const ans=`${h}:${String(m).padStart(2,'0')}`;
+  return makeQ(`Đồng hồ đang chỉ mấy giờ? (Viết dạng giờ:phút, VD 8:15)`,ans,`Kim ngắn qua số ${h}, kim dài chỉ vạch ${m} phút. Đồng hồ chỉ ${ans}.`,{type:'clock',h,m},'clock');
+ }
+
+ // ==================== 3. SỐ ĐO THỜI GIAN LỚP 5 ====================
+ if(k==='timecalc'){
+  if(/đơn vị đo thời gian/.test(title)){
+   const mode=rand(0,2);
+   if(mode===0){
+    const h=rand(1,4), m=pick([15,30,45]), ans=h*60+m;
+    return makeQ(`Đổi số đo thời gian: ${h} giờ ${m} phút = … phút.`,ans,`1 giờ = 60 phút nên ${h} giờ ${m} phút = ${h} × 60 + ${m} = ${ans} phút.`,null,'timecalc');
+   }
+   if(mode===1){
+    const h=pick([1.5,2.5,3.5,1.25,2.25,1.75]), ans=Math.round(h*60);
+    return makeQ(`Đổi số đo thời gian: ${numfmt(h)} giờ = … phút.`,ans,`${numfmt(h)} giờ = ${numfmt(h)} × 60 = ${ans} phút.`,null,'timecalc');
+   }
+   const min=rand(2,5), sec=pick([15,30,45]), ans=min*60+sec;
+   return makeQ(`Đổi số đo thời gian: ${min} phút ${sec} giây = … giây.`,ans,`1 phút = 60 giây nên ${min} phút ${sec} giây = ${min} × 60 + ${sec} = ${ans} giây.`,null,'timecalc');
+  }
+  if(/nhân, chia/.test(title)){
+   if(pick([true,false])){
+    const h=rand(1,3), m=pick([10,15,20,25,35]), kMul=rand(2,4);
+    const totM=h*60+m, resM=totM*kMul, rh=Math.floor(resM/60), rm=resM%60;
+    const ans=rm?`${rh} giờ ${rm} phút`:`${rh} giờ 0 phút`;
+    return makeQ(`Tính: (${h} giờ ${m} phút) × ${kMul} = ?`,ans,`Nhân từng đơn vị: ${h*kMul} giờ ${m*kMul} phút = ${ans}.`,null,'timecalc');
+   }else{
+    const kDiv=pick([2,3,4]), rh=rand(1,3), rm=pick([10,15,20,25,30]);
+    const tot=(rh*60+rm)*kDiv, sh=Math.floor(tot/60), sm=tot%60;
+    const ans=`${rh} giờ ${rm} phút`;
+    return makeQ(`Tính: (${sh} giờ ${sm} phút) : ${kDiv} = ?`,ans,`Đổi/chia từng phần cho ${kDiv}, ta được ${ans}.`,null,'timecalc');
+   }
+  }
+  // Cộng, trừ số đo thời gian
+  if(pick([true,false])){
+   const h1=rand(1,4), m1=pick([20,35,40,45,50]), h2=rand(1,3), m2=pick([15,25,30,35,40]);
+   const tot=(h1+h2)*60+m1+m2, rh=Math.floor(tot/60), rm=tot%60;
+   const ans=`${rh} giờ ${rm} phút`;
+   return makeQ(`Tính: ${h1} giờ ${m1} phút + ${h2} giờ ${m2} phút = ?`,ans,`Cộng giờ với giờ, phút với phút (đổi 60 phút = 1 giờ): kết quả là ${ans}.`,null,'timecalc');
+  }else{
+   const h1=rand(4,8), m1=pick([10,15,20,25]), h2=rand(1,h1-2), m2=pick([30,35,40,45]);
+   const tot=(h1*60+m1)-(h2*60+m2), rh=Math.floor(tot/60), rm=tot%60;
+   const ans=`${rh} giờ ${rm} phút`;
+   return makeQ(`Tính: ${h1} giờ ${m1} phút − ${h2} giờ ${m2} phút = ?`,ans,`Đổi ${h1} giờ ${m1} phút = ${h1-1} giờ ${m1+60} phút, trừ đi ${h2} giờ ${m2} phút được ${ans}.`,null,'timecalc');
+  }
+ }
+
+ // ==================== 4. CHUYỂN ĐỘNG ĐỀU (LỚP 5) ====================
+ if(k==='motion'){
+  const v=pick([12,15,30,36,40,45,48,50,54,60]), t=pick([1.5,2,2.5,3,4]);
+  const sDist=Number((v*t).toFixed(2));
+  if(/vận tốc/.test(title)&&!/quãng đường/.test(title)){
+   return makeQ(`Một ô tô đi quãng đường dài ${numfmt(sDist)} km trong ${numfmt(t)} giờ. Tính vận tốc của ô tô (km/giờ).`,numfmt(v),`Vận tốc = Quãng đường : Thời gian = ${numfmt(sDist)} : ${numfmt(t)} = ${numfmt(v)} (km/giờ).`,null,'motion');
+  }
+  const variant=rand(0,2);
+  if(variant===0){
+   return makeQ(`Một ô tô đi đều với vận tốc ${v} km/giờ trong ${numfmt(t)} giờ. Tính quãng đường ô tô đi được (km).`,numfmt(sDist),`Quãng đường = Vận tốc × Thời gian = ${v} × ${numfmt(t)} = ${numfmt(sDist)} (km).`,null,'motion');
+  }
+  if(variant===1){
+   return makeQ(`Một xe máy đi quãng đường dài ${numfmt(sDist)} km với vận tốc ${v} km/giờ. Hỏi xe máy đi hết bao nhiêu giờ?`,numfmt(t),`Thời gian = Quãng đường : Vận tốc = ${numfmt(sDist)} : ${v} = ${numfmt(t)} (giờ).`,null,'motion');
+  }
+  return makeQ(`Một người đi xe đạp đi được ${numfmt(sDist)} km trong ${numfmt(t)} giờ. Tính vận tốc của người đó (km/giờ).`,numfmt(v),`Vận tốc = ${numfmt(sDist)} : ${numfmt(t)} = ${numfmt(v)} (km/giờ).`,null,'motion');
+ }
+
+ // ==================== 5. GÓC & ĐO GÓC (LỚP 3–4) ====================
+ if(k==='angle'){
+  if(g===3){
+   const isRight=pick([true,false]);
+   const d=isRight?90:pick([40,55,120,145]);
+   const ans=isRight?'góc vuông':'góc không vuông';
+   return makeQOpt(`Quan sát hình vẽ (số đo ${d}°). Đây là góc vuông hay góc không vuông?`,ans,`Góc có số đo bằng 90° là góc vuông; khác 90° là góc không vuông. Vậy đây là ${ans}.`,{type:'angle',deg:d},'angle',['góc vuông','góc không vuông','góc bẹt','đường thẳng']);
+  }
+  const d=pick([30,45,60,75,90,110,120,135,150,180]);
+  const ans=d<90?'nhọn':d===90?'vuông':d<180?'tù':'bẹt';
+  return makeQ(`Góc trong hình có số đo ${d}°. Đây là góc gì? (nhọn / vuông / tù / bẹt)`,ans,`Góc < 90° là góc nhọn; = 90° là góc vuông; giữa 90° và 180° là góc tù; = 180° là góc bẹt.`,{type:'angle',deg:d},'angle');
+ }
+
+ // ==================== 6. TIA SỐ, SỐ LIỀN TRƯỚC / LIỀN SAU (LỚP 2) ====================
+ if(k==='numberline'){
+  if(pick([true,false])){
+   const n=rand(11,98), askAfter=pick([true,false]);
+   const ans=askAfter?n+1:n-1;
+   return makeQ(`Số liền ${askAfter?'sau':'trước'} của số ${n} là số nào?`,ans,`Số liền ${askAfter?'sau':'trước'} của ${n} là ${n} ${askAfter?'+':'−'} 1 = ${ans}.`,null,'numberline');
+  }
+  const start=pick([0,10,20,30]), step=pick([1,2,5,10]), mark=rand(2,7), ans=start+mark*step;
+  return makeQ(`Số còn thiếu ở vị trí dấu hỏi trên tia số là số nào?`,ans,`Mỗi vạch liên tiếp cách nhau ${step} đơn vị. Đếm từ ${start}, ta được ${ans}.`,{type:'numberline',start,step,mark},'numberline');
+ }
+
+ // ==================== 7. HÌNH KHỐI 3D (NHẬN BIẾT LỚP 1–3) ====================
+ if(k==='3d'){
+  if(/vị trí, định hướng/.test(title)){
+   const pos=pick([['trên','dưới'],['trái','phải'],['trước','sau']]);
+   return makeQOpt(`Quyển sách đặt ở phía ${pos[0]} mặt bàn. Mặt bàn ở phía nào so với quyển sách?`,pos[1],`Vị trí ngược lại với phía ${pos[0]} là phía ${pos[1]}.`,null,'3d',['trên','dưới','trái','phải']);
+  }
+  if(g===3&&/khối lập phương|khối hộp/.test(title)&&pick([true,false])){
+   const qType=pick([['mặt',6],['đỉnh',8],['cạnh',12]]);
+   const nm=pick(['khối lập phương','khối hộp chữ nhật']);
+   return makeQOpt(`Một ${nm} có tất cả bao nhiêu ${qType[0]}?`,qType[1],`Mỗi ${nm} đều có 6 mặt, 8 đỉnh và 12 cạnh. Vậy có ${qType[1]} ${qType[0]}.`,{type:'3d',shape:nm.includes('lập')?'cube':'cuboid'},'number',['4','6','8','12']);
+  }
+  let shapes=[['khối lập phương','cube'],['khối hộp chữ nhật','cuboid'],['khối trụ','cylinder'],['khối cầu','sphere']];
+  if(g===1||(/lập phương.*hộp/.test(title)))shapes=shapes.slice(0,2);
+  else if(/trụ.*cầu/.test(title))shapes=shapes.slice(2,4);
+  const item=pick(shapes);
+  return makeQ(`Khối hình trong hình minh họa có tên là gì?`,item[0],`Quan sát đặc điểm của hình khối: đây là ${item[0]}.`,{type:'3d',shape:item[1]},'3d');
+ }
+
+ // ==================== 8. DIỆN TÍCH & THỂ TÍCH HÌNH KHỐI (LỚP 5) ====================
+ if(k==='solidcalc'){
+  if(/xăng-ti-mét khối|đề-xi-mét khối|mét khối|thể tích của một hình/.test(title)){
+   const mode=rand(0,2);
+   if(mode===0){
+    const a=rand(2,12), ans=a*1000;
+    return makeQ(`Đổi đơn vị đo thể tích: ${a} dm³ = … cm³.`,ans,`1 dm³ = 1 000 cm³ nên ${a} dm³ = ${fmtInt(ans)} cm³.`,null,'solidcalc');
+   }
+   if(mode===1){
+    const a=rand(1,9)+pick([0.2,0.5,0.25,0.75]), ans=Math.round(a*1000);
+    return makeQ(`Đổi đơn vị đo thể tích: ${numfmt(a)} m³ = … dm³.`,ans,`1 m³ = 1 000 dm³ nên ${numfmt(a)} m³ = ${fmtInt(ans)} dm³.`,null,'solidcalc');
+   }
+   const n1=rand(4,12), n2=rand(3,10);
+   return makeQ(`Hình A được ghép bởi ${n1} hình lập phương cạnh 1 cm, hình B ghép bởi ${n2} hình lập phương cạnh 1 cm. Tổng thể tích hai hình là bao nhiêu cm³?`,n1+n2,`Mỗi hình lập phương nhỏ có thể tích 1 cm³. Tổng thể tích là ${n1} + ${n2} = ${n1+n2} cm³.`,{type:'3d',shape:'cube'},'solidcalc');
+  }
+  if(/hình khai triển/.test(title)){
+   const ask=pick([
+    ['Hình khai triển của hình lập phương gồm mấy hình vuông bằng nhau?',6,'Hình lập phương có 6 mặt đều là hình vuông bằng nhau.',['4','6','8','12']],
+    ['Hình khai triển của hình trụ gồm hai hình tròn đáy và một hình gì?','hình chữ nhật','Mặt xung quanh hình trụ khi trải phẳng là một hình chữ nhật.',['hình chữ nhật','hình tam giác','hình thang','hình thoi']],
+    ['Hình khai triển của hình hộp chữ nhật gồm tất cả bao nhiêu mặt?',6,'Hình hộp chữ nhật có 6 mặt (2 mặt đáy và 4 mặt xung quanh).',['4','5','6','8']]
+   ]);
+   return makeQOpt(ask[0],ask[1],ask[2],{type:'3d',shape:'cuboid'},'solidcalc',ask[3]);
+  }
+  if(/hình lập phương/.test(title)){
+   const a=rand(3,9);
+   if(/thể tích/.test(title)){
+    const ans=a*a*a;
+    return makeQ(`Tính thể tích hình lập phương có cạnh ${a} cm (đơn vị: cm³).`,ans,`Thể tích = a × a × a = ${a} × ${a} × ${a} = ${ans} (cm³).`,{type:'3d',shape:'cube'},'solidcalc');
+   }
+   const isFull=pick([true,false]);
+   const ans=isFull?6*a*a:4*a*a;
+   return makeQ(`Hình lập phương có cạnh ${a} cm. Tính diện tích ${isFull?'toàn phần':'xung quanh'} (cm²).`,ans,isFull?`S toàn phần = ${a} × ${a} × 6 = ${ans} (cm²).`:`S xung quanh = ${a} × ${a} × 4 = ${ans} (cm²).`,{type:'3d',shape:'cube'},'solidcalc');
+  }
+  // Hình hộp chữ nhật (Sxq, Stp, Thể tích)
+  const lLen=rand(5,12), w=rand(3,Math.min(8,lLen-1)), h=rand(2,7);
+  if(/thể tích/.test(title)){
+   const ans=lLen*w*h;
+   return makeQ(`Hình hộp chữ nhật có chiều dài ${lLen} cm, chiều rộng ${w} cm, chiều cao ${h} cm. Tính thể tích (cm³).`,ans,`Thể tích = ${lLen} × ${w} × ${h} = ${ans} (cm³).`,{type:'3d',shape:'cuboid'},'solidcalc');
+  }
+  const isFull=pick([true,false]);
+  const sxq=2*(lLen+w)*h, stp=sxq+2*lLen*w, ans=isFull?stp:sxq;
+  return makeQ(`Hình hộp chữ nhật có chiều dài ${lLen} cm, chiều rộng ${w} cm, chiều cao ${h} cm. Tính diện tích ${isFull?'toàn phần':'xung quanh'} (cm²).`,ans,isFull?`S xung quanh = (${lLen} + ${w}) × 2 × ${h} = ${sxq} cm²; S toàn phần = ${sxq} + 2 × ${lLen} × ${w} = ${stp} cm².`:`S xung quanh = (${lLen} + ${w}) × 2 × ${h} = ${sxq} cm².`,{type:'3d',shape:'cuboid'},'solidcalc');
+ }
+
+ // ==================== 9. HÌNH HỌC PHẲNG (CHUẨN THEO TỪNG LỚP 1–5) ====================
+ if(k==='geometry'){
+  // Lớp 1: Chỉ nhận biết hình vuông, tròn, tam giác, chữ nhật (KHÔNG tính diện tích!)
+  if(g===1){
+   const sh=pick(['circle','square','triangle','rect']);
+   const vn={circle:'hình tròn',square:'hình vuông',triangle:'hình tam giác',rect:'hình chữ nhật'};
+   return makeQ(`Quan sát hình minh họa. Đây là hình gì?`,vn[sh],`Quan sát hình dạng đường bao: đây là ${vn[sh]}.`,{type:'shape',shape:sh},'geometry');
+  }
+  // Lớp 2: Điểm, đoạn thẳng, đường gấp khúc, hình tứ giác
+  if(g===2){
+   if(/đường gấp khúc/.test(title)||pick([true,false])){
+    const a=rand(4,15), b=rand(3,14), c=rand(4,12), ans=a+b+c;
+    return makeQ(`Đường gấp khúc ABCD gồm 3 đoạn thẳng dài lần lượt ${a} cm, ${b} cm và ${c} cm. Tính độ dài đường gấp khúc ABCD (cm).`,ans,`Độ dài đường gấp khúc = ${a} + ${b} + ${c} = ${ans} (cm).`,null,'geometry');
+   }
+   const sh=pick(['rect','square','triangle','trapezoid']);
+   const vn={rect:'hình chữ nhật',square:'hình vuông',triangle:'hình tam giác',trapezoid:'hình tứ giác'};
+   return makeQOpt(`Quan sát hình vẽ. Đây là hình gì?`,vn[sh],`Đếm số cạnh và quan sát đặc điểm: đây là ${vn[sh]}.`,{type:'shape',shape:sh},'geometry',['hình tam giác','hình tứ giác','hình vuông','hình tròn']);
+  }
+  // Lớp 3: Trung điểm, hình tròn (bán kính/đường kính), chu vi, diện tích HCN/HV
+  if(g===3){
+   if(/trung điểm|điểm ở giữa/.test(title)){
+    const half=rand(4,25), ab=half*2;
+    return makeQ(`Điểm M là trung điểm của đoạn thẳng AB. Biết đoạn thẳng AB dài ${ab} cm, hỏi đoạn thẳng AM dài bao nhiêu cm?`,half,`Vì M là trung điểm của AB nên AM = AB : 2 = ${ab} : 2 = ${half} (cm).`,null,'geometry');
+   }
+   if(/hình tròn|bán kính|đường kính/.test(title)){
+    const r=rand(3,20), askD=pick([true,false]);
+    return askD
+     ? makeQ(`Hình tròn tâm O có bán kính dài ${r} cm. Độ dài đường kính của hình tròn đó là bao nhiêu cm?`,r*2,`Đường kính gấp 2 lần bán kính: ${r} × 2 = ${r*2} (cm).`,{type:'shape',shape:'circle'},'geometry')
+     : makeQ(`Hình tròn tâm O có đường kính dài ${r*2} cm. Độ dài bán kính của hình tròn đó là bao nhiêu cm?`,r,`Bán kính bằng một nửa đường kính: ${r*2} : 2 = ${r} (cm).`,{type:'shape',shape:'circle'},'geometry');
+   }
+   if(/chu vi/.test(title)&&!/diện tích/.test(title)){
+    const kindC=rand(0,2);
+    if(kindC===0){
+     const a=rand(5,18),b=rand(5,18),c=rand(5,18);
+     return makeQ(`Tính chu vi hình tam giác có độ dài ba cạnh lần lượt là ${a} cm, ${b} cm và ${c} cm.`,a+b+c,`Chu vi hình tam giác = ${a} + ${b} + ${c} = ${a+b+c} (cm).`,{type:'shape',shape:'triangle'},'geometry');
+    }
+    if(kindC===1){
+     const side=rand(4,20);
+     return makeQ(`Tính chu vi hình vuông có cạnh dài ${side} cm.`,side*4,`Chu vi hình vuông = ${side} × 4 = ${side*4} (cm).`,{type:'shape',shape:'square'},'geometry');
+    }
+    const a=rand(8,22), b=rand(3,a-2);
+    return makeQ(`Hình chữ nhật có chiều dài ${a} cm, chiều rộng ${b} cm. Tính chu vi hình chữ nhật đó (cm).`,2*(a+b),`Chu vi = (${a} + ${b}) × 2 = ${2*(a+b)} (cm).`,{type:'shape',shape:'rect'},'geometry');
+   }
+   // Diện tích HCN / Hình vuông Lớp 3
+   if(pick([true,false])){
+    const side=rand(3,12);
+    return makeQ(`Hình vuông có cạnh dài ${side} cm. Tính diện tích hình vuông đó (cm²).`,side*side,`Diện tích hình vuông = ${side} × ${side} = ${side*side} (cm²).`,{type:'shape',shape:'square'},'geometry');
+   }
+   const a=rand(6,16), b=rand(2,Math.min(9,a-1));
+   return makeQ(`Hình chữ nhật có chiều dài ${a} cm, chiều rộng ${b} cm. Tính diện tích hình chữ nhật đó (cm²).`,a*b,`Diện tích hình chữ nhật = ${a} × ${b} = ${a*b} (cm²).`,{type:'shape',shape:'rect'},'geometry');
+  }
+  // Lớp 4: Đường thẳng vuông góc/song song, Hình bình hành, Hình thoi, Ôn tập hình học
+  if(g===4){
+   if(/vuông góc/.test(title)){
+    return makeQOpt(`Hai đường thẳng cắt nhau tạo thành bốn góc vuông gọi là hai đường thẳng gì?`,'vuông góc',`Hai đường thẳng cắt nhau tạo thành góc vuông gọi là hai đường thẳng vuông góc.`,{type:'angle',deg:90},'geometry',['vuông góc','song song','trùng nhau','gấp khúc']);
+   }
+   if(/song song/.test(title)){
+    return makeQOpt(`Hai đường thẳng không bao giờ cắt nhau dù kéo dài mãi về hai phía gọi là hai đường thẳng gì?`,'song song',`Hai đường thẳng song song với nhau không bao giờ cắt nhau.`,null,'geometry',['song song','vuông góc','cắt nhau','chéo nhau']);
+   }
+   if(/hình bình hành|hình thoi/.test(title)){
+    if(pick([true,false])){
+     const a=rand(6,18), b=rand(4,12);
+     return makeQ(`Hình bình hành có hai cạnh kề dài ${a} cm và ${b} cm. Tính chu vi hình bình hành đó (cm).`,2*(a+b),`Hình bình hành có hai cặp cạnh đối diện bằng nhau nên chu vi = (${a} + ${b}) × 2 = ${2*(a+b)} (cm).`,{type:'shape',shape:'parallelogram'},'geometry');
+    }
+    const side=rand(5,18);
+    return makeQ(`Hình thoi có độ dài một cạnh là ${side} cm. Tính chu vi hình thoi đó (cm).`,side*4,`Hình thoi có 4 cạnh bằng nhau nên chu vi = ${side} × 4 = ${side*4} (cm).`,{type:'shape',shape:'rhombus'},'geometry');
+   }
+   const a=rand(10,25), b=rand(4,12);
+   return makeQ(`Một mảnh đất hình chữ nhật có chiều dài ${a} m, chiều rộng ${b} m. Tính diện tích mảnh đất (m²).`,a*b,`Diện tích = ${a} × ${b} = ${a*b} (m²).`,{type:'shape',shape:'rect'},'geometry');
+  }
+  // Lớp 5: Tam giác, Hình thang, Đường tròn (chu vi & diện tích)
+  if(/đường tròn|hình tròn/.test(title)){
+   const r=rand(2,10), area=pick([true,false]);
+   const ans=area?Number((3.14*r*r).toFixed(2)):Number((2*3.14*r).toFixed(2));
+   return makeQ(`Hình tròn có bán kính r = ${r} cm. Tính ${area?'diện tích (cm²)':'chu vi (cm)'} của hình tròn đó (lấy π = 3,14).`,numfmt(ans),area?`Diện tích = 3,14 × ${r} × ${r} = ${numfmt(ans)} (cm²).`:`Chu vi = 2 × 3,14 × ${r} = ${numfmt(ans)} (cm).`,{type:'shape',shape:'circle'},'geometry');
+  }
+  if(/hình thang/.test(title)){
+   const top=rand(4,12), bottom=top+rand(2,8), h=rand(2,5)*2, ans=(top+bottom)*h/2;
+   return makeQ(`Hình thang có đáy bé ${top} cm, đáy lớn ${bottom} cm và chiều cao ${h} cm. Tính diện tích hình thang (cm²).`,numfmt(ans),`Diện tích = (${bottom} + ${top}) × ${h} : 2 = ${numfmt(ans)} (cm²).`,{type:'shape',shape:'trapezoid'},'geometry');
+  }
+  const base=rand(3,12)*2, h=rand(3,11), ans=base*h/2;
+  return makeQ(`Hình tam giác có độ dài đáy ${base} cm và chiều cao ${h} cm. Tính diện tích hình tam giác (cm²).`,numfmt(ans),`Diện tích = ${base} × ${h} : 2 = ${numfmt(ans)} (cm²).`,{type:'shape',shape:'triangle'},'geometry');
+ }
+
+ // ==================== 10. PHÂN SỐ & HỖN SỐ (LỚP 4–5) ====================
+ if(k==='fraction'){
+  if(/hỗn số/.test(title)){
+   const w=rand(1,6), d=pick([2,3,4,5,8,10]), n=rand(1,d-1);
+   if(pick([true,false])){
+    const imp=w*d+n;
+    return makeQ(`Chuyển hỗn số ${w} ${n}/${d} thành phân số.`, `${imp}/${d}`, `Lấy phần nguyên nhân mẫu số cộng tử số: (${w} × ${d} + ${n})/${d} = ${imp}/${d}.`, null, 'fraction');
+   }
+   const imp=w*d+n;
+   return makeQ(`Viết phân số ${imp}/${d} dưới dạng hỗn số (VD: 2 1/3).`, `${w} ${n}/${d}`, `Ta có ${imp} : ${d} = ${w} dư ${n}, nên ${imp}/${d} = ${w} ${n}/${d}.`, null, 'fraction');
+  }
+  if(/phân số thập phân/.test(title)){
+   const pairs=[[1,2,5,10],[1,4,25,100],[3,4,75,100],[1,5,2,10],[2,5,4,10],[3,5,6,10],[4,5,8,10],[3,20,15,100],[7,25,28,100]];
+   const [a,b,na,nb]=pick(pairs);
+   return makeQ(`Viết phân số ${a}/${b} thành phân số thập phân có mẫu số là ${nb}.`,`${na}/${nb}`,`Nhân cả tử số và mẫu số với ${nb/b}: ${a}/${b} = ${na}/${nb}.`,null,'fraction');
+  }
+  if(/rút gọn/.test(title)){
+   const base=pick([[1,2],[1,3],[2,3],[1,4],[3,4],[2,5],[3,5],[4,5],[3,7],[5,6]]);
+   const mul=rand(2,6);
+   return makeQ(`Rút gọn phân số ${base[0]*mul}/${base[1]*mul} thành phân số tối giản.`,`${base[0]}/${base[1]}`,`Chia cả tử số và mẫu số cho ${mul}: (${base[0]*mul}:${mul})/(${base[1]*mul}:${mul}) = ${base[0]}/${base[1]}.`,null,'fraction');
+  }
+  if(/so sánh/.test(title)){
+   const d=pick([5,6,7,8,9,10]);
+   const a=rand(1,d-1), b=rand(1,d-1);
+   const ans=a>b?'>':a<b?'<':'=';
+   return makeQOpt(`Điền dấu thích hợp (>, < hoặc =): ${a}/${d} □ ${b}/${d}`,ans,`Hai phân số cùng mẫu số ${d}: vì ${a} ${ans} ${b} nên ${a}/${d} ${ans} ${b}/${d}.`,null,'fraction',['>','<','=','không so sánh được']);
+  }
+  if(/tìm phân số của một số/.test(title)){
+   const d=pick([3,4,5,6,8,10]), n=rand(1,d-1), mult=rand(3,12), total=d*mult, ans=n*mult;
+   return makeQ(`Tìm ${n}/${d} của ${total}.`,ans,`Muốn tìm ${n}/${d} của ${total}, ta lấy ${total} × ${n}/${d} = (${total} : ${d}) × ${n} = ${ans}.`,null,'fraction');
+  }
+  if(/phép nhân/.test(title)){
+   const a=rand(1,5), b=pick([2,3,4,5,6]), c=rand(1,5), d=pick([2,3,4,5,6]);
+   const ans=makeFractionSimp(a*c,b*d);
+   return makeQ(`Tính và rút gọn: ${a}/${b} × ${c}/${d} = ?`,ans,`Tử nhân tử, mẫu nhân mẫu: (${a}×${c})/(${b}×${d}) = ${a*c}/${b*d} = ${ans}.`,null,'fraction');
+  }
+  if(/phép chia/.test(title)&&!/số tự nhiên/.test(title)){
+   const a=rand(1,5), b=pick([2,3,4,5,6]), c=rand(1,5), d=pick([2,3,4,5,6]);
+   const ans=makeFractionSimp(a*d,b*c);
+   return makeQ(`Tính và rút gọn: ${a}/${b} : ${c}/${d} = ?`,ans,`Nhân với phân số đảo ngược: ${a}/${b} × ${d}/${c} = ${a*d}/${b*c} = ${ans}.`,null,'fraction');
+  }
+  if(/phép chia số tự nhiên/.test(title)){
+   const a=rand(2,11), b=rand(a+1,15);
+   return makeQ(`Viết thương của phép chia ${a} : ${b} dưới dạng phân số.`,`${a}/${b}`,`Thương của phép chia số tự nhiên cho số tự nhiên khác 0 được viết là ${a}/${b}.`,null,'fraction');
+  }
+  // Cộng / trừ phân số (cùng mẫu hoặc khác mẫu đơn giản)
+  const isSub=/trừ/.test(title)&&!/cộng/.test(title)?true:(/cộng/.test(title)&&!/trừ/.test(title)?false:pick([true,false]));
+  const diffDenom=(diff!=='easy'||g===5)&&pick([true,false]);
+  if(diffDenom){
+   const d1=pick([2,3,4,5]), kMul=pick([2,3]), d2=d1*kMul;
+   let a=rand(1,d1-1), b=rand(1,d2-1);
+   if(isSub&&a*kMul<b){a=Math.max(1,Math.ceil(b/kMul));}
+   const n=isSub?(a*kMul-b):(a*kMul+b);
+   const ans=makeFractionSimp(n,d2);
+   return makeQ(`Tính và rút gọn: ${a}/${d1} ${isSub?'−':'+'} ${b}/${d2} = ?`,ans,`Quy đồng mẫu số chung là ${d2}: ${a*kMul}/${d2} ${isSub?'−':'+'} ${b}/${d2} = ${n}/${d2} = ${ans}.`,null,'fraction');
+  }
+  const d=pick([4,5,6,7,8,9,10,12]);
+  let a=rand(1,d-1), b=rand(1,d-1);
+  if(isSub&&a<b)[a,b]=[b,a];
+  if(isSub&&a===b)a=Math.min(d-1,a+1);
+  const n=isSub?a-b:a+b, ans=makeFractionSimp(n,d);
+  return makeQ(`Tính và rút gọn: ${a}/${d} ${isSub?'−':'+'} ${b}/${d} = ?`,ans,`Cộng/trừ hai phân số cùng mẫu ${d}: (${a} ${isSub?'−':'+'} ${b})/${d} = ${n}/${d} = ${ans}.`,null,'fraction');
+ }
+
+ // ==================== 11. SỐ THẬP PHÂN (LỚP 5) ====================
+ if(k==='decimal'){
+  if(/khái niệm|chữ số/.test(title)){
+   const a=rand(1,45), t1=rand(1,9), t2=rand(1,9);
+   const sDec=`${a},${t1}${t2}`;
+   const askTenths=pick([true,false]);
+   return makeQ(`Trong số thập phân ${sDec}, chữ số thuộc hàng ${askTenths?'phần mười':'phần trăm'} là chữ số nào?`,askTenths?t1:t2,`Sau dấu phẩy: chữ số thứ nhất là hàng phần mười (${t1}), chữ số thứ hai là hàng phần trăm (${t2}).`,null,'decimal');
+  }
+  if(/so sánh/.test(title)){
+   const a=rand(12,95)/10, b=rand(12,95)/10;
+   const ans=a>b?'>':a<b?'<':'=';
+   return makeQOpt(`Điền dấu thích hợp (>, < hoặc =): ${numfmt(a)} □ ${numfmt(b)}`,ans,`So sánh phần nguyên rồi đến hàng phần mười: ${numfmt(a)} ${ans} ${numfmt(b)}.`,null,'decimal',['>','<','=','không so sánh được']);
+  }
+  if(/làm tròn/.test(title)){
+   const v=Number((rand(12,89)+rand(11,98)/100).toFixed(2));
+   if(pick([true,false])){
+    const ans=Math.round(v);
+    return makeQ(`Làm tròn số thập phân ${numfmt(v)} đến số tự nhiên gần nhất.`,ans,`Xét chữ số hàng phần mười của ${numfmt(v)} để làm tròn thành ${ans}.`,null,'decimal');
+   }
+   const ans=Number(v.toFixed(1));
+   return makeQ(`Làm tròn số thập phân ${numfmt(v)} đến hàng phần mười.`,numfmt(ans),`Xét chữ số hàng phần trăm của ${numfmt(v)}, ta được ${numfmt(ans)}.`,null,'decimal');
+  }
+  if(/số đo đại lượng/.test(title)){
+   const mode=rand(0,2);
+   if(mode===0){const m=rand(1,8),cm=rand(5,95),ans=Number((m+cm/100).toFixed(2));return makeQ(`Viết số đo ${m} m ${cm} cm dưới dạng số thập phân có đơn vị là mét.`,numfmt(ans),`${m} m ${cm} cm = ${m} + ${cm}/100 m = ${numfmt(ans)} m.`,null,'decimal');}
+   if(mode===1){const kg=rand(1,9),gr=pick([100,250,500,750,400]),ans=Number((kg+gr/1000).toFixed(3));return makeQ(`Viết số đo ${kg} kg ${gr} g dưới dạng số thập phân có đơn vị là ki-lô-gam.`,numfmt(ans),`${kg} kg ${gr} g = ${numfmt(ans)} kg.`,null,'decimal');}
+   const dm=rand(12,95),ans=Number((dm/10).toFixed(1));
+   return makeQ(`Viết số đo ${dm} dm dưới dạng số thập phân có đơn vị là mét.`,numfmt(ans),`1 m = 10 dm nên ${dm} dm = ${numfmt(ans)} m.`,null,'decimal');
+  }
+  if(/10; 100|0,1; 0,01/.test(title)){
+   const a=Number((rand(12,485)/100).toFixed(2));
+   const f=pick([10,100,0.1]);
+   const isMul=pick([true,false]);
+   if(isMul){
+    const ans=Number((a*f).toFixed(3));
+    return makeQ(`Tính nhẩm: ${numfmt(a)} × ${numfmt(f)} = ?`,numfmt(ans),`Dịch dấu phẩy thích hợp, ta được ${numfmt(ans)}.`,null,'decimal');
+   }
+   const fd=pick([10,100]);
+   const big=Number((rand(25,950)/10).toFixed(1)), ans=Number((big/fd).toFixed(3));
+   return makeQ(`Tính nhẩm: ${numfmt(big)} : ${fd} = ?`,numfmt(ans),`Chia cho ${fd}, dịch dấu phẩy sang trái ${fd===10?1:2} chữ số, được ${numfmt(ans)}.`,null,'decimal');
+  }
+  if(/phép nhân/.test(title)){
+   const a=Number((rand(12,65)/10).toFixed(1)), b=pick([2,3,4,5,1.2,1.5,2.5]);
+   const ans=Number((a*b).toFixed(2));
+   return makeQ(`Tính: ${numfmt(a)} × ${numfmt(b)} = ?`,numfmt(ans),`Đặt tính nhân như số tự nhiên rồi đếm chữ số phần thập phân: ${numfmt(a)} × ${numfmt(b)} = ${numfmt(ans)}.`,null,'decimal');
+  }
+  if(/phép chia/.test(title)){
+   const qAns=Number((rand(12,58)/10).toFixed(1)), div=pick([2,4,5,8]);
+   const dividend=Number((qAns*div).toFixed(2));
+   return makeQ(`Tính: ${numfmt(dividend)} : ${div} = ?`,numfmt(qAns),`Thực hiện phép chia số thập phân cho số tự nhiên: ${numfmt(dividend)} : ${div} = ${numfmt(qAns)}.`,null,'decimal');
+  }
+  // Cộng / trừ số thập phân
+  const isSub=/trừ/.test(title)&&!/cộng/.test(title)?true:(/cộng/.test(title)&&!/trừ/.test(title)?false:pick([true,false]));
+  let a=Number((rand(125,850)/100).toFixed(2)), b=Number((rand(35,450)/100).toFixed(2));
+  if(isSub&&a<b)[a,b]=[b,a];
+  const ans=Number((isSub?a-b:a+b).toFixed(2));
+  return makeQ(`Tính: ${numfmt(a)} ${isSub?'−':'+'} ${numfmt(b)} = ?`,numfmt(ans),`Đặt dấu phẩy thẳng cột rồi tính: ${numfmt(a)} ${isSub?'−':'+'} ${numfmt(b)} = ${numfmt(ans)}.`,null,'decimal');
+ }
+
+ // ==================== 12. TỈ SỐ & TỈ SỐ PHẦN TRĂM (LỚP 5) ====================
+ if(k==='percent'){
+  if(/tỉ lệ bản đồ/.test(title)){
+   const scale=pick([1000,10000,100000]), cmMap=rand(2,9);
+   if(scale===100000){
+    return makeQ(`Trên bản đồ tỉ lệ 1 : 100 000, quãng đường dài ${cmMap} cm. Độ dài thật ngoài thực tế là bao nhiêu ki-lô-mét?`,cmMap,`${cmMap} × 100 000 = ${fmtInt(cmMap*100000)} cm = ${cmMap} km.`,null,'percent');
+   }
+   const realM=(cmMap*scale)/100;
+   return makeQ(`Trên bản đồ tỉ lệ 1 : ${fmtInt(scale)}, một đoạn đường dài ${cmMap} cm. Độ dài thật của đoạn đường đó là bao nhiêu mét?`,realM,`${cmMap} × ${fmtInt(scale)} = ${fmtInt(cmMap*scale)} cm = ${realM} m.`,null,'percent');
+  }
+  if(/tổng và tỉ số/.test(title)){
+   const p1=rand(1,4), p2=rand(p1+1,6), unit=rand(4,15), sum=(p1+p2)*unit;
+   const askBig=pick([true,false]), ans=askBig?p2*unit:p1*unit;
+   return makeQ(`Tổng của hai số là ${sum}. Tỉ số của hai số đó là ${p1}/${p2}. Tìm số ${askBig?'lớn':'bé'}.`,ans,`Tổng số phần bằng nhau: ${p1} + ${p2} = ${p1+p2} (phần). Giá trị 1 phần = ${sum} : ${p1+p2} = ${unit}. Số ${askBig?'lớn':'bé'} là ${ans}.`,null,'percent');
+  }
+  if(/hiệu và tỉ số/.test(title)){
+   const p1=rand(1,3), p2=p1+rand(1,3), unit=rand(5,18), diffVal=(p2-p1)*unit;
+   const askBig=pick([true,false]), ans=askBig?p2*unit:p1*unit;
+   return makeQ(`Hiệu của hai số là ${diffVal}. Tỉ số của hai số đó là ${p1}/${p2}. Tìm số ${askBig?'lớn':'bé'}.`,ans,`Hiệu số phần bằng nhau: ${p2} − ${p1} = ${p2-p1} (phần). Giá trị 1 phần = ${diffVal} : ${p2-p1} = ${unit}. Số ${askBig?'lớn':'bé'} là ${ans}.`,null,'percent');
+  }
+  if(/tỉ số phần trăm của hai số/.test(title)){
+   const tot=pick([20,25,40,50,80,100]), pct=pick([10,20,25,30,40,50,60,75,80]);
+   const part=tot*pct/100;
+   if(Number.isInteger(part)){
+    return makeQ(`Tìm tỉ số phần trăm của ${part} và ${tot} (viết kèm dấu %, VD: 25%).`,`${pct}%`,`${part} : ${tot} = ${numfmt(part/tot)} = ${pct}%.`,null,'percent');
+   }
+  }
+  const p=pick([5,10,15,20,25,30,40,50,75]), base=rand(2,18)*20, ans=base*p/100;
+  return makeQ(`Tìm ${p}% của ${base}.`,numfmt(ans),`${base} × ${p} : 100 = ${numfmt(ans)}.`,null,'percent');
+ }
+
+ // ==================== 13. BIỂU ĐỒ & THỐNG KÊ ====================
+ if(k==='bar'||k==='pie'||k==='pictograph'){
+  const labels=['A','B','C','D'], vals=shuffleArray([2,3,4,5,6,7,8]).slice(0,4);
+  const max=Math.max(...vals), idx=vals.indexOf(max);
+  if(k==='pie'){
+   const x=rand(2,8), y=rand(2,8), tot=x+y;
+   if(g===5&&pick([true,false])){
+    const pct=pick([20,25,30,40,60]), base=pick([40,50,100,200]);
+    return makeQ(`Trên biểu đồ hình quạt tròn biểu diễn ${base} học sinh, nhóm yêu thích bóng đá chiếm ${pct}%. Hỏi có bao nhiêu học sinh thích bóng đá?`,base*pct/100,`Số học sinh thích bóng đá = ${base} × ${pct}% = ${base*pct/100} (học sinh).`,{type:'pie',parts:[pct,100-pct],total:100},'pie');
+   }
+   return makeQ(`Biểu đồ quạt tròn minh họa hai nhóm có ${x} và ${y} phần. Tổng số phần của hai nhóm là bao nhiêu?`,tot,`Cộng số phần hai nhóm: ${x} + ${y} = ${tot}.`,{type:'pie',parts:[x,y],total:tot},'pie');
+  }
+  if(k==='pictograph'){
+   const unit=pick([1,2,5]), v={type:'pictograph',labels,values:vals,unit};
+   return makeQ(`Dựa vào biểu đồ tranh, nhóm nào có số lượng lớn nhất?`,labels[idx],`Nhóm ${labels[idx]} có ${max} hình, mỗi hình ứng với ${unit} đơn vị, tổng ${max*unit} đơn vị.`,v,'pictograph');
+  }
+  const v={type:'bar',labels,values:vals};
+  return makeQ(`Dựa vào biểu đồ cột, nhóm nào có giá trị lớn nhất?`,labels[idx],`Cột cao nhất là nhóm ${labels[idx]} với giá trị ${max}.`,v,'bar');
+ }
+
+ // ==================== 14. XÁC SUẤT (CHUẨN THEO LỚP 2–5) ====================
+ if(k==='probability'){
+  if(g>=4&&(/số lần lặp lại|số lần xuất hiện|xác suất/.test(full))){
+   const totalT=pick([10,12,15,20]), hit=rand(3,totalT-2);
+   if(g===5){
+    const ans=makeFractionSimp(hit,totalT);
+    return makeQ(`Gieo một đồng xu ${totalT} lần, thấy có ${hit} lần xuất hiện mặt sấp. Viết tỉ số (dạng phân số tối giản) giữa số lần xuất hiện mặt sấp và tổng số lần gieo.`,ans,`Tỉ số là ${hit}/${totalT} = ${ans}.`,null,'fraction');
+   }
+   return makeQ(`Bạn Nam tung xúc xắc ${totalT} lần, trong đó mặt 6 chấm xuất hiện ${hit} lần. Hỏi các mặt còn lại xuất hiện tất cả bao nhiêu lần?`,totalT-hit,`Số lần xuất hiện các mặt còn lại = ${totalT} − ${hit} = ${totalT-hit} (lần).`,null,'number');
+  }
+  const cases=[['Mặt Trời mọc ở hướng Đông','chắc chắn'],['Một con cá sống trên cây','không thể'],['Chiều nay trời có mưa','có thể'],['Tháng 2 có 32 ngày','không thể'],['Một tuần lễ có 7 ngày','chắc chắn']];
+  const c=pick(cases);
+  return makeQ(`Nhận xét sau thuộc khả năng nào: “${c[0]}”? (chắc chắn / có thể / không thể)`,c[1],`Trong thực tế, sự kiện "${c[0]}" là ${c[1]}.`,null,'probability');
+ }
+
+ // ==================== 15. ĐO LƯỜNG & ĐƠN VỊ ĐO (THEO ĐÚNG TỪNG LỚP 1–5) ====================
+ if(k==='measure'){
+  if(g===1){
+   const a=rand(3,12), b=rand(2,8);
+   if(/dài hơn, ngắn hơn/.test(title)){
+    const big=Math.max(a,b+1), sm=Math.min(a,b);
+    return makeQ(`Bút chì dài ${big} cm, tẩy dài ${sm} cm. Bút chì dài hơn tẩy bao nhiêu xăng-ti-mét?`,big-sm,`Ta lấy ${big} − ${sm} = ${big-sm} (cm).`,{type:'ruler'},'measure');
+   }
+   return makeQ(`Đoạn dây thứ nhất dài ${a} cm, đoạn dây thứ hai dài ${b} cm. Cả hai đoạn dây dài bao nhiêu cm?`,a+b,`${a} + ${b} = ${a+b} (cm).`,{type:'ruler'},'measure');
+  }
+  if(g===2){
+   if(/ki-lô-gam/.test(title)){const a=rand(4,25),b=rand(3,20);return makeQ(`Bao gạo nặng ${a} kg, bao đường nặng ${b} kg. Cả hai bao nặng bao nhiêu ki-lô-gam?`,a+b,`${a} + ${b} = ${a+b} (kg).`,null,'measure');}
+   if(/lít/.test(title)){const a=rand(12,35),b=rand(3,11);return makeQ(`Can nước có ${a} lít, rót ra ${b} lít. Trong can còn lại bao nhiêu lít nước?`,a-b,`${a} − ${b} = ${a-b} (lít).`,null,'measure');}
+   if(/tiền việt/.test(title)){const a=pick([100,200,500]),b=pick([200,500]);return makeQ(`Bạn An có một tờ ${a} đồng và một tờ ${b} đồng. Bạn An có tất cả bao nhiêu đồng?`,a+b,`${a} + ${b} = ${a+b} (đồng).`,null,'measure');}
+   const mode=rand(0,2);
+   if(mode===0){const m=rand(2,9);return makeQ(`Đổi đơn vị đo độ dài: ${m} m = … dm.`,m*10,`1 m = 10 dm nên ${m} m = ${m*10} dm.`,{type:'ruler'},'measure');}
+   if(mode===1){const dm=rand(2,9);return makeQ(`Đổi đơn vị đo độ dài: ${dm} dm = … cm.`,dm*10,`1 dm = 10 cm nên ${dm} dm = ${dm*10} cm.`,{type:'ruler'},'measure');}
+   const km=rand(1,5);return makeQ(`Đổi đơn vị đo độ dài: ${km} km = … m.`,km*1000,`1 km = 1 000 m nên ${km} km = ${fmtInt(km*1000)} m.`,null,'measure');
+  }
+  if(g===3){
+   if(/mi-li-mét/.test(title)){const c=rand(2,15);return makeQ(`Đổi đơn vị: ${c} cm = … mm.`,c*10,`1 cm = 10 mm nên ${c} cm = ${c*10} mm.`,{type:'ruler'},'measure');}
+   if(/\bgam\b/.test(title)){const kg=rand(1,5),gr=pick([0,200,500]);return makeQ(`Đổi đơn vị: ${kg} kg ${gr?gr+' g ':''}= … g.`,kg*1000+gr,`1 kg = 1 000 g nên kết quả là ${fmtInt(kg*1000+gr)} g.`,null,'measure');}
+   if(/mi-li-lít/.test(title)){const lt=rand(1,4);return makeQ(`Đổi đơn vị: ${lt} lít = … ml.`,lt*1000,`1 lít = 1 000 ml nên ${lt} lít = ${fmtInt(lt*1000)} ml.`,null,'measure');}
+   if(/nhiệt độ/.test(title)){const t1=rand(26,35),t2=rand(18,25);return makeQ(`Buổi trưa nhiệt độ là ${t1}°C, buổi tối là ${t2}°C. Buổi trưa nóng hơn buổi tối bao nhiêu độ C?`,t1-t2,`${t1} − ${t2} = ${t1-t2} (°C).`,null,'measure');}
+   if(/tiền việt/.test(title)){const p1=pick([5000,10000,15000,20000]),p2=pick([2000,5000,10000]);return makeQ(`Mua vở hết ${fmtInt(p1)} đồng và bút hết ${fmtInt(p2)} đồng. Tổng số tiền phải trả là bao nhiêu đồng?`,p1+p2,`${fmtInt(p1)} + ${fmtInt(p2)} = ${fmtInt(p1+p2)} đồng.`,null,'measure');}
+   const a=rand(2,9);return makeQ(`Đổi đơn vị: ${a} m = … cm.`,a*100,`1 m = 100 cm nên ${a} m = ${a*100} cm.`,{type:'ruler'},'measure');
+  }
+  if(g===4){
+   if(/yến, tạ, tấn/.test(title)){
+    const v=pick([
+     ()=>{const t=rand(2,9);return makeQ(`Đổi đơn vị khối lượng: ${t} tấn = … kg.`,t*1000,`1 tấn = 1 000 kg nên ${t} tấn = ${fmtInt(t*1000)} kg.`,null,'measure');},
+     ()=>{const t=rand(2,9);return makeQ(`Đổi đơn vị khối lượng: ${t} tạ = … kg.`,t*100,`1 tạ = 100 kg nên ${t} tạ = ${t*100} kg.`,null,'measure');},
+     ()=>{const y=rand(3,15);return makeQ(`Đổi đơn vị khối lượng: ${y} yến = … kg.`,y*10,`1 yến = 10 kg nên ${y} yến = ${y*10} kg.`,null,'measure');}
+    ]);
+    return v();
+   }
+   if(/giây, thế kỉ/.test(title)){
+    if(pick([true,false])){const yr=pick([1945,1975,2000,2010,2026,1890]);const cen=Math.ceil(yr/100);return makeQ(`Năm ${yr} thuộc thế kỉ thứ mấy? (viết số tự nhiên, VD: 21)`,cen,`Năm ${yr} thuộc thế kỉ ${cen} (${toRoman(cen)}).`,null,'measure');}
+    const min=rand(2,6), s=pick([0,15,30,45]);return makeQ(`Đổi đơn vị thời gian: ${min} phút ${s?s+' giây ':''}= … giây.`,min*60+s,`1 phút = 60 giây nên ${min} × 60 + ${s} = ${min*60+s} giây.`,null,'measure');
+   }
+   const m2=rand(2,9);return makeQ(`Đổi đơn vị đo diện tích: ${m2} m² = … dm².`,m2*100,`1 m² = 100 dm² nên ${m2} m² = ${m2*100} dm².`,null,'measure');
+  }
+  // Lớp 5: km², ha, các đơn vị đo diện tích
+  const variants5=[
+   ()=>{const ha=rand(2,15);return makeQ(`Đổi đơn vị đo diện tích: ${ha} ha = … m².`,ha*10000,`1 ha = 10 000 m² nên ${ha} ha = ${fmtInt(ha*10000)} m².`,null,'measure');},
+   ()=>{const km2=rand(2,12);return makeQ(`Đổi đơn vị đo diện tích: ${km2} km² = … ha.`,km2*100,`1 km² = 100 ha nên ${km2} km² = ${km2*100} ha.`,null,'measure');},
+   ()=>{const dm2=rand(3,25);return makeQ(`Đổi đơn vị đo diện tích: ${dm2} dm² = … cm².`,dm2*100,`1 dm² = 100 cm² nên ${dm2} dm² = ${dm2*100} cm².`,null,'measure');}
+  ];
+  return pick(variants5)();
+ }
+
+ // ==================== 16. BIỂU THỨC & BIỂU THỨC CHỨA CHỮ (LỚP 3–4) ====================
+ if(k==='expression'){
+  if(/chứa chữ/.test(title)||g===4){
+   const a=rand(5,25), b=rand(3,15), c=rand(2,9);
+   if(pick([true,false])){
+    return makeQ(`Tính giá trị biểu thức a + b × ${c} với a = ${a}, b = ${b}.`,a+b*c,`Thay a = ${a}, b = ${b}: ${a} + ${b} × ${c} = ${a} + ${b*c} = ${a+b*c}.`,null,'expression');
+   }
+   return makeQ(`Tính giá trị biểu thức (m + n) × ${c} với m = ${a}, n = ${b}.`,(a+b)*c,`Thay m = ${a}, n = ${b}: (${a} + ${b}) × ${c} = ${a+b} × ${c} = ${(a+b)*c}.`,null,'expression');
+  }
+  if(pick([true,false])){
+   const a=rand(10,50), b=rand(2,9), c=rand(2,9);
+   return makeQ(`Tính giá trị của biểu thức: ${a} + ${b} × ${c}`,a+b*c,`Thực hiện phép nhân trước: ${b} × ${c} = ${b*c}; sau đó ${a} + ${b*c} = ${a+b*c}.`,null,'expression');
+  }
+  const a=rand(10,30), b=rand(5,20), c=rand(2,5);
+  return makeQ(`Tính giá trị của biểu thức: (${a} + ${b}) × ${c}`,(a+b)*c,`Tính trong ngoặc trước: ${a} + ${b} = ${a+b}; sau đó ${a+b} × ${c} = ${(a+b)*c}.`,null,'expression');
+ }
+
+ // ==================== 17. BÀI TOÁN CÓ LỜI VĂN ĐẶC TRƯNG ====================
+ if(k==='word'){
+  if(/tổng và hiệu/.test(title)){
+   const sm=rand(15,65), d=rand(6,34)*2, bg=sm+d, sum=sm+bg;
+   const askBig=pick([true,false]);
+   return makeQ(`Tổng của hai số là ${sum}, hiệu của hai số đó là ${d}. Tìm số ${askBig?'lớn':'bé'}.`,askBig?bg:sm,askBig?`Số lớn = (Tổng + Hiệu) : 2 = (${sum} + ${d}) : 2 = ${bg}.`:`Số bé = (Tổng − Hiệu) : 2 = (${sum} − ${d}) : 2 = ${sm}.`,null,'word');
+  }
+  if(/trung bình cộng/.test(title)){
+   const cnt=pick([3,4]);
+   const avg=rand(12,45);
+   const nums=cnt===3?[avg-4,avg,avg+4]:[avg-6,avg-2,avg+2,avg+6];
+   const tot=nums.reduce((s,x)=>s+x,0);
+   return makeQ(`Tìm số trung bình cộng của các số: ${nums.join('; ')}.`,avg,`Trung bình cộng = (${nums.join(' + ')}) : ${cnt} = ${tot} : ${cnt} = ${avg}.`,null,'word');
+  }
+  if(/rút về đơn vị/.test(title)){
+   const unit=rand(4,15), n1=rand(3,7), n2=rand(n1+1,9);
+   return makeQ(`Có ${n1*unit} quyển vở chia đều vào ${n1} hộp. Hỏi ${n2} hộp như thế có bao nhiêu quyển vở?`,n2*unit,`Mỗi hộp có: ${n1*unit} : ${n1} = ${unit} (quyển). Vậy ${n2} hộp có: ${unit} × ${n2} = ${n2*unit} (quyển).`,null,'word');
+  }
+  if(/gấp một số/.test(title)){
+   const a=rand(4,18), kMul=rand(2,6);
+   return makeQ(`Lan có ${a} nhãn vở. Số nhãn vở của Hà gấp ${kMul} lần số nhãn vở của Lan. Hỏi Hà có bao nhiêu nhãn vở?`,a*kMul,`Muốn gấp một số lên nhiều lần ta nhân số đó với số lần: ${a} × ${kMul} = ${a*kMul} (nhãn vở).`,null,'word');
+  }
+  if(/giảm một số/.test(title)){
+   const ans=rand(3,15), kDiv=rand(2,6);
+   return makeQ(`Một sợi dây dài ${ans*kDiv} cm, cắt giảm đi ${kDiv} lần thì còn lại dài bao nhiêu cm?`,ans,`Muốn giảm một số đi nhiều lần ta chia số đó cho số lần: ${ans*kDiv} : ${kDiv} = ${ans} (cm).`,null,'word');
+  }
+  if(/so sánh số lớn gấp/.test(title)){
+   const sm=rand(3,12), kMul=rand(2,8);
+   return makeQ(`Bút chì dài ${sm*kMul} cm, cục tẩy dài ${sm} cm. Bút chì dài gấp mấy lần cục tẩy?`,kMul,`Lấy số lớn chia cho số bé: ${sm*kMul} : ${sm} = ${kMul} (lần).`,null,'word');
+  }
+  if(/hai bước tính/.test(title)){
+   const a=rand(12,35), extra=rand(5,18), b=a+extra;
+   return makeQ(`Thùng thứ nhất có ${a} lít dầu, thùng thứ hai có nhiều hơn thùng thứ nhất ${extra} lít dầu. Hỏi cả hai thùng có tất cả bao nhiêu lít dầu?`,a+b,`Thùng thứ hai có: ${a} + ${extra} = ${b} (lít). Cả hai thùng có: ${a} + ${b} = ${a+b} (lít).`,null,'word');
+  }
+  if(/ba bước tính/.test(title)){
+   const p1=rand(4,12)*1000, q1=rand(2,4), p2=rand(3,10)*1000, q2=rand(2,4);
+   const ans=p1*q1+p2*q2;
+   return makeQ(`An mua ${q1} quyển vở giá ${fmtInt(p1)} đồng/quyển và ${q2} chiếc bút giá ${fmtInt(p2)} đồng/chiếc. Hỏi An phải trả tất cả bao nhiêu đồng?`,ans,`Tiền vở: ${fmtInt(p1*q1)}đ; tiền bút: ${fmtInt(p2*q2)}đ; tổng cộng: ${fmtInt(ans)} đồng.`,null,'word');
+  }
+  // Lớp 2: Bài toán thêm/bớt, nhiều hơn/ít hơn, hơn kém nhau
+  const a=rand(7,15), b=rand(3,9);
+  if(/bớt|ít hơn|kém/.test(title)){
+   const big=Math.max(a,b+3), sm=Math.min(a-2,b);
+   return makeQ(`Tổ Một trồng được ${big} cây, tổ Hai trồng được ít hơn tổ Một ${sm} cây. Hỏi tổ Hai trồng được bao nhiêu cây?`,big-sm,`Số cây của tổ Hai = ${big} − ${sm} = ${big-sm} (cây).`,null,'word');
+  }
+  return makeQ(`Lan có ${a} bông hoa, Mai có nhiều hơn Lan ${b} bông hoa. Hỏi Mai có bao nhiêu bông hoa?`,a+b,`Số bông hoa của Mai = ${a} + ${b} = ${a+b} (bông hoa).`,null,'word');
+ }
+
+ // ==================== 18. PHÉP NHÂN, PHÉP CHIA (KHÓA ĐÚNG BẢNG & PHẠM VI) ====================
+ if(k==='muldiv'){
+  // Khóa đúng bảng nhân / bảng chia theo tên bài (VD: Bảng nhân 2, Bảng chia 5, Bảng nhân 7, bảng chia 7...)
+  const mTbl=title.match(/bảng (?:nhân|chia)\s*([2-9])/);
+  if(mTbl){
+   const n=Number(mTbl[1]), f=rand(2,10);
+   const onlyDiv=/bảng chia/.test(title)&&!/bảng nhân/.test(title);
+   const onlyMul=/bảng nhân/.test(title)&&!/bảng chia/.test(title);
+   const isDiv=onlyDiv?true:(onlyMul?false:pick([true,false]));
+   return isDiv
+    ? makeQ(`Tính nhẩm: ${n*f} : ${n} = ?`,f,`Theo bảng chia ${n}: ${n*f} : ${n} = ${f}.`,null,'muldiv')
+    : makeQ(`Tính nhẩm: ${n} × ${f} = ?`,n*f,`Theo bảng nhân ${n}: ${n} × ${f} = ${n*f}.`,null,'muldiv');
+  }
+  if(/bảng nhân 2; 5/.test(title)){
+   const n=pick([2,5]), f=rand(2,10), isDiv=pick([true,false]);
+   return isDiv?makeQ(`Tính nhẩm: ${n*f} : ${n} = ?`,f,`${n*f} : ${n} = ${f}.`,null,'muldiv'):makeQ(`Tính nhẩm: ${n} × ${f} = ?`,n*f,`${n} × ${f} = ${n*f}.`,null,'muldiv');
+  }
+  if(/một phần mấy/.test(title)){
+   const d=pick([2,3,4,5,6,8]), ans=rand(2,10);
+   return makeQ(`Tìm 1/${d} của ${ans*d}.`,ans,`Lấy ${ans*d} : ${d} = ${ans}.`,null,'muldiv');
+  }
+  if(/phép chia hết, phép chia có dư/.test(title)){
+   const div=rand(3,8), q=rand(4,12), r=rand(1,div-1), dividend=div*q+r;
+   return makeQ(`Tìm số dư trong phép chia ${dividend} : ${div}.`,r,`Ta có ${dividend} = ${div} × ${q} + ${r}, nên số dư là ${r}.`,null,'muldiv');
+  }
+  if(/tìm thành phần/.test(title)){
+   const a=rand(3,9), b=rand(3,9);
+   if(pick([true,false])){
+    return makeQ(`Tìm số chưa biết: ? × ${a} = ${a*b}`,b,`Muốn tìm thừa số chưa biết, ta lấy tích chia cho thừa số kia: ${a*b} : ${a} = ${b}.`,null,'muldiv');
+   }
+   return makeQ(`Tìm số bị chia: ? : ${a} = ${b}`,a*b,`Muốn tìm số bị chia, ta lấy thương nhân với số chia: ${b} × ${a} = ${a*b}.`,null,'muldiv');
+  }
+  if(/10, 100, 1 000/.test(title)){
+   const a=rand(12,350), f=pick([10,100,1000]);
+   return pick([true,false])
+    ? makeQ(`Tính nhẩm: ${a} × ${fmtInt(f)} = ?`,a*f,`Viết thêm ${f===10?1:f===100?2:3} chữ số 0 vào bên phải số ${a}, được ${fmtInt(a*f)}.`,null,'muldiv')
+    : makeQ(`Tính nhẩm: ${fmtInt(a*f)} : ${fmtInt(f)} = ?`,a,`Bỏ bớt ${f===10?1:f===100?2:3} chữ số 0 ở tận cùng, được ${a}.`,null,'muldiv');
+  }
+  if(/giao hoán|kết hợp|phân phối/.test(title)){
+   const a=rand(4,15), b=rand(2,8), c=10-b;
+   return makeQ(`Tính bằng cách thuận tiện: ${a} × ${b} + ${a} × ${c} = ?`,a*(b+c),`${a} × (${b} + ${c}) = ${a} × 10 = ${a*10}.`,null,'muldiv');
+  }
+  if(/thừa số, tích/.test(title)){
+   const n=pick([2,5]), f=rand(2,9);
+   return makeQ(`Tìm tích của hai thừa số ${n} và ${f}.`,n*f,`Tích = ${n} × ${f} = ${n*f}.`,null,'muldiv');
+  }
+  if(/số bị chia, số chia, thương/.test(title)){
+   const n=pick([2,5]), f=rand(2,9);
+   return makeQ(`Tìm thương khi biết số bị chia là ${n*f} và số chia là ${n}.`,f,`Thương = ${n*f} : ${n} = ${f}.`,null,'muldiv');
+  }
+  // Nhân / chia theo đúng số chữ số của Lớp 2, 3, 4
+  const isDiv=/chia|thương/.test(title)&&!/nhân/.test(title)?true:(/nhân|tích/.test(title)&&!/chia/.test(title)?false:pick([true,false]));
+  if(g===2){
+   const n=pick([2,5]), f=rand(2,10);
+   return isDiv?makeQ(`Tính: ${n*f} : ${n} = ?`,f,`${n*f} : ${n} = ${f}.`,null,'muldiv'):makeQ(`Tính: ${n} × ${f} = ?`,n*f,`${n} × ${f} = ${n*f}.`,null,'muldiv');
+  }
+  if(g===3){
+   let aMin=12, aMax=32;
+   if(/ba chữ số|1 000/.test(full)){aMin=102;aMax=315;}
+   else if(/bốn chữ số|10 000/.test(full)){aMin=1012;aMax=2450;}
+   else if(/năm chữ số|100 000/.test(full)){aMin=10200;aMax=24500;}
+   const b=rand(2,4);
+   if(isDiv){
+    const q=rand(aMin,Math.max(aMin+5,Math.floor(aMax/b)));
+    return makeQ(`Tính: ${fmtInt(q*b)} : ${b} = ?`,q,`Thực hiện phép chia: ${fmtInt(q*b)} : ${b} = ${fmtInt(q)}.`,null,'muldiv');
+   }
+   const a=rand(aMin,aMax);
+   return makeQ(`Tính: ${fmtInt(a)} × ${b} = ?`,a*b,`${fmtInt(a)} × ${b} = ${fmtInt(a*b)}.`,null,'muldiv');
+  }
+  // Lớp 4–5
+  if(/hai chữ số/.test(title)){
+   const b=rand(11,25);
+   if(isDiv){const q=rand(12,48);return makeQ(`Tính: ${fmtInt(q*b)} : ${b} = ?`,q,`${fmtInt(q*b)} : ${b} = ${q}.`,null,'muldiv');}
+   const a=rand(15,95);return makeQ(`Tính: ${a} × ${b} = ?`,a*b,`${a} × ${b} = ${fmtInt(a*b)}.`,null,'muldiv');
+  }
+  const b=rand(3,9), a=rand(120,2500);
+  return isDiv?makeQ(`Tính: ${fmtInt(a*b)} : ${b} = ?`,a,`${fmtInt(a*b)} : ${b} = ${fmtInt(a)}.`,null,'muldiv'):makeQ(`Tính: ${fmtInt(a)} × ${b} = ?`,a*b,`${fmtInt(a)} × ${b} = ${fmtInt(a*b)}.`,null,'muldiv');
+ }
+
+ // ==================== 19. SỐ HỌC: SO SÁNH, LÀM TRÒN, LA MÃ, CHẴN/LẺ, CẤU TẠO SỐ ====================
+ if(k==='number'){
+  if(/la mã/.test(title)){
+   const n=rand(1,20);
+   return pick([true,false])
+    ? makeQ(`Chữ số La Mã ${toRoman(n)} biểu thị số tự nhiên nào?`,n,`${toRoman(n)} đọc là ${n}.`,null,'number')
+    : makeQ(`Viết số ${n} bằng chữ số La Mã.`,toRoman(n),`Số ${n} viết bằng chữ số La Mã là ${toRoman(n)}.`,null,'number');
+  }
+  if(/chẵn, số lẻ/.test(title)){
+   const n=rand(101,999);
+   const ans=n%2===0?'số chẵn':'số lẻ';
+   return makeQOpt(`Số ${n} là số chẵn hay số lẻ?`,ans,`Số ${n} có chữ số tận cùng là ${n%10} nên là ${ans}.`,null,'number',['số chẵn','số lẻ','chia hết cho 10','không xác định']);
+  }
+  // Biên số chính xác theo lớp & tập
+  let loN=0, hiN=10;
+  if(g===1){loN=bk===1?0:10;hiN=bk===1?10:99;}
+  else if(g===2){loN=bk===1?10:100;hiN=bk===1?99:999;}
+  else if(g===3){loN=/100 000|năm chữ số/.test(full)?10000:(/10 000|bốn chữ số/.test(full)?1000:100);hiN=/100 000|năm chữ số/.test(full)?99999:(/10 000|bốn chữ số/.test(full)?9999:999);}
+  else if(g===4){loN=/triệu|sáu chữ số|nhiều chữ số/.test(full)?100000:10000;hiN=/triệu|nhiều chữ số/.test(full)?9999999:999999;}
+  else{loN=1000;hiN=999999;}
+
+  if(/so sánh/.test(title)){
+   const c=rand(loN,hiN), d=rand(loN,hiN);
+   const ans=c>d?'>':c<d?'<':'=';
+   return makeQOpt(`Điền dấu thích hợp (>, < hoặc =): ${fmtInt(c)} □ ${fmtInt(d)}`,ans,`So sánh hai số: ${fmtInt(c)} ${ans} ${fmtInt(d)}.`,null,'number',['>','<','=','không so sánh được']);
+  }
+  if(/làm tròn/.test(title)){
+   let unit=10;
+   if(/trăm nghìn/.test(title))unit=100000;
+   else if(/chục nghìn/.test(title))unit=10000;
+   else if(/nghìn/.test(title))unit=1000;
+   else if(/trăm/.test(title))unit=100;
+   const v=rand(Math.max(unit+15,loN),Math.max(unit*9,hiN));
+   const ans=Math.round(v/unit)*unit;
+   const uName={10:'chục',100:'trăm',1000:'nghìn',10000:'chục nghìn',100000:'trăm nghìn'}[unit];
+   return makeQ(`Làm tròn số ${fmtInt(v)} đến hàng ${uName}.`,ans,`Xét chữ số ngay bên phải hàng ${uName}: làm tròn được ${fmtInt(ans)}.`,null,'number');
+  }
+  if(/viết số thành tổng/.test(title)){
+   const h=rand(1,9), t=rand(1,9), u=rand(1,9);
+   return makeQ(`Số gồm ${h} trăm, ${t} chục và ${u} đơn vị là số nào?`,h*100+t*10+u,`${h*100} + ${t*10} + ${u} = ${h*100+t*10+u}.`,null,'number');
+  }
+  if(/hàng và lớp|sáu chữ số|lớp triệu/.test(title)){
+   const n=rand(120000,985000);
+   const s=String(n), idx=rand(0,2);
+   const dig=Number(s[idx]), place=Math.pow(10,s.length-1-idx), ans=dig*place;
+   return makeQ(`Giá trị của chữ số ${dig} trong số ${fmtInt(n)} là bao nhiêu?`,ans,`Chữ số ${dig} nằm ở hàng ${fmtInt(place)} nên có giá trị là ${fmtInt(ans)}.`,null,'number');
+  }
+  if(g===1&&bk===2){
+   const chuc=rand(1,9), dv=rand(0,9);
+   return makeQ(`Số gồm ${chuc} chục và ${dv} đơn vị viết là số nào?`,chuc*10+dv,`${chuc} chục và ${dv} đơn vị là số ${chuc*10+dv}.`,null,'number');
+  }
+  const n=rand(loN,hiN);
+  return makeQ(`Chữ số hàng đơn vị của số ${fmtInt(n)} là chữ số nào?`,n%10,`Chữ số tận cùng bên phải của ${fmtInt(n)} là ${n%10}.`,null,'number');
+ }
+
+ // ==================== 20. PHÉP CỘNG, PHÉP TRỪ & TÌM THÀNH PHẦN (KHÓA CHẶT PHẠM VI LỚP 1–5) ====================
+ if(k==='addsub'||k==='mixed'){
+  if(/tìm thành phần/.test(title)){
+   const a=rand(15,65), b=rand(12,55);
+   if(pick([true,false])){
+    return makeQ(`Tìm số hạng chưa biết: ? + ${a} = ${a+b}`,b,`Số hạng chưa biết = Tổng − Số hạng đã biết = ${a+b} − ${a} = ${b}.`,null,'addsub');
+   }
+   return makeQ(`Tìm số bị trừ: ? − ${a} = ${b}`,a+b,`Số bị trừ = Hiệu + Số trừ = ${b} + ${a} = ${a+b}.`,null,'addsub');
+  }
+  if(/thành phần của phép cộng/.test(title)){
+   const a=rand(12,45), b=rand(11,35);
+   return pick([true,false])
+    ? makeQ(`Tìm tổng khi biết hai số hạng là ${a} và ${b}.`,a+b,`Tổng = ${a} + ${b} = ${a+b}.`,null,'addsub')
+    : makeQ(`Tìm hiệu khi biết số bị trừ là ${a+b} và số trừ là ${a}.`,b,`Hiệu = ${a+b} − ${a} = ${b}.`,null,'addsub');
+  }
+  const onlyAdd=/cộng/.test(title)&&!/trừ/.test(title);
+  const onlySub=/trừ/.test(title)&&!/cộng/.test(title);
+  const op=onlyAdd?'+':(onlySub?'−':pick(['+','−']));
+
+  // LỚP 1: HK1 chỉ trong phạm vi 10; HK2 cộng/trừ KHÔNG NHỚ trong phạm vi 100
+  if(g===1){
+   if(bk===1||/phạm vi 10/.test(full)){
+    if(op==='+'){const a=rand(1,8),b=rand(1,10-a);return makeQ(`Tính: ${a} + ${b} = ?`,a+b,`${a} + ${b} = ${a+b}.`,null,'addsub');}
+    const a=rand(2,10),b=rand(1,a);return makeQ(`Tính: ${a} − ${b} = ?`,a-b,`${a} − ${b} = ${a-b}.`,null,'addsub');
+   }
+   const twoBoth=/với số có hai chữ số|cho số có hai chữ số/.test(title)?true:(/một chữ số/.test(title)?false:pick([true,false]));
+   if(op==='+'){
+    const [a,b]=addNoCarry2(twoBoth);
+    return makeQ(`Tính: ${a} + ${b} = ?`,a+b,`Cộng hàng đơn vị rồi hàng chục (không nhớ): ${a} + ${b} = ${a+b}.`,null,'addsub');
+   }
+   const [a,b]=subNoBorrow2(twoBoth);
+   return makeQ(`Tính: ${a} − ${b} = ?`,a-b,`Trừ hàng đơn vị rồi hàng chục (không nhớ): ${a} − ${b} = ${a-b}.`,null,'addsub');
+  }
+
+  // LỚP 2: qua 10 trong 20, có nhớ trong 100, phạm vi 1 000 ở Tập 2
+  if(g===2){
+   if(/phạm vi 20|qua 10/.test(full)){
+    if(op==='+'){const a=rand(5,9),b=rand(11-a,9);return makeQ(`Tính nhẩm: ${a} + ${b} = ?`,a+b,`Tách để tròn 10: ${a} + ${b} = ${a+b}.`,null,'addsub');}
+    const a=rand(11,18),b=rand(a-9,9);return makeQ(`Tính nhẩm: ${a} − ${b} = ?`,a-b,`${a} − ${b} = ${a-b}.`,null,'addsub');
+   }
+   if(bk===1||/phạm vi 100/.test(full)){
+    const twoBoth=/với số có hai chữ số|cho số có hai chữ số/.test(title)?true:(/một chữ số/.test(title)?false:pick([true,false]));
+    const noCarry=/không nhớ/.test(title);
+    if(op==='+'){
+     const [a,b]=noCarry?addNoCarry2(twoBoth):addWithCarry2(twoBoth);
+     return makeQ(`Tính: ${a} + ${b} = ?`,a+b,`${a} + ${b} = ${a+b}.`,null,'addsub');
+    }
+    const [a,b]=noCarry?subNoBorrow2(twoBoth):subWithBorrow2(twoBoth);
+    return makeQ(`Tính: ${a} − ${b} = ?`,a-b,`${a} − ${b} = ${a-b}.`,null,'addsub');
+   }
+   // Lớp 2 Tập 2: phạm vi 1 000
+   let a=rand(120,680), b=rand(105,310);
+   if(op==='−'&&a<b)[a,b]=[b,a];
+   return makeQ(`Tính: ${a} ${op} ${b} = ?`,op==='+'?a+b:a-b,`${a} ${op} ${b} = ${op==='+'?a+b:a-b}.`,null,'addsub');
+  }
+
+  // LỚP 3–5: Đúng phạm vi bài (1 000 / 10 000 / 100 000 / nhiều chữ số)
+  let maxLim=999;
+  if(g===3)maxLim=/100 000/.test(full)?99999:(/10 000/.test(full)?9999:999);
+  else if(g===4)maxLim=bk===1&&/100 000/.test(full)?99999:450000;
+  else maxLim=50000;
+  const minLim=Math.max(100,Math.floor(maxLim/10));
+  let a=rand(minLim,Math.floor(maxLim*0.62)), b=rand(Math.floor(minLim/2),Math.floor(maxLim*0.35));
+  if(op==='−'&&a<b)[a,b]=[b,a];
+  const ans=op==='+'?a+b:a-b;
+  return makeQ(`Tính: ${fmtInt(a)} ${op} ${fmtInt(b)} = ?`,ans,`${fmtInt(a)} ${op} ${fmtInt(b)} = ${fmtInt(ans)}.`,null,'addsub');
+ }
+
+ return makeQ(`Tính: ${rand(2,8)} + ${rand(1,9)} = ?`,10,'Thực hiện phép tính theo quy tắc đã học.',null,'general');
+}
+function normalize(a){return String(a??'').trim().toLowerCase().replace(/,/g,'.').replace(/\s+/g,'').replace(/(đồng|km\/giờ|km\/h|cm³|dm³|m³|km²|dm²|mm²|cm²|m²|ha|cm|mm|dm|km|m|kg|yến|tạ|tấn|ml|lít|lit|g|quyển|quả|cái|viên|bông|cây|con|bạn|em|tờ|chiếc|lần|phút|giờ|giây|tuổi|độ|°)$/g,'')}
 function selectedPracticeLesson(){return findLesson($('#practiceLesson').value)||allLessons(Number($('#practiceGrade').value),Number($('#practiceBook').value))[0]}
 function makePractice(){let l=selectedPracticeLesson();if(!l)return;selectedLesson=l;currentQuestions=Array.from({length:qty},()=>makeQuestion(l,level));currentChecked=false;$('#practiceCaption').textContent=`Lớp ${l.grade} · Bài ${l.number}: ${l.title} · ${qty} câu · ${level==='easy'?'Cơ bản':level==='medium'?'Vận dụng':'Nâng cao'}`;$('#practiceBadge').textContent='Chưa chấm';$('#practiceQuestions').innerHTML=`<div class="exercisegrid">${currentQuestions.map((q,i)=>renderQ(q,i)).join('')}</div>`;$('#practiceActions').hidden=false;$('#practiceSummary').innerHTML='';$$('[data-ans]').forEach(i=>i.addEventListener('input',e=>currentQuestions[Number(e.target.dataset.ans)].user=e.target.value));}
 function checkPractice(){if(!currentQuestions.length)return;let ok=0;currentQuestions.forEach(q=>{q.correct=normalize(q.user)===normalize(q.answer);if(q.correct)ok++});currentChecked=true;$('#practiceQuestions').innerHTML=`<div class="exercisegrid">${currentQuestions.map((q,i)=>renderQ(q,i,true,true)).join('')}</div>`;let total=currentQuestions.length,rate=Math.round(ok/total*100),score=(ok/total*10).toFixed(1);$('#practiceBadge').textContent=`${ok}/${total} đúng`;$('#practiceSummary').innerHTML=`<div class="callout" style="margin-top:12px"><b>Kết quả: ${score}/10 · ${rate}%</b><p>${rate>=90?'Rất tốt! Em đã nắm chắc dạng bài.':rate>=70?'Em làm khá tốt. Hãy xem lại lời giải các câu sai.':'Em hãy đọc lời giải và luyện tập lại để nhớ cách làm.'}</p></div>`;let l=selectedLesson||selectedPracticeLesson(),p=progress.lesson[l.id]||(progress.lesson[l.id]={attempts:0,total:0,correct:0});p.attempts++;p.total+=total;p.correct+=ok;progress.history.push({date:new Date().toISOString(),grade:l.grade,book:l.book,lessonId:l.id,lesson:l.title,topic:l.topic,total,correct:ok,score:Number(score)});recordWrongQuestions(currentQuestions,'practice',`Lớp ${l.grade} · Bài ${l.number}: ${l.title}`,l.grade);progress.history=progress.history.slice(-250);saveStore();updateHomeStats();playCelebrationFx(rate);showFloatFx(rate>=80?`🎉 Xuất sắc! ${score}/10`:`✅ Đạt ${score}/10 điểm`,rate>=50);}
@@ -10524,103 +11526,436 @@ const TERM_LABELS={
  ghk1:'KIỂM TRA GIỮA HỌC KÌ I',
  chk1:'KIỂM TRA CUỐI HỌC KÌ I',
  ghk2:'KIỂM TRA GIỮA HỌC KÌ II',
- chk2:'KIỂM TRA CUỐI NĂM HỌC'
+ chk2:'KIỂM TRA CUỐI NĂM HỌC',
+ custom:'KIỂM TRA ĐỊNH KÌ THEO PHẠM VI BÀI HỌC'
 };
-function getTermLessonPool(g,term){
- const b1=allTopics(g,1), b2=allTopics(g,2);
- if(term==='ghk1'){
-  const half=Math.max(1,Math.ceil(b1.length/2));
-  return b1.slice(0,half).flatMap(t=>t.lessons);
- }
- if(term==='chk1')return b1.flatMap(t=>t.lessons);
- if(term==='ghk2'){
-  const half=Math.max(1,Math.ceil(b2.length/2));
-  return b2.slice(0,half).flatMap(t=>t.lessons);
- }
- return [...b1,...b2].flatMap(t=>t.lessons);
+// Phạm vi bài học chính xác theo phân phối chương trình SGK Kết nối tri thức (Lớp 1–5)
+const KNTT_TERM_RANGES={
+ 1:{ghk1:[1,13],chk1:[1,20],ghk2:[21,33],chk2:[21,41],hk1:[1,20]},
+ 2:{ghk1:[1,24],chk1:[1,36],ghk2:[37,58],chk2:[37,75],hk1:[1,36]},
+ 3:{ghk1:[1,29],chk1:[1,44],ghk2:[45,65],chk2:[45,81],hk1:[1,44]},
+ 4:{ghk1:[1,21],chk1:[1,37],ghk2:[38,59],chk2:[38,73],hk1:[1,37]},
+ 5:{ghk1:[1,18],chk1:[1,35],ghk2:[36,55],chk2:[36,75],hk1:[1,35]}
+};
+
+function getAllGradeLessons(g){
+ return [...allLessons(g,1),...allLessons(g,2)];
 }
+function isCoreExamLesson(l){
+ const t=(l.title||'').toLowerCase();
+ if(/thực hành và trải nghiệm|thực hành lắp ghép|thực hành gấp|thực hành vẽ|thực hành ước lượng|thực hành đo|máy tính cầm tay/.test(t))return false;
+ if(/^luyện tập chung$|^ôn tập chung$/.test(t.trim()))return false;
+ return true;
+}
+function getLessonStrand(l){
+ if(['geometry','angle','3d','solidcalc','measure','clock','timecalc'].includes(l.kind))return 'geom';
+ if(['word','bar','pie','pictograph','probability','motion'].includes(l.kind))return 'prob';
+ return 'calc';
+}
+function getTermLessonPool(g,term,customFrom=null,customTo=null){
+ const all=getAllGradeLessons(g);
+ if(term==='custom'){
+  const f=Math.max(1,Number(customFrom)||1);
+  const t=Math.min(all.length,Math.max(f,Number(customTo)||all.length));
+  const slice=all.filter(l=>l.number>=f&&l.number<=t);
+  const core=slice.filter(isCoreExamLesson);
+  return {pool:core.length>=3?core:slice, allSlice:slice, from:f, to:t, isYearEnd:false};
+ }
+ const r=KNTT_TERM_RANGES[g]||KNTT_TERM_RANGES[1];
+ const [from,to]=r[term]||[1,all.length];
+ const mainSlice=all.filter(l=>l.number>=from&&l.number<=to);
+ const mainCore=mainSlice.filter(isCoreExamLesson);
+ if(term==='chk2'){
+  // Cuối năm: trọng tâm Học kì 2 (~80%) + ôn tập Học kì 1 (~20%)
+  const hk1Core=all.filter(l=>l.number>=r.hk1[0]&&l.number<=r.hk1[1]&&isCoreExamLesson(l));
+  return {pool:mainCore.length?mainCore:mainSlice, hk1Pool:hk1Core, allSlice:all, from:1, to:all.length, focusFrom:from, focusTo:to, isYearEnd:true};
+ }
+ return {pool:mainCore.length>=3?mainCore:mainSlice, allSlice:mainSlice, from, to, isYearEnd:false};
+}
+
+function updateMultiExamScopeUI(){
+ const g=Number($('#mtGrade')?.value)||1;
+ const term=$('#mtTerm')?.value||'chk2';
+ const box=$('#mtCustomRangeBox'), fSel=$('#mtFromLesson'), tSel=$('#mtToLesson'), note=$('#mtScopeNote');
+ const all=getAllGradeLessons(g);
+ if(fSel&&tSel){
+  const curGrade=fSel.dataset.grade;
+  if(curGrade!==String(g)){
+   const opts=all.map(l=>`<option value="${l.number}">Bài ${l.number}. ${esc(l.title)}</option>`).join('');
+   fSel.innerHTML=opts; tSel.innerHTML=opts;
+   fSel.dataset.grade=String(g); tSel.dataset.grade=String(g);
+   fSel.value='1'; tSel.value=String(all.length);
+  }
+  if(Number(fSel.value)>Number(tSel.value))tSel.value=fSel.value;
+ }
+ if(box)box.hidden=(term!=='custom');
+ if(note){
+  const info=getTermLessonPool(g,term,fSel?.value,tSel?.value);
+  if(info.isYearEnd){
+   note.innerHTML=`📚 <b>Phạm vi chuẩn SGK KNTT Lớp ${g}:</b> Trọng tâm HK2 (Bài ${info.focusFrom} → Bài ${info.focusTo}) kết hợp ~20% ôn tập HK1 (${info.pool.length} bài kiến thức lõi).`;
+  }else{
+   note.innerHTML=`📚 <b>Phạm vi chuẩn SGK KNTT Lớp ${g}:</b> Từ <b>Bài ${info.from}</b> đến <b>Bài ${info.to}</b> (${info.pool.length} bài kiến thức lõi).`;
+  }
+ }
+}
+
+function splitPoints(total,count,preferredStep=0.5){
+ if(count<=0||total<=0)return [];
+ const exact=total/count;
+ // Nếu chia đều ra số đẹp tối đa 2 chữ số thập phân (VD: 10/10=1, 10/20=0.5, 10/8=1.25, 10/40=0.25)
+ if(Math.abs(exact*100-Math.round(exact*100))<1e-6){
+  return Array.from({length:count},()=>Number(exact.toFixed(2)));
+ }
+ let step=preferredStep;
+ if(total<count*step)step=0.25;
+ if(total<count*step)step=0.1;
+ if(total<count*step)step=0.05;
+ if(total<count*step)step=0.01;
+ const baseUnits=Math.floor((total/count)/step);
+ const base=Number((baseUnits*step).toFixed(2));
+ const arr=Array.from({length:count},()=>base);
+ let left=Number((total-base*count).toFixed(2));
+ // Dồn phần cộng thêm vào các câu phía sau (thường có độ khó cao hơn)
+ for(let i=count-1;i>=0&&left>=step-1e-6;i--){
+  arr[i]=Number((arr[i]+step).toFixed(2));
+  left=Number((left-step).toFixed(2));
+ }
+ if(Math.abs(left)>=0.01){
+  arr[count-1]=Number((arr[count-1]+left).toFixed(2));
+ }
+ return arr;
+}
+
 function allocatePoints(mcqCount,essayCount,hasIQ){
- // Chuẩn tổng đúng 10.0 điểm
- const iqPts=hasIQ?1.0:0;
- const rem=10-iqPts;
- const mcqEach=mcqCount<=4?1.0:(mcqCount<=6?0.5:0.5);
- const mcqTotal=Number((mcqCount*mcqEach).toFixed(2));
- const essayTotal=Number((rem-mcqTotal).toFixed(2));
- const essayPts=[];
- const base=Math.floor((essayTotal/essayCount)*2)/2; // bội số 0.5
- let left=Number((essayTotal-base*essayCount).toFixed(2));
- for(let i=0;i<essayCount;i++){
-  let p=base;
-  if(left>=0.5){p=Number((p+0.5).toFixed(2));left=Number((left-0.5).toFixed(2));}
-  essayPts.push(p);
+ // Chuẩn tổng đúng 10.0 điểm cho mọi chế độ: Chỉ TN, Chỉ TL, hoặc Hỗn hợp
+ const iqInMcq=Boolean(hasIQ&&essayCount===0&&mcqCount>0);
+ const iqInEssay=Boolean(hasIQ&&!iqInMcq);
+ let iqPts=0, mcqPts=[], essayPts=[], mcqTotal=0, essayTotal=0;
+
+ if(mcqCount>0&&essayCount===0){
+  // 100% Trắc nghiệm
+  iqPts=iqInMcq?1.0:0;
+  const rem=Number((10-iqPts).toFixed(2));
+  mcqPts=splitPoints(rem,mcqCount,0.25);
+  mcqTotal=10.0;
+  essayTotal=0;
+ }else if(mcqCount===0&&essayCount>0){
+  // 100% Tự luận
+  iqPts=iqInEssay?1.0:0;
+  const rem=Number((10-iqPts).toFixed(2));
+  essayPts=splitPoints(rem,essayCount,0.5);
+  mcqTotal=0;
+  essayTotal=10.0;
+ }else if(mcqCount===0&&essayCount===0&&hasIQ){
+  iqPts=10.0;
+  mcqTotal=0;
+  essayTotal=10.0;
+ }else if(mcqCount>0&&essayCount>0){
+  // Hỗn hợp: Trắc nghiệm + Tự luận
+  iqPts=iqInEssay?1.0:0;
+  const rem=Number((10-iqPts).toFixed(2));
+  let mcqTarget=0;
+  if(mcqCount<=4&&rem-mcqCount*1.0>=essayCount*0.5){
+   mcqTarget=mcqCount*1.0;
+  }else if(rem-mcqCount*0.5>=essayCount*0.5){
+   mcqTarget=mcqCount*0.5;
+  }else if(rem-mcqCount*0.25>=essayCount*0.5){
+   mcqTarget=mcqCount*0.25;
+  }else{
+   const ratio=mcqCount/(mcqCount+essayCount*1.8);
+   mcqTarget=Math.max(0.5,Math.min(rem-0.5,Math.round(rem*ratio*2)/2));
+  }
+  mcqTotal=Number(mcqTarget.toFixed(2));
+  const essayRegTotal=Number((rem-mcqTotal).toFixed(2));
+  mcqPts=splitPoints(mcqTotal,mcqCount,0.25);
+  essayPts=splitPoints(essayRegTotal,essayCount,0.5);
+  essayTotal=Number((essayRegTotal+iqPts).toFixed(2));
  }
- if(left>0.01)essayPts[essayPts.length-1]=Number((essayPts[essayPts.length-1]+left).toFixed(2));
- return {mcqEach,mcqTotal,essayPts,essayTotal,iqPts};
+
+ const allMcqPts=iqInMcq?[...mcqPts,iqPts]:mcqPts;
+ const uniformMcq=allMcqPts.length>0&&allMcqPts.every(v=>v===allMcqPts[0])?allMcqPts[0]:null;
+ return {mcqPts,mcqEach:uniformMcq,mcqTotal,essayPts,essayTotal,iqPts,iqInMcq,iqInEssay};
 }
+
+function readMultiExamCounts(){
+ const rawMcq=parseInt($('#mtMcqQty')?.value,10);
+ const rawEssay=parseInt($('#mtEssayQty')?.value,10);
+ const mcqQty=Number.isFinite(rawMcq)?Math.max(0,Math.min(40,rawMcq)):0;
+ const essayQty=Number.isFinite(rawEssay)?Math.max(0,Math.min(20,rawEssay)):0;
+ const incIQ=Boolean($('#mtIncludeIQ')?.checked);
+ return {mcqQty,essayQty,incIQ};
+}
+
+function updateMultiExamStructurePreview(){
+ const el=$('#mtStructureNote');
+ if(!el)return;
+ const {mcqQty,essayQty,incIQ}=readMultiExamCounts();
+ const codeCount=Math.max(1,Math.min(10,parseInt($('#mtCodes')?.value,10)||2));
+ if(mcqQty===0&&essayQty===0&&!incIQ){
+  el.innerHTML=`⚠️ <b>Chưa có câu hỏi:</b> Hãy nhập ít nhất 1 câu Trắc nghiệm hoặc 1 bài Tự luận.`;
+  el.classList.add('is-warn');
+  return;
+ }
+ el.classList.remove('is-warn');
+ const pts=allocatePoints(mcqQty,essayQty,incIQ);
+ const totalMcq=mcqQty+(pts.iqInMcq?1:0);
+ const totalEssay=essayQty+(pts.iqInEssay?1:0);
+ let desc='';
+ if(totalMcq>0&&totalEssay===0){
+  desc=`<b>100% Trắc nghiệm</b> (${totalMcq} câu${pts.mcqEach!==null?` · ${numfmt(pts.mcqEach)}đ/câu`:''}${pts.iqInMcq?' gồm 1 IQ':''})`;
+ }else if(totalMcq===0&&totalEssay>0){
+  desc=`<b>100% Tự luận</b> (${totalEssay} bài${pts.iqInEssay?' gồm 1 IQ':''})`;
+ }else{
+  desc=`<b>${totalMcq} câu TN</b> (${numfmt(pts.mcqTotal)}đ${pts.mcqEach!==null?` · ${numfmt(pts.mcqEach)}đ/câu`:''}) + <b>${totalEssay} bài TL</b> (${numfmt(pts.essayTotal)}đ${pts.iqInEssay?' gồm 1 IQ':''})`;
+ }
+ el.innerHTML=`⚖️ <b>Cấu trúc (${codeCount} mã đề):</b> ${desc} · Tổng <b>10 điểm</b>.`;
+}
+
+// Sinh câu TỰ LUẬN chuẩn cấu trúc Đề kiểm tra Tiểu học bám sát đúng bài học trong phạm vi
+function makeExamEssaySlot(slotType, lesson, g, termPool, makeFreshQ){
+ // DẠNG 1: Đặt tính rồi tính / Tính (gồm 2 ý a, b từ đúng bài phép tính trong phạm vi)
+ if(slotType==='compute2'){
+  const calcKinds=['addsub','muldiv','decimal','fraction','timecalc'];
+  const cands=termPool.filter(l=>calcKinds.includes(l.kind));
+  const l1=cands.includes(lesson)?lesson:(cands[0]||lesson);
+  const l2=cands.length>1?cands[(cands.indexOf(l1)+Math.max(1,Math.floor(cands.length/2)))%cands.length]:l1;
+  const q1=makeFreshQ(l1,'medium');
+  const q2=makeFreshQ(l2,'medium');
+  const stripCalc=s=>String(s).replace(/^(Tính nhẩm|Tính và rút gọn|Tính):\s*/i,'').replace(/\s*=\s*\?$/,'');
+  const p1=stripCalc(q1.prompt), p2=stripCalc(q2.prompt);
+  const verb=(g===1&&l1.book===1)?'Tính':(/phân số/.test((l1.title+l2.title).toLowerCase())?'Tính rồi rút gọn (nếu có)':'Đặt tính rồi tính');
+  return {
+   prompt:`${verb}:\na) ${p1}\nb) ${p2}`,
+   answer:`a) ${q1.answer} ; b) ${q2.answer}`,
+   explanation:`a) ${q1.explanation} | b) ${q2.explanation}`,
+   visual:null,
+   type:'essay_compute',
+   source:l1.number===l2.number?`Bài ${l1.number}. ${l1.title}`:`Bài ${l1.number}. ${l1.title} & Bài ${l2.number}. ${l2.title}`,
+   strandLabel:'Số & phép tính'
+  };
+ }
+
+ // DẠNG 2: Giải bài toán có lời văn (bám đúng bài toán lời văn của kì học)
+ if(slotType==='word_essay'){
+  const q=makeFreshQ(lesson,'hard');
+  if(q.type==='addsub'&&/^Tính:/.test(q.prompt)){
+   const m=q.prompt.match(/(\d[\d\s.]*)\s*([+−-])\s*(\d[\d\s.]*)/);
+   if(m){
+    const a=Number(m[1].replace(/\s|\./g,'')), op=m[2], b=Number(m[3].replace(/\s|\./g,''));
+    const isAdd=(op==='+');
+    const wp=isAdd
+     ? `Giải bài toán: Tổ Một có ${fmtInt(a)} bạn, tổ Hai có ${fmtInt(b)} bạn. Hỏi cả hai tổ có tất cả bao nhiêu bạn?`
+     : `Giải bài toán: Trong vườn có ${fmtInt(a)} cây cam, bác nông dân đã thu hoạch ${fmtInt(b)} cây. Hỏi còn lại bao nhiêu cây cam chưa thu hoạch?`;
+    q.prompt=wp;
+    q.explanation=`Phép tính: ${fmtInt(a)} ${isAdd?'+':'−'} ${fmtInt(b)} = ${q.answer}. Đáp số: ${q.answer}.`;
+   }
+  }
+  q.source=`Bài ${lesson.number}. ${lesson.title}`;
+  q.strandLabel='Giải toán có lời văn';
+  return q;
+ }
+
+ // DẠNG 3: Hình học / Đo lường tự luận
+ if(slotType==='geom_essay'){
+  const q=makeFreshQ(lesson,'medium');
+  q.source=`Bài ${lesson.number}. ${lesson.title}`;
+  q.strandLabel='Hình học & Đo lường';
+  return q;
+ }
+
+ // DẠNG 4: Tìm thành phần chưa biết / Biểu thức / Đổi đơn vị / Vận dụng
+ const q=makeFreshQ(lesson,'hard');
+ q.source=`Bài ${lesson.number}. ${lesson.title}`;
+ q.strandLabel=getLessonStrand(lesson)==='geom'?'Hình học & Đo lường':(getLessonStrand(lesson)==='prob'?'Giải toán & Thống kê':'Số & phép tính');
+ return q;
+}
+
 function buildMultiCodeExams(){
  const g=Number($('#mtGrade').value)||1;
  const term=$('#mtTerm').value||'chk2';
  const school=($('#mtSchool').value||'Trường Tiểu học …').trim();
- const codeCount=Number($('#mtCodes').value)||2;
+ const codeCount=Math.max(1,Math.min(10,parseInt($('#mtCodes').value,10)||2));
  const minutes=Number($('#mtMinutes').value)||40;
- const mcqQty=Number($('#mtMcqQty').value)||6;
- const essayQty=Number($('#mtEssayQty').value)||4;
- const incIQ=$('#mtIncludeIQ').checked;
+ const {mcqQty,essayQty,incIQ}=readMultiExamCounts();
+ $('#mtMcqQty').value=String(mcqQty);
+ $('#mtEssayQty').value=String(essayQty);
  const incKey=$('#mtIncludeKey').checked;
- const pool=getTermLessonPool(g,term);
- if(!pool.length){showToast('Không có bài học cho kì kiểm tra này!','err');return;}
+
+ if(mcqQty===0&&essayQty===0&&!incIQ){
+  showToast('Vui lòng nhập ít nhất 1 câu Trắc nghiệm hoặc 1 bài Tự luận!','err');
+  return;
+ }
+ const scopeInfo=getTermLessonPool(g,term,$('#mtFromLesson')?.value,$('#mtToLesson')?.value);
+ const pool=scopeInfo.pool;
+ if(!pool.length){showToast('Không có bài học trong phạm vi này!','err');return;}
 
  const pts=allocatePoints(mcqQty,essayQty,incIQ);
- // Chọn trước khung bài học để tất cả mã đề có CÙNG ma trận kiến thức, nhưng KHÁC hoàn toàn số liệu!
- const pickedMcqLessons=Array.from({length:mcqQty},(_,i)=>pool[Math.floor((i+0.5)*pool.length/mcqQty)%pool.length]);
- const pickedEssayLessons=Array.from({length:essayQty},(_,i)=>pool[Math.floor((i+0.35)*pool.length/essayQty+1)%pool.length]);
+
+ // Phân nhóm bài học theo 3 mạch kiến thức chuẩn CT 2018 (TT27)
+ const calcPool=pool.filter(l=>getLessonStrand(l)==='calc');
+ const geomPool=pool.filter(l=>getLessonStrand(l)==='geom');
+ const probPool=pool.filter(l=>getLessonStrand(l)==='prob');
+
+ // 1. Xây khung Ma trận Phần I (Trắc nghiệm) — chỉ chạy khi mcqQty > 0
+ const pickedMcqLessons=[];
+ if(mcqQty>0){
+  const usedMcqIds=new Set();
+  const takeNext=(preferred,stepIdx)=>{
+   const src=preferred.length?preferred:pool;
+   let chosen=src[stepIdx%src.length];
+   for(let off=0;off<src.length;off++){
+    const cand=src[(stepIdx+off)%src.length];
+    if(!usedMcqIds.has(cand.id)){chosen=cand;break;}
+   }
+   usedMcqIds.add(chosen.id);
+   if(usedMcqIds.size>=pool.length)usedMcqIds.clear();
+   return chosen;
+  };
+  const targetGeomMcq=geomPool.length?Math.max(1,Math.round(mcqQty*0.32)):0;
+  const targetProbMcq=probPool.length?Math.max(1,Math.round(mcqQty*0.18)):0;
+  const targetCalcMcq=Math.max(1,mcqQty-targetGeomMcq-targetProbMcq);
+
+  const hk1Pool=scopeInfo.hk1Pool||[];
+  for(let i=0;i<targetCalcMcq&&pickedMcqLessons.length<mcqQty;i++){
+   if(scopeInfo.isYearEnd&&i===0&&hk1Pool.length){
+    const hk1Calc=hk1Pool.filter(l=>getLessonStrand(l)==='calc');
+    pickedMcqLessons.push(takeNext(hk1Calc.length?hk1Calc:hk1Pool,i));
+   }else{
+    pickedMcqLessons.push(takeNext(calcPool,Math.floor(i*Math.max(1,calcPool.length)/Math.max(1,targetCalcMcq))));
+   }
+  }
+  for(let i=0;i<targetGeomMcq&&pickedMcqLessons.length<mcqQty;i++){
+   pickedMcqLessons.push(takeNext(geomPool,Math.floor(i*Math.max(1,geomPool.length)/Math.max(1,targetGeomMcq))));
+  }
+  for(let i=0;i<targetProbMcq&&pickedMcqLessons.length<mcqQty;i++){
+   pickedMcqLessons.push(takeNext(probPool,Math.floor(i*Math.max(1,probPool.length)/Math.max(1,targetProbMcq))));
+  }
+  while(pickedMcqLessons.length<mcqQty){
+   pickedMcqLessons.push(takeNext(pool,pickedMcqLessons.length));
+  }
+ }
+
+ // 2. Xây khung Ma trận Phần II (Tự luận) — chỉ chạy khi essayQty > 0
+ const essayPlan=[];
+ if(essayQty>0){
+  const computeCands=pool.filter(l=>['addsub','muldiv','decimal','fraction','timecalc'].includes(l.kind));
+  const exprCands=pool.filter(l=>['expression','measure','number','percent','fraction','decimal'].includes(l.kind));
+  const wordCands=pool.filter(l=>['word','motion','percent','addsub'].includes(l.kind)&&!['count','clock'].includes(l.kind));
+  const geomEssayCands=pool.filter(l=>['solidcalc','geometry','measure','timecalc'].includes(l.kind)&&!(g===1&&l.kind==='geometry'));
+
+  const usedEssayIds=new Set();
+  const pickEssayLesson=(cands,fallbackIdx)=>{
+   const src=cands.length?cands:pool;
+   let chosen=src[fallbackIdx%src.length];
+   for(let off=0;off<src.length;off++){
+    const cand=src[(fallbackIdx+off)%src.length];
+    if(!usedEssayIds.has(cand.id)){chosen=cand;break;}
+   }
+   usedEssayIds.add(chosen.id);
+   if(usedEssayIds.size>=pool.length)usedEssayIds.clear();
+   return chosen;
+  };
+
+  // Chu trình luân phiên đa dạng: Đặt tính/Tính -> Lời văn -> Biểu thức/Kỹ năng -> Hình học/Đo lường
+  const slotCycle=[
+   {slotType:'compute2',cands:computeCands},
+   {slotType:'word_essay',cands:wordCands},
+   {slotType:'skill_essay',cands:exprCands},
+   {slotType:'geom_essay',cands:geomEssayCands}
+  ];
+  // Sắp xếp chuẩn Tiểu học khi có >= 3 bài: Bài 1 Tính, Bài 2 Kỹ năng/Biểu thức, Bài 3 Lời văn, Bài 4 Hình học...
+  const order=essayQty>=3?[0,2,1,3]:[0,1,2,3];
+  for(let i=0;i<essayQty;i++){
+   const spec=slotCycle[order[i%4]];
+   essayPlan.push({slotType:spec.slotType,lesson:pickEssayLesson(spec.cands,Math.floor(i/4))});
+  }
+ }
+
  const iqCats=['sequence','symbol','balance','spatial','logic'];
  const pickedIQCat=pick(iqCats);
 
- const usedPrompts=new Set();
- const makeFreshQ=(lesson,diff)=>{
-  let q=makeQuestion(lesson,diff), tries=0;
-  while(usedPrompts.has(q.prompt)&&tries<12){q=makeQuestion(lesson,diff);tries++;}
-  usedPrompts.add(q.prompt);
-  return q;
- };
+ const globalUsed=new Set();
+ const qSig=q=>`${q.prompt}|${q.answer}|${q.visual?JSON.stringify(q.visual):''}`;
 
  const exams=[];
  for(let c=0;c<codeCount;c++){
   const code=String(101+c);
+  const localUsed=new Set();
+  const makeFreshQ=(lesson,diff)=>{
+   let best=makeQuestion(lesson,diff);
+   for(let tries=0;tries<18;tries++){
+    const cand=tries===0?best:makeQuestion(lesson,diff);
+    const sig=qSig(cand);
+    if(!localUsed.has(sig)&&!globalUsed.has(sig)){
+     localUsed.add(sig);globalUsed.add(sig);
+     return cand;
+    }
+    if(!localUsed.has(sig))best=cand;
+   }
+   const sig=qSig(best);
+   localUsed.add(sig);globalUsed.add(sig);
+   return best;
+  };
+
   const mcqs=pickedMcqLessons.map((l,i)=>{
    const q=makeFreshQ(l,i<Math.ceil(mcqQty/2)?'easy':'medium');
    q.options=gameOptions(q);
-   q.points=pts.mcqEach;
+   q.points=pts.mcqPts[i];
    q.source=`Bài ${l.number}. ${l.title}`;
+   q.strandLabel=getLessonStrand(l)==='geom'?'Hình học & Đo lường':(getLessonStrand(l)==='prob'?'Giải toán & Thống kê':'Số & phép tính');
    return q;
   });
-  const essays=pickedEssayLessons.map((l,i)=>{
-   const q=makeFreshQ(l,i<Math.ceil(essayQty/2)?'medium':'hard');
+
+  const essays=essayPlan.map((slot,i)=>{
+   const q=makeExamEssaySlot(slot.slotType,slot.lesson,g,pool,makeFreshQ);
    q.points=pts.essayPts[i];
-   q.source=`Bài ${l.number}. ${l.title}`;
    return q;
   });
+
   if(incIQ){
-   let iqQ=makeIQQuestion(g,pickedIQCat,'medium'), tries=0;
-   while(usedPrompts.has(iqQ.prompt)&&tries<10){iqQ=makeIQQuestion(g,pickedIQCat,'medium');tries++;}
-   usedPrompts.add(iqQ.prompt);
+   let iqQ=makeIQQuestion(g,pickedIQCat,'medium');
+   for(let tries=0;tries<14;tries++){
+    const cand=tries===0?iqQ:makeIQQuestion(g,pickedIQCat,'medium');
+    const sig=qSig(cand);
+    if(!localUsed.has(sig)&&!globalUsed.has(sig)){iqQ=cand;break;}
+    if(!localUsed.has(sig))iqQ=cand;
+   }
+   const sig=qSig(iqQ);
+   localUsed.add(sig);globalUsed.add(sig);
    iqQ.points=pts.iqPts;
-   iqQ.source='Toán IQ nâng cao';
+   iqQ.source='Toán IQ vận dụng nâng cao';
+   iqQ.strandLabel='Tư duy nâng cao';
    iqQ.isIQ=true;
-   essays.push(iqQ);
+   if(pts.iqInMcq){
+    iqQ.options=(Array.isArray(iqQ.options)&&iqQ.options.length>=4)?shuffleArray(iqQ.options.slice(0,4).map(String)):gameOptions(iqQ);
+    mcqs.push(iqQ);
+   }else{
+    essays.push(iqQ);
+   }
   }
   exams.push({code,mcqs,essays});
  }
- multiExamPack={grade:g,term,termLabel:TERM_LABELS[term],school,minutes,pts,incIQ,incKey,exams};
+
+ const scopeText=scopeInfo.isYearEnd
+  ? `Trọng tâm HK2 (Bài ${scopeInfo.focusFrom}–${scopeInfo.focusTo}) + Ôn HK1`
+  : `Bài ${scopeInfo.from} → Bài ${scopeInfo.to}`;
+ multiExamPack={grade:g,term,termLabel:TERM_LABELS[term],scopeText,school,minutes,pts,incIQ,incKey,exams};
  activePreviewCodeIdx=0;
+ const totalMcq=exams[0].mcqs.length, totalEssay=exams[0].essays.length;
+ const codeSummary=codeCount<=4?exams.map(e=>e.code).join(', '):`${exams[0].code}–${exams[exams.length-1].code}`;
+ const partSummary=[
+  totalMcq>0?`${totalMcq} TN (${numfmt(pts.mcqTotal)}đ)`:'',
+  totalEssay>0?`${totalEssay} TL (${numfmt(pts.essayTotal)}đ)`:''
+ ].filter(Boolean).join(' + ');
+
  $('#mtBadge').textContent=`${codeCount} mã đề · 10 điểm`;
- $('#mtCaption').textContent=`Lớp ${g} · ${TERM_LABELS[term]} · ${codeCount} mã đề (${exams.map(e=>e.code).join(', ')}) · ${mcqQty} TN (${numfmt(pts.mcqTotal)}đ) + ${essayQty+(incIQ?1:0)} TL (${numfmt(10-pts.mcqTotal)}đ)`;
+ $('#mtCaption').textContent=`Lớp ${g} · ${TERM_LABELS[term]} (${scopeText}) · ${codeCount} mã đề (${codeSummary}) · ${partSummary}`;
  $('#btnPrintMultiExam').disabled=false;
  renderMultiExamPreview();
  renderMultiExamPrintArea();
- showToast(`Đã sinh ${codeCount} mã đề kiểm tra khác số liệu!`);
+ showToast(`Đã sinh ${codeCount} mã đề (${codeSummary}) bám sát SGK Lớp ${g}!`);
 }
+
 function renderMultiExamPreview(){
  if(!multiExamPack)return;
  const tabs=$('#mtCodeTabs'), prev=$('#mtPreview');
@@ -10630,33 +11965,60 @@ function renderMultiExamPreview(){
 
  const ex=multiExamPack.exams[activePreviewCodeIdx];
  const letters=['A','B','C','D'];
+ const fmtPromptHtml=str=>esc(str).replace(/\n/g,'<br>');
+ const hasMcq=ex.mcqs.length>0, hasEssay=ex.essays.length>0;
+ const mcqTitle=hasEssay?`PHẦN I. TRẮC NGHIỆM (${numfmt(multiExamPack.pts.mcqTotal)} điểm)`:`PHẦN TRẮC NGHIỆM (${numfmt(multiExamPack.pts.mcqTotal)} điểm)`;
+ const essayTitle=hasMcq?`PHẦN II. TỰ LUẬN (${numfmt(multiExamPack.pts.essayTotal)} điểm)`:`PHẦN TỰ LUẬN (${numfmt(multiExamPack.pts.essayTotal)} điểm)`;
+
  prev.className='mt-preview-sheet';
  prev.innerHTML=`
   <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
-   <div><b style="font-size:17px;color:#1b348c">${esc(multiExamPack.termLabel)} – MÔN TOÁN LỚP ${multiExamPack.grade}</b><br><small class="muted">${esc(multiExamPack.school)} · Thời gian: ${multiExamPack.minutes} phút · Năm học 2026–2027</small></div>
+   <div>
+    <b style="font-size:17px;color:#1b348c">${esc(multiExamPack.termLabel)} – MÔN TOÁN LỚP ${multiExamPack.grade}</b><br>
+    <small class="muted">${esc(multiExamPack.school)} · Phạm vi SGK: <b>${esc(multiExamPack.scopeText||'')}</b> · Thời gian: ${multiExamPack.minutes} phút</small>
+   </div>
    <span class="score">MÃ ĐỀ ${ex.code}</span>
   </div>
-  <div class="mt-preview-sec">
-   <h4>PHẦN I. TRẮC NGHIỆM (${numfmt(multiExamPack.pts.mcqTotal)} điểm)</h4>
-   ${ex.mcqs.map((q,i)=>`<div class="mt-preview-q"><div class="mt-preview-text"><b>Câu ${i+1} (${numfmt(q.points)}đ).</b> ${esc(q.prompt)}</div>${q.visual?`<div class="qvisual mt-preview-vis">${visualSvg(q.visual)}</div>`:''}<div class="mt-preview-opts">${q.options.map((o,j)=>`<span><b>${letters[j]}.</b> ${esc(o)}</span>`).join('')}</div></div>`).join('')}
-  </div>
-  <div class="mt-preview-sec">
-   <h4>PHẦN II. TỰ LUẬN (${numfmt(10-multiExamPack.pts.mcqTotal)} điểm)</h4>
-   ${ex.essays.map((q,i)=>`<div class="mt-preview-q"><div class="mt-preview-text"><b>Bài ${i+1} (${numfmt(q.points)}đ)${q.isIQ?' [Toán IQ]':''}.</b> ${esc(q.prompt)}</div>${q.visual?`<div class="qvisual mt-preview-vis">${visualSvg(q.visual)}</div>`:''}</div>`).join('')}
-  </div>`;
+  ${hasMcq?`<div class="mt-preview-sec">
+   <h4>${mcqTitle}</h4>
+   ${ex.mcqs.map((q,i)=>`<div class="mt-preview-q">
+    <div class="mt-q-src-row"><span class="mt-src-pill">📖 ${esc(q.source)}</span><span class="mt-strand-pill">${esc(q.strandLabel||'')}</span></div>
+    <div class="mt-preview-text"><b>Câu ${i+1} (${numfmt(q.points)}đ)${q.isIQ?' [Toán IQ]':''}.</b> ${fmtPromptHtml(q.prompt)}</div>
+    ${q.visual?`<div class="qvisual mt-preview-vis">${visualSvg(q.visual)}</div>`:''}
+    <div class="mt-preview-opts">${q.options.map((o,j)=>`<span><b>${letters[j]}.</b> ${esc(o)}</span>`).join('')}</div>
+   </div>`).join('')}
+  </div>`:''}
+  ${hasEssay?`<div class="mt-preview-sec">
+   <h4>${essayTitle}</h4>
+   ${ex.essays.map((q,i)=>`<div class="mt-preview-q">
+    <div class="mt-q-src-row"><span class="mt-src-pill">📖 ${esc(q.source)}</span><span class="mt-strand-pill">${esc(q.strandLabel||'')}</span></div>
+    <div class="mt-preview-text"><b>Bài ${i+1} (${numfmt(q.points)}đ)${q.isIQ?' [Toán IQ]':''}.</b> ${fmtPromptHtml(q.prompt)}</div>
+    ${q.visual?`<div class="qvisual mt-preview-vis">${visualSvg(q.visual)}</div>`:''}
+   </div>`).join('')}
+  </div>`:''}`;
 }
+
 function renderMultiExamPrintArea(){
  if(!multiExamPack)return;
  const p=multiExamPack, letters=['A','B','C','D'];
+ const fmtPromptHtml=str=>esc(str).replace(/\n/g,'<br>');
  const sheets=p.exams.map(ex=>{
+  const hasMcq=ex.mcqs.length>0, hasEssay=ex.essays.length>0;
+  const mcqHeading=hasEssay
+   ? `Phần I. Trắc nghiệm (${numfmt(p.pts.mcqTotal)} điểm) – Khoanh vào chữ cái đặt trước câu trả lời đúng`
+   : `Phần Trắc nghiệm (${numfmt(p.pts.mcqTotal)} điểm) – Khoanh vào chữ cái đặt trước câu trả lời đúng`;
+  const essayHeading=hasMcq
+   ? `Phần II. Tự luận (${numfmt(p.pts.essayTotal)} điểm)`
+   : `Phần Tự luận (${numfmt(p.pts.essayTotal)} điểm)`;
+
   const mcqHtml=ex.mcqs.map((q,i)=>`<div class="print-q ${q.visual||String(q.prompt).length>90?'wide':''}">
-   <div class="print-question-line"><strong>Câu ${i+1} (${numfmt(q.points)} đ).</strong> ${esc(q.prompt)}</div>
+   <div class="print-question-line"><strong>Câu ${i+1} (${numfmt(q.points)} đ)${q.isIQ?' – Tư duy nâng cao':''}.</strong> ${fmtPromptHtml(q.prompt)}</div>
    ${q.visual?`<div class="print-visual">${visualSvg(q.visual)}</div>`:''}
    <div class="print-options">${q.options.map((o,j)=>`<span><b>${letters[j]}.</b> ${esc(o)}</span>`).join('')}</div>
   </div>`).join('');
 
   const essayHtml=ex.essays.map((q,i)=>`<div class="print-q wide">
-   <div class="print-question-line"><strong>Bài ${i+1} (${numfmt(q.points)} điểm)${q.isIQ?' – Tư duy IQ':''}.</strong> ${esc(q.prompt)}</div>
+   <div class="print-question-line"><strong>Bài ${i+1} (${numfmt(q.points)} điểm)${q.isIQ?' – Tư duy nâng cao':''}.</strong> ${fmtPromptHtml(q.prompt)}</div>
    ${q.visual?`<div class="print-visual">${visualSvg(q.visual)}</div>`:''}
    <div class="exam-essay-lines"><div></div><div></div><div></div></div>
   </div>`).join('');
@@ -10681,46 +12043,82 @@ function renderMultiExamPrintArea(){
      <td style="width:22%"><b>Nhận xét của GV:</b><br><br></td>
     </tr>
    </table>
-   <div class="exam-part-title">Phần I. Trắc nghiệm (${numfmt(p.pts.mcqTotal)} điểm) – Khoanh vào chữ cái đặt trước câu trả lời đúng</div>
-   <div class="print-grid">${mcqHtml}</div>
-   <div class="exam-part-title">Phần II. Tự luận (${numfmt(10-p.pts.mcqTotal)} điểm)</div>
-   <div class="print-grid">${essayHtml}</div>
+   ${hasMcq?`<div class="exam-part-title">${mcqHeading}</div><div class="print-grid">${mcqHtml}</div>`:''}
+   ${hasEssay?`<div class="exam-part-title">${essayHeading}</div><div class="print-grid">${essayHtml}</div>`:''}
   </div>`;
  }).join('');
 
  let keySheet='';
  if(p.incKey){
   const keyBlocks=p.exams.map(ex=>{
-   const mcqCells=ex.mcqs.map((q,i)=>{
-    const idx=q.options.findIndex(o=>normalize(o)===normalize(q.answer));
-    return `<td><b>C${i+1}:</b> ${idx>=0?letters[idx]:''} (${esc(q.answer)})</td>`;
-   }).join('');
-   const essayRows=ex.essays.map((q,i)=>`<tr><td><b>Bài ${i+1}</b> (${numfmt(q.points)}đ)</td><td><b>${esc(q.answer)}</b></td><td>${esc(q.explanation||'')}</td></tr>`).join('');
+   const hasMcq=ex.mcqs.length>0, hasEssay=ex.essays.length>0;
+   let mcqKeyTable='';
+   if(hasMcq){
+    // Chia tối đa 5 cột/dòng để in A4 không bao giờ tràn ngang dù 20–40 câu TN
+    const cols=Math.min(5,ex.mcqs.length);
+    const rowsHtml=[];
+    for(let start=0;start<ex.mcqs.length;start+=cols){
+     const slice=ex.mcqs.slice(start,start+cols);
+     const cells=slice.map((q,offset)=>{
+      const i=start+offset;
+      const idx=q.options.findIndex(o=>normalize(o)===normalize(q.answer));
+      return `<td><b>C${i+1}:</b> ${idx>=0?letters[idx]:''} (${esc(q.answer)}) <small>[${numfmt(q.points)}đ]</small><br><small style="color:#555">${esc(q.source||'')}</small></td>`;
+     });
+     while(cells.length<cols)cells.push('<td></td>');
+     rowsHtml.push(`<tr>${cells.join('')}</tr>`);
+    }
+    const mcqKeyTitle=hasEssay?'Phần I. Trắc nghiệm':'Phần Trắc nghiệm';
+    const perNote=p.pts.mcqEach!==null?`mỗi câu đúng ${numfmt(p.pts.mcqEach)} điểm`:`tổng ${numfmt(p.pts.mcqTotal)} điểm`;
+    mcqKeyTable=`<table class="exam-key-table">
+     <tr><th colspan="${cols}">${mcqKeyTitle} (${perNote})</th></tr>
+     ${rowsHtml.join('')}
+    </table>`;
+   }
+   let essayKeyTable='';
+   if(hasEssay){
+    const essayKeyTitle=hasMcq?'Phần II &amp; Bài SGK':'Tự luận &amp; Bài SGK';
+    const essayRows=ex.essays.map((q,i)=>`<tr><td><b>Bài ${i+1}</b> (${numfmt(q.points)}đ)<br><small style="color:#555">${esc(q.source||'')}</small></td><td><b>${esc(q.answer)}</b></td><td>${esc(q.explanation||'')}</td></tr>`).join('');
+    essayKeyTable=`<table class="exam-key-table">
+     <tr><th style="width:24%">${essayKeyTitle}</th><th style="width:22%">Đáp án</th><th>Hướng dẫn chấm</th></tr>
+     ${essayRows}
+    </table>`;
+   }
    return `<div style="margin-bottom:6mm;break-inside:avoid;page-break-inside:avoid">
     <div class="exam-part-title">Đáp án &amp; Biểu điểm – Mã đề ${ex.code}</div>
-    <table class="exam-key-table">
-     <tr><th colspan="${ex.mcqs.length}">Phần I. Trắc nghiệm (mỗi câu đúng ${numfmt(p.pts.mcqEach)} điểm)</th></tr>
-     <tr>${mcqCells}</tr>
-    </table>
-    <table class="exam-key-table">
-     <tr><th style="width:18%">Phần II</th><th style="width:20%">Đáp án</th><th>Hướng dẫn chấm</th></tr>
-     ${essayRows}
-    </table>
+    ${mcqKeyTable}
+    ${essayKeyTable}
    </div>`;
   }).join('');
   keySheet=`<div class="print-sheet answerkey">
-   <div class="print-head"><h1>ĐÁP ÁN &amp; BIỂU ĐIỂM CHẤM – LỚP ${p.grade}</h1><p>${esc(p.termLabel)} · Mã đề: ${p.exams.map(e=>e.code).join(', ')}</p></div>
+   <div class="print-head"><h1>ĐÁP ÁN, BIỂU ĐIỂM &amp; ĐỐI CHIẾU SGK – LỚP ${p.grade}</h1><p>${esc(p.termLabel)} (${esc(p.scopeText||'')}) · Mã đề: ${p.exams.map(e=>e.code).join(', ')}</p></div>
    ${keyBlocks}
   </div>`;
  }
  $('#printArea').innerHTML=sheets+keySheet;
 }
+
 function setupMultiExamModule(){
  $$('#wsSubtabs .subtab').forEach(b=>b.onclick=()=>{
   const t=b.dataset.wtab;
   $$('#wsSubtabs .subtab').forEach(x=>x.classList.toggle('active',x===b));
   $$('#page-worksheet .subpane').forEach(p=>p.classList.toggle('active',p.id==='wtab-'+t));
  });
+ if($('#mtGrade'))$('#mtGrade').onchange=updateMultiExamScopeUI;
+ if($('#mtTerm'))$('#mtTerm').onchange=updateMultiExamScopeUI;
+ if($('#mtFromLesson'))$('#mtFromLesson').onchange=updateMultiExamScopeUI;
+ if($('#mtToLesson'))$('#mtToLesson').onchange=updateMultiExamScopeUI;
+ ['#mtCodes','#mtMcqQty','#mtEssayQty','#mtIncludeIQ'].forEach(sel=>{
+  const el=$(sel);
+  if(el){el.addEventListener('input',updateMultiExamStructurePreview);el.addEventListener('change',updateMultiExamStructurePreview);}
+ });
+ $$('#mtQuickPresets [data-pmcq]').forEach(btn=>btn.onclick=()=>{
+  $('#mtMcqQty').value=btn.dataset.pmcq;
+  $('#mtEssayQty').value=btn.dataset.pessay;
+  $('#mtIncludeIQ').checked=(btn.dataset.piq==='1');
+  updateMultiExamStructurePreview();
+ });
+ updateMultiExamScopeUI();
+ updateMultiExamStructurePreview();
  $('#btnBuildMultiExam').onclick=buildMultiCodeExams;
  $('#btnPrintMultiExam').onclick=()=>{
   if(!multiExamPack){showToast('Hãy bấm Sinh bộ đề kiểm tra trước khi in!','err');return;}
@@ -10728,7 +12126,6 @@ function setupMultiExamModule(){
   window.print();
  };
 }
-
 function init(){if(totalLessons!==345){console.error('Số bài chưa đạt 345',totalLessons)}$('#globalGrade').onchange=()=>{renderHome();$('#courseGrade').value=$('#globalGrade').value;renderCourse(0)};$('#brandHome').onclick=()=>go('home');$('#btnBackPage').onclick=goBackPage;document.addEventListener('keydown',e=>{if(e.altKey&&e.key==='ArrowLeft'&&!$('#slideBack').classList.contains('show')&&!$('#gameOverlay')){e.preventDefault();goBackPage();}});$('#brandHome').onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go('home')}};$$('#nav button[data-page]').forEach(b=>b.onclick=()=>go(b.dataset.page));$$('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go));$('#courseGrade').onchange=()=>{ $('#globalGrade').value=$('#courseGrade').value;renderCourse(0)};$('#courseBook').onchange=()=>renderCourse(0);let _lsT=null;$('#lessonSearch').oninput=()=>{clearTimeout(_lsT);_lsT=setTimeout(()=>renderCourse(Number($('#topicNav .selected')?.dataset.topic||0)),120);};setupPractice();setupIQ();setupSlides();setupSlideExtras();setupWorksheet();setupMultiExamModule();setupHomeworkModule();setupExamLibrary();setupProgress();setupV17Features();$('#courseGrade').value=$('#globalGrade').value;$('#practiceGrade').value='1';$('#iqGrade').value='1';$('#slideGrade').value='1';$('#printGrade').value='1';renderHome();renderCourse(0);go('home');setupAuthAndManagement();}
 
 // ==============================================================================
