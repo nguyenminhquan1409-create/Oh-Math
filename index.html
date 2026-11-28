@@ -4858,6 +4858,409 @@ html[class*="math-cursor-"] textarea {
  text-align: center;
 }
 
+
+/* ===== CẬP NHẬT V26: BỘ LỌC 3 CHẾ ĐỘ BẢNG XẾP HẠNG ĐẤU TRƯỜNG & KHÁCH DÙNG THỬ NHẬP TÊN IN HOA ===== */
+.lb-scope-row {
+ display: flex;
+ flex-wrap: wrap;
+ gap: 6px;
+}
+.lb-scope-row .opt {
+ flex: 1 1 auto;
+ text-align: center;
+ justify-content: center;
+ font-size: 13px!important;
+ padding: 8px 10px!important;
+ border-radius: 11px!important;
+}
+.lb-scope-row .opt.active {
+ background: linear-gradient(110deg, #2857f0, #673ce3)!important;
+ color: #ffffff!important;
+ border-color: transparent!important;
+ box-shadow: 0 4px 12px rgba(49, 92, 255, 0.24);
+}
+.lb-filter-selects {
+ display: flex;
+ gap: 8px;
+ flex-wrap: wrap;
+}
+.lb-filter-selects:empty {
+ display: none;
+}
+.lb-filter-selects select {
+ flex: 1 1 160px;
+ min-width: 0;
+}
+.lb-list {
+ max-height: 540px;
+ overflow-y: auto;
+ padding-right: 3px;
+}
+.lb-row.is-guest {
+ border-color: #7dd3fc;
+ background: linear-gradient(120deg, #f0f9ff 0%, #ffffff 70%, #f0fdfa 100%);
+}
+.lb-role-guest {
+ display: inline-block;
+ padding: 2px 7px;
+ margin-left: 4px;
+ border-radius: 999px;
+ background: #cffafe;
+ color: #0e7490;
+ font-size: 11px;
+ font-weight: 800;
+ vertical-align: middle;
+}
+
+/* Hộp nhập tên tự động viết IN HOA cho Khách dùng thử sau khi đấu 60s */
+.guest-name-box {
+ margin: 12px auto 4px;
+ padding: 14px 16px;
+ max-width: 560px;
+ border-radius: 16px;
+ background: linear-gradient(135deg, #ffffff 0%, #eff6ff 60%, #f0fdfa 100%);
+ border: 2px solid #38bdf8;
+ box-shadow: 0 6px 18px rgba(2, 132, 199, 0.14);
+ text-align: left;
+}
+.guest-name-box label {
+ display: block;
+ font-size: 14px;
+ font-weight: 800;
+ color: #0c4a6e;
+ margin-bottom: 8px;
+ line-height: 1.4;
+}
+.guest-name-row {
+ display: flex;
+ gap: 8px;
+ flex-wrap: wrap;
+ align-items: stretch;
+}
+.guest-upper-input {
+ flex: 1 1 220px;
+ min-width: 0;
+ border: 2px solid #7dd3fc!important;
+ border-radius: 12px!important;
+ padding: 10px 14px!important;
+ font-size: 16px!important;
+ font-weight: 800!important;
+ color: #0f172a!important;
+ background: #ffffff!important;
+ text-transform: uppercase!important;
+ letter-spacing: 0.4px;
+ outline: none;
+}
+.guest-upper-input:focus {
+ border-color: #2563eb!important;
+ box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.16)!important;
+}
+.guest-save-status {
+ margin-top: 7px;
+ font-size: 13px;
+ font-weight: 600;
+ color: #475569;
+ line-height: 1.4;
+}
+.guest-save-status.is-ok {
+ color: #047857;
+}
+.guest-save-status.is-err {
+ color: #be123c;
+}
+
+
+/* ===== CẬP NHẬT V27: LỌC CHẾ ĐỘ ĐẤU TRƯỜNG · TOP 25 · BẢNG VÀNG TRANG CHỦ ĐẸP MẮT ===== */
+.lb-mode-row {
+ display: flex;
+ flex-wrap: wrap;
+ align-items: center;
+ gap: 6px;
+}
+.lb-mode-label {
+ font-size: 13px;
+ font-weight: 800;
+ color: #475569;
+ margin-right: 2px;
+ white-space: nowrap;
+}
+.lb-mode-row .opt {
+ font-size: 12.5px!important;
+ padding: 6px 10px!important;
+ border-radius: 999px!important;
+ background: #ffffff;
+ border-color: #d6e2ff;
+}
+.lb-mode-row .opt.active {
+ background: linear-gradient(110deg, #f97316, #f59e0b)!important;
+ color: #ffffff!important;
+ border-color: transparent!important;
+ box-shadow: 0 3px 10px rgba(249, 115, 22, 0.28);
+}
+.lb-mode-compact .opt {
+ flex: 1 1 auto;
+ text-align: center;
+ justify-content: center;
+ font-size: 12px!important;
+ padding: 6px 8px!important;
+}
+
+/* Khung Bảng Vàng Đấu Trường ngoài Trang chủ */
+.home-lb-showcase {
+ margin: 0 0 22px!important;
+ padding: clamp(18px, 2vw, 26px)!important;
+ border: 2px solid #fbbf24!important;
+ border-top: 6px solid #f59e0b!important;
+ border-radius: 24px!important;
+ background:
+  radial-gradient(circle at 96% 8%, rgba(251, 191, 36, 0.16) 0%, transparent 34%),
+  radial-gradient(circle at 4% 94%, rgba(56, 189, 248, 0.12) 0%, transparent 36%),
+  linear-gradient(145deg, #ffffff 0%, #f5f9ff 52%, #fffbeb 100%)!important;
+ box-shadow: 0 12px 30px rgba(217, 119, 6, 0.11), 0 4px 12px rgba(38, 72, 165, 0.06)!important;
+}
+.home-lb-head {
+ display: flex;
+ align-items: center;
+ justify-content: space-between;
+ gap: 14px;
+ flex-wrap: wrap;
+ padding-bottom: 14px;
+ border-bottom: 2px dashed #fde68a;
+}
+.home-lb-title-group {
+ display: flex;
+ align-items: center;
+ gap: 13px;
+ min-width: 0;
+}
+.home-lb-trophy {
+ width: 58px;
+ height: 58px;
+ flex: 0 0 58px;
+ border-radius: 18px;
+ display: grid;
+ place-items: center;
+ font-size: 32px;
+ background: linear-gradient(135deg, #fef08a 0%, #fb923c 100%);
+ box-shadow: 0 8px 18px rgba(245, 158, 11, 0.30);
+ border: 2px solid #ffffff;
+}
+.home-lb-kicker {
+ font-size: 11.5px;
+ font-weight: 800;
+ letter-spacing: 1px;
+ color: #d97706;
+ text-transform: uppercase;
+ margin-bottom: 2px;
+}
+.home-lb-title-group h3 {
+ margin: 0!important;
+ font-size: clamp(20px, 1.7vw, 25px)!important;
+ color: #1b348c!important;
+}
+.home-lb-head-actions {
+ display: flex;
+ align-items: center;
+ gap: 8px;
+ flex-wrap: wrap;
+}
+.home-lb-toolbar {
+ display: flex;
+ flex-direction: column;
+ gap: 10px;
+ margin: 14px 0 16px;
+ padding: 12px 14px;
+ border-radius: 16px;
+ background: rgba(255, 255, 255, 0.82);
+ border: 1.5px solid #e2ebff;
+}
+.home-lb-row1 {
+ display: flex;
+ align-items: center;
+ justify-content: space-between;
+ gap: 10px;
+ flex-wrap: wrap;
+}
+.home-lb-scope {
+ flex: 1 1 360px;
+}
+.home-lb-selects {
+ display: flex;
+ gap: 8px;
+ flex-wrap: wrap;
+}
+.home-lb-selects select {
+ border: 1.5px solid #c8d7ff;
+ border-radius: 11px;
+ padding: 8px 11px;
+ font-size: 13.5px;
+ background: #ffffff;
+ color: #1b348c;
+ font-weight: 700;
+ min-height: 38px;
+}
+.home-lb-sort {
+ flex: 0 0 auto;
+}
+
+/* Bục Vinh Quang Top 3 ngoài Trang chủ */
+.home-podium {
+ display: flex;
+ align-items: flex-end;
+ justify-content: center;
+ gap: 14px;
+ margin: 6px 0 16px;
+ padding: 12px 8px 6px;
+}
+.podium-card {
+ flex: 1 1 0;
+ max-width: 280px;
+ position: relative;
+ border-radius: 20px;
+ padding: 16px 14px 14px;
+ text-align: center;
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ gap: 5px;
+ border: 2px solid #dce6ff;
+ background: #ffffff;
+ box-shadow: 0 10px 24px rgba(30, 58, 138, 0.09);
+ transition: transform .16s;
+}
+.podium-card:hover {
+ transform: translateY(-3px);
+}
+.podium-card.podium-r1 {
+ max-width: 310px;
+ padding: 20px 16px 18px;
+ border: 2.5px solid #f59e0b;
+ background: linear-gradient(160deg, #fffdf0 0%, #fef3c7 52%, #ffedd5 100%);
+ box-shadow: 0 14px 30px rgba(245, 158, 11, 0.24);
+ transform: translateY(-6px);
+}
+.podium-card.podium-r1:hover {
+ transform: translateY(-9px);
+}
+.podium-card.podium-r2 {
+ border-color: #94a3b8;
+ background: linear-gradient(160deg, #ffffff 0%, #f1f5f9 60%, #e0f2fe 100%);
+}
+.podium-card.podium-r3 {
+ border-color: #fb923c;
+ background: linear-gradient(160deg, #ffffff 0%, #fff7ed 60%, #ffedd5 100%);
+}
+.podium-card.is-me {
+ box-shadow: 0 0 0 4px rgba(49, 92, 255, 0.22), 0 12px 26px rgba(49, 92, 255, 0.16);
+}
+.podium-crown {
+ position: absolute;
+ top: -18px;
+ left: 50%;
+ transform: translateX(-50%);
+ font-size: 28px;
+ line-height: 1;
+ filter: drop-shadow(0 3px 6px rgba(180, 83, 9, 0.35));
+}
+.podium-medal {
+ font-size: 13px;
+ font-weight: 800;
+ padding: 3px 11px;
+ border-radius: 999px;
+ background: rgba(255, 255, 255, 0.85);
+ color: #1e3a8a;
+ border: 1px solid rgba(148, 163, 184, 0.35);
+}
+.podium-r1 .podium-medal {
+ background: #f59e0b;
+ color: #ffffff;
+ border-color: transparent;
+}
+.podium-avatar {
+ width: 52px;
+ height: 52px;
+ border-radius: 50%;
+ display: grid;
+ place-items: center;
+ font-size: 20px;
+ font-weight: 800;
+ color: #ffffff;
+ background: linear-gradient(135deg, #2857f0, #673ce3);
+ border: 3px solid #ffffff;
+ box-shadow: 0 5px 12px rgba(40, 87, 240, 0.22);
+ margin: 4px 0 2px;
+}
+.podium-r1 .podium-avatar {
+ width: 60px;
+ height: 60px;
+ font-size: 23px;
+ background: linear-gradient(135deg, #f59e0b, #ea580c);
+ box-shadow: 0 6px 16px rgba(234, 88, 12, 0.30);
+}
+.podium-name {
+ font-size: 15.5px;
+ font-weight: 800;
+ color: #162a68;
+ max-width: 100%;
+ white-space: nowrap;
+ overflow: hidden;
+ text-overflow: ellipsis;
+}
+.podium-r1 .podium-name {
+ font-size: 17px;
+ color: #7c2d12;
+}
+.podium-tag {
+ display: flex;
+ justify-content: center;
+}
+.podium-score {
+ font-size: clamp(22px, 2vw, 28px);
+ font-weight: 800;
+ color: #0f766e;
+ line-height: 1.15;
+ margin-top: 2px;
+}
+.podium-r1 .podium-score {
+ font-size: clamp(26px, 2.3vw, 33px);
+ color: #ea580c;
+}
+.podium-sub {
+ font-size: 12.5px;
+ font-weight: 700;
+ color: #54688f;
+}
+
+/* Lưới Top 4..25 ngoài Trang chủ */
+.home-lb-grid {
+ display: grid;
+ grid-template-columns: repeat(2, minmax(0, 1fr));
+ gap: 9px 12px;
+ max-height: 410px;
+ overflow-y: auto;
+ padding: 2px 4px 2px 2px;
+}
+@media(max-width: 820px) {
+ .home-podium {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+ }
+ .podium-card,
+ .podium-card.podium-r1 {
+  max-width: 100%;
+  transform: none!important;
+ }
+ .podium-crown {
+  position: static;
+  transform: none;
+  margin-bottom: -2px;
+ }
+ .home-lb-grid {
+  grid-template-columns: 1fr;
+ }
+}
+
 </style>
 </head>
 <body>
@@ -4913,6 +5316,54 @@ html[class*="math-cursor-"] textarea {
       </div>
       <div class="hw-card-grid" id="studentHwGrid"></div>
     </div>
+
+    <section class="panel home-lb-showcase" id="homeLeaderboardSection" aria-label="Bảng xếp hạng Đấu trường tính nhẩm">
+      <div class="home-lb-head">
+        <div class="home-lb-title-group">
+          <span class="home-lb-trophy" aria-hidden="true">🏆</span>
+          <div>
+            <div class="home-lb-kicker">BẢNG VÀNG THI ĐUA · TOP 25 XUẤT SẮC NHẤT</div>
+            <h3>Bảng xếp hạng Đấu trường tính nhẩm 60 giây</h3>
+            <p class="sub" id="homeLbSubtitle" style="margin:3px 0 0">Đang đồng bộ bảng xếp hạng…</p>
+          </div>
+        </div>
+        <div class="home-lb-head-actions">
+          <button type="button" class="btn gamebtn top-mini-btn" id="homeLbPlayNow">⚡ Vào đấu ngay</button>
+          <button type="button" class="btn light top-mini-btn" id="homeLbRefresh">🔄 Cập nhật</button>
+        </div>
+      </div>
+
+      <div class="home-lb-toolbar">
+        <div class="home-lb-row1">
+          <div class="lb-scope-row home-lb-scope" id="homeLbScopeMode">
+            <button type="button" class="opt active" data-lbscope="class">🏫 Trong cùng lớp</button>
+            <button type="button" class="opt" data-lbscope="teacher">👩‍🏫 Tất cả HS của GV</button>
+            <button type="button" class="opt" data-lbscope="all">🌏 Tất cả (gồm Dùng thử)</button>
+          </div>
+          <div class="home-lb-selects">
+            <select id="homeLbTeacherSelect" hidden></select>
+            <select id="homeLbClassSelect" hidden></select>
+          </div>
+          <div class="optrow home-lb-sort" id="homeLbSortMode">
+            <button type="button" class="opt active" data-lbsort="arena">⚡ Top Tính nhẩm</button>
+            <button type="button" class="opt" data-lbsort="diligent">🌟 Top Chăm chỉ</button>
+          </div>
+        </div>
+        <div class="lb-mode-row" id="homeLbModeRow">
+          <span class="lb-mode-label">🎯 Chế độ đấu:</span>
+          <button type="button" class="opt active" data-lbamode="all">✨ Tất cả chế độ</button>
+          <button type="button" class="opt" data-lbamode="addsub20">➕➖ Cộng trừ 20</button>
+          <button type="button" class="opt" data-lbamode="muldiv29">✖️➗ Nhân chia 2–9</button>
+          <button type="button" class="opt" data-lbamode="addsub100">🚀 Nhẩm trong 100</button>
+          <button type="button" class="opt" data-lbamode="mixed">🔥 Hỗn hợp siêu tốc</button>
+        </div>
+      </div>
+
+      <div id="homeLbPodium" class="home-podium" hidden></div>
+      <div id="homeLbBody" class="home-lb-grid">
+        <div class="empty" style="grid-column:1/-1">Đang tải Bảng Vàng…</div>
+      </div>
+    </section>
 
     <div class="sectionhead"><div><h2>✨ Giới thiệu về Toán Ơi !</h2><p>Tổng quan mục tiêu, nguồn dữ liệu và đối tượng phù hợp khi sử dụng ứng dụng.</p></div></div>
     <div class="about-grid">
@@ -5043,11 +5494,26 @@ html[class*="math-cursor-"] textarea {
 
         <div class="panel arena-rank-panel">
           <div class="lb-head-block">
-            <h3>🏆 Bảng xếp hạng nội bộ lớp</h3>
-            <p class="sub" id="lbSubtitle" style="margin:4px 0 0">Top học sinh chăm chỉ &amp; tính nhẩm nhanh trong lớp.</p>
+            <h3>🏆 Bảng xếp hạng Đấu trường</h3>
+            <p class="sub" id="lbSubtitle" style="margin:4px 0 0">Chọn bộ lọc để xem xếp hạng trong lớp, toàn bộ học sinh của giáo viên hoặc toàn hệ thống.</p>
           </div>
           <div class="lb-controls">
-            <select id="lbClassSelect" hidden style="border:1.5px solid #c8d7ff;border-radius:11px;padding:7px 10px;font-size:13.5px"></select>
+            <div class="lb-scope-row" id="lbScopeMode">
+              <button type="button" class="opt active" data-lbscope="class">🏫 Trong cùng lớp</button>
+              <button type="button" class="opt" data-lbscope="teacher">👩‍🏫 Tất cả HS của GV</button>
+              <button type="button" class="opt" data-lbscope="all">🌏 Tất cả (gồm Dùng thử)</button>
+            </div>
+            <div class="lb-filter-selects" id="lbFilterSelects">
+              <select id="lbTeacherSelect" hidden style="border:1.5px solid #c8d7ff;border-radius:11px;padding:7px 10px;font-size:13.5px"></select>
+              <select id="lbClassSelect" hidden style="border:1.5px solid #c8d7ff;border-radius:11px;padding:7px 10px;font-size:13.5px"></select>
+            </div>
+            <div class="lb-mode-row lb-mode-compact" id="lbArenaModeRow">
+              <button type="button" class="opt active" data-lbamode="all">✨ Tất cả chế độ</button>
+              <button type="button" class="opt" data-lbamode="addsub20">➕➖ ±20</button>
+              <button type="button" class="opt" data-lbamode="muldiv29">✖️➗ 2–9</button>
+              <button type="button" class="opt" data-lbamode="addsub100">🚀 ±100</button>
+              <button type="button" class="opt" data-lbamode="mixed">🔥 Hỗn hợp</button>
+            </div>
             <div class="lb-sort-bar">
               <div class="optrow" id="lbSortMode">
                 <button type="button" class="opt active" data-lbsort="arena">⚡ Top Tính nhẩm</button>
@@ -5057,7 +5523,7 @@ html[class*="math-cursor-"] textarea {
             </div>
           </div>
           <div id="leaderboardBody" class="lb-list">
-            <div class="empty">Đang tải bảng xếp hạng lớp…</div>
+            <div class="empty">Đang tải bảng xếp hạng…</div>
           </div>
         </div>
       </div>
@@ -6177,7 +6643,7 @@ let showAdminGvPw = false;
 let progress=loadStore(),selectedLesson=null,currentQuestions=[],currentChecked=false,level='easy',qty=10,slideQuestions=[],slideIndex=0,slideRevealed=false,worksheetQs=[],activeGame=null;
 
 function getUserStoreKey(){return currentUser?`${KEY}_${currentUser.username}`:KEY}
-function emptyProgress(){return{history:[],lesson:{},wrongBook:[],fixedWrongCount:0,arena:{bestScore:0,bestStreak:0,totalPlays:0,totalCorrect:0,byMode:{}}}}
+function emptyProgress(){return{history:[],lesson:{},wrongBook:[],fixedWrongCount:0,arena:{bestScore:0,bestStreak:0,totalPlays:0,totalCorrect:0,byMode:{},streakByMode:{}}}}
 function normalizeProgressObj(o){
  if(!o||typeof o!=='object')return emptyProgress();
  const ar=o.arena&&typeof o.arena==='object'?o.arena:{};
@@ -6191,7 +6657,8 @@ function normalizeProgressObj(o){
    bestStreak:Number(ar.bestStreak)||0,
    totalPlays:Number(ar.totalPlays)||0,
    totalCorrect:Number(ar.totalCorrect)||0,
-   byMode:ar.byMode&&typeof ar.byMode==='object'?ar.byMode:{}
+   byMode:ar.byMode&&typeof ar.byMode==='object'?ar.byMode:{},
+   streakByMode:ar.streakByMode&&typeof ar.streakByMode==='object'?ar.streakByMode:{}
   }
  };
 }
@@ -6541,7 +7008,7 @@ function go(page,opts={}){
  if(page==='progress')renderProgress();
  if(page==='practice'){updateWrongBookBadges();renderArenaOverview();if($('#ptab-wrong')?.classList.contains('active'))renderWrongBook();if($('#ptab-arena')?.classList.contains('active'))loadClassLeaderboard(true,true);}
  if(page==='assigned'){renderAssignedPage();loadStudentHomeworks(true,true);}
- if(page==='home')renderHome();
+ if(page==='home'){renderHome();loadClassLeaderboard(true,false);}
  if(page==='exams')renderExamLibrary();
  if(page==='students'){loadTeacherStudents(true);loadTeacherAssignments(true);}
  if(page==='admin'){
@@ -7098,6 +7565,15 @@ function computeEarnedBadges(prog){
  if((p.fixedWrongCount||0)>=3)out.push('mistake_master');
  return out;
 }
+function mergeNumericMap(a,b){
+ const out={};
+ const keys=new Set([...Object.keys(a&&typeof a==='object'?a:{}),...Object.keys(b&&typeof b==='object'?b:{})]);
+ keys.forEach(k=>{
+  const v=Math.max(Number(a?.[k])||0,Number(b?.[k])||0);
+  if(v>0)out[k]=v;
+ });
+ return out;
+}
 function calcProgressSummary(prog){
  const p=normalizeProgressObj(prog);
  const hist=p.history, les=p.lesson, ar=p.arena;
@@ -7115,6 +7591,8 @@ function calcProgressSummary(prog){
   arenaBest:ar.bestScore||0,
   arenaStreak:ar.bestStreak||0,
   arenaPlays:ar.totalPlays||0,
+  arenaByMode:ar.byMode&&typeof ar.byMode==='object'?ar.byMode:{},
+  arenaStreakByMode:ar.streakByMode&&typeof ar.streakByMode==='object'?ar.streakByMode:{},
   wrongLeft:(p.wrongBook||[]).length,
   fixedWrong:p.fixedWrongCount||0,
   badges
@@ -7134,7 +7612,7 @@ async function syncProgressToCloud(lastArenaScore=null){
   history:(progress.history||[]).slice(-40),
   wrongBook:(progress.wrongBook||[]).slice(-40),
   fixedWrongCount:Number(progress.fixedWrongCount)||0,
-  arena:progress.arena||{bestScore:0,bestStreak:0,totalPlays:0,totalCorrect:0,byMode:{}},
+  arena:progress.arena||{bestScore:0,bestStreak:0,totalPlays:0,totalCorrect:0,byMode:{},streakByMode:{}},
   updatedAt:new Date().toISOString()
  };
  const sum=calcProgressSummary(progress);
@@ -7143,23 +7621,33 @@ async function syncProgressToCloud(lastArenaScore=null){
   tasks.push(dbPut(`students/${currentUser.teacherId}/${currentUser.username}/summary`,sum));
  }
  const ownerTid=getArenaOwnerTeacherId();
+ const nowIso=new Date().toISOString();
+ const boardRec={
+  username:currentUser.username,
+  fullName:currentUser.fullName||currentUser.username,
+  role:currentUser.role,
+  className:currentUser.role==='student'?(currentUser.className||''):(currentUser.role==='teacher'?'__TEACHER__':''),
+  teacherId:ownerTid||'',
+  teacherName:currentUser.role==='student'?(currentUser.teacherName||ownerTid||''):(currentUser.role==='teacher'?(currentUser.fullName||currentUser.username):''),
+  arenaBest:Number(sum.arenaBest)||0,
+  arenaStreak:Number(sum.arenaStreak)||0,
+  arenaPlays:Number(sum.arenaPlays)||0,
+  arenaByMode:sum.arenaByMode||{},
+  arenaStreakByMode:sum.arenaStreakByMode||{},
+  attempts:Number(sum.attempts)||0,
+  accuracy:Number(sum.accuracy)||0,
+  doneCount:Number(sum.doneCount)||0,
+  badges:Array.isArray(sum.badges)?sum.badges:[],
+  updatedAt:nowIso
+ };
+ if(lastArenaScore!==null)boardRec.lastScore=Number(lastArenaScore)||0;
  if(ownerTid){
-  const boardRec={
-   username:currentUser.username,
-   fullName:currentUser.fullName||currentUser.username,
-   role:currentUser.role,
-   className:currentUser.role==='teacher'?'__TEACHER__':(currentUser.className||''),
-   arenaBest:Number(sum.arenaBest)||0,
-   arenaStreak:Number(sum.arenaStreak)||0,
-   arenaPlays:Number(sum.arenaPlays)||0,
-   attempts:Number(sum.attempts)||0,
-   accuracy:Number(sum.accuracy)||0,
-   doneCount:Number(sum.doneCount)||0,
-   badges:Array.isArray(sum.badges)?sum.badges:[],
-   updatedAt:new Date().toISOString()
-  };
-  if(lastArenaScore!==null)boardRec.lastScore=Number(lastArenaScore)||0;
   tasks.push(dbPut(`arena_board/${ownerTid}/${currentUser.username}`,boardRec));
+ }
+ // Đồng bộ lên nhánh bảng xếp hạng toàn hệ thống (arena_global)
+ if(lastArenaScore!==null||boardRec.arenaBest>0||boardRec.attempts>0){
+  const gKey=`u_${currentUser.username}`;
+  tasks.push(dbPut(`arena_global/${gKey}`,{key:gKey,...boardRec}));
  }
  await Promise.all(tasks);
 }
@@ -7181,7 +7669,8 @@ async function pullProgressFromCloud(){
       bestStreak:Math.max(rp.arena.bestStreak,lp.arena.bestStreak),
       totalPlays:Math.max(rp.arena.totalPlays,lp.arena.totalPlays),
       totalCorrect:Math.max(rp.arena.totalCorrect,lp.arena.totalCorrect),
-      byMode:{...lp.arena.byMode,...rp.arena.byMode}
+      byMode:mergeNumericMap(lp.arena.byMode,rp.arena.byMode),
+      streakByMode:mergeNumericMap(lp.arena.streakByMode,rp.arena.streakByMode)
      }
     };
     saveStore(true);
@@ -7352,9 +7841,14 @@ async function applyUserSession(user, isFreshLogin=false){
  go('home',{fromBack:true});
  // Đồng bộ Cloud ngầm ở nền
  pullProgressFromCloud().then(()=>{updateHomeStats();renderHome();if(currentPageId==='course')renderCourse(Number($('#topicNav .selected')?.dataset.topic||0));if(currentPageId==='progress')renderProgress();}).catch(()=>{});
- studentHwCache=[];studentSubsMap={};_lastStuHwFetch=0;lbStudentsCache=[];lbArenaMap={};lbLastFetch=0;
+ studentHwCache=[];studentSubsMap={};_lastStuHwFetch=0;
+ lbStudentsCache=[];lbArenaMap={};lbGlobalCache=null;lbAllStudentsCache=null;lbAllBoardsCache=null;lbTeachersCache=null;lbLastFetch=0;lbGlobalLastFetch=0;
+ lbScope=(user.isTrial||user.role==='admin')?'all':'class';
+ lbArenaMode='all';
+ syncLeaderboardScopeUI();
  if(user.role==='student'){loadStudentHomeworks(true,true);}else{const hb=$('#studentHomeworkBox');if(hb)hb.hidden=true;updateAssignedNavBadge();}
  if(user.role==='teacher'){loadTeacherStudents(true,true);loadTeacherAssignments(true,true);}
+ loadClassLeaderboard(true,true);
  startLiveSyncTimers();
 }
 
@@ -7366,7 +7860,7 @@ function logoutUser(){
  clearMathCursor();
  clearSession();
  progress=emptyProgress();
- studentHwCache=[];studentSubsMap={};_lastStuHwFetch=0;lbStudentsCache=[];lbArenaMap={};lbLastFetch=0;
+ studentHwCache=[];studentSubsMap={};_lastStuHwFetch=0;lbStudentsCache=[];lbArenaMap={};lbGlobalCache=null;lbAllStudentsCache=null;lbAllBoardsCache=null;lbTeachersCache=null;lbLastFetch=0;lbGlobalLastFetch=0;
  syncTopAccountBar('');
  $('#navAdmin').hidden=true;$('#navStudents').hidden=true;
  if($('#navAssigned')){$('#navAssigned').hidden=true;$('#navAssigned').classList.remove('has-pending-hw');}
@@ -9696,14 +10190,14 @@ function stopLiveSyncTimers(){
 }
 function startLiveSyncTimers(){
  stopLiveSyncTimers();
- if(!currentUser||currentUser.isTrial)return;
+ if(!currentUser)return;
  _liveSyncTimer=setInterval(()=>{
   if(document.visibilityState==='hidden')return;
-  if(!currentUser||currentUser.isTrial)return;
-  if(currentUser.role==='student'){
+  if(!currentUser)return;
+  if(currentUser.role==='student'&&!currentUser.isTrial){
    loadStudentHomeworks(true,true);
   }
-  if(currentPageId==='practice'&&$('#ptab-arena')?.classList.contains('active')&&!arenaRunning){
+  if((currentPageId==='home'||(currentPageId==='practice'&&$('#ptab-arena')?.classList.contains('active')))&&!arenaRunning){
    loadClassLeaderboard(true,true);
   }
  },15000);
@@ -10279,7 +10773,8 @@ function switchPracticeTab(tab){
 // --- B. ĐẤU TRƯỜNG TÍNH NHẨM 60 GIÂY & BẢNG XẾP HẠNG NỘI BỘ LỚP ---
 let arenaMode='addsub20', arenaInputType='choice', arenaRunning=false, arenaTimerId=null;
 let arenaTimeLeft=60, arenaScore=0, arenaStreak=0, arenaBestRunStreak=0, arenaRight=0, arenaTotal=0, arenaCurQ=null;
-let lbSortMode='arena', lbStudentsCache=[], lbArenaMap={}, lbLastFetch=0;
+const ARENA_MODE_LABELS={all:'Tất cả chế độ',addsub20:'Cộng trừ trong 20',muldiv29:'Bảng nhân chia 2–9',addsub100:'Nhẩm trong 100',mixed:'Hỗn hợp siêu tốc'};
+let lbSortMode='arena', lbScope='class', lbArenaMode='all', lbSelectedTeacher='', lbSelectedClass='', lbStudentsCache=[], lbArenaMap={}, lbGlobalCache=null, lbAllStudentsCache=null, lbAllBoardsCache=null, lbTeachersCache=null, lbLastFetch=0, lbGlobalLastFetch=0;
 
 function makeArenaQuestion(mode){
  let actual=mode;
@@ -10416,30 +10911,129 @@ function submitArenaAnswer(val){
  nextArenaQuestion();
 }
 
+function syncLeaderboardScopeUI(){
+ const isGuest=!!currentUser?.isTrial;
+ const isAdmin=(currentUser?.role==='admin');
+ if(isGuest&&lbScope!=='all')lbScope='all';
+ if(isAdmin&&!['class','teacher','all'].includes(lbScope))lbScope='all';
+ ['#lbScopeMode','#homeLbScopeMode'].forEach(sel=>{
+  const wrap=$(sel);
+  if(!wrap)return;
+  const btnClass=wrap.querySelector('[data-lbscope="class"]');
+  const btnTeacher=wrap.querySelector('[data-lbscope="teacher"]');
+  const btnAll=wrap.querySelector('[data-lbscope="all"]');
+  if(btnClass)btnClass.hidden=isGuest;
+  if(btnTeacher)btnTeacher.hidden=isGuest;
+  if(btnAll)btnAll.hidden=false;
+  wrap.querySelectorAll('[data-lbscope]').forEach(b=>b.classList.toggle('active',b.dataset.lbscope===lbScope));
+ });
+ ['#lbSortMode','#homeLbSortMode'].forEach(sel=>{
+  const wrap=$(sel);
+  if(!wrap)return;
+  wrap.querySelectorAll('[data-lbsort]').forEach(b=>b.classList.toggle('active',b.dataset.lbsort===lbSortMode));
+ });
+ ['#lbArenaModeRow','#homeLbModeRow'].forEach(sel=>{
+  const wrap=$(sel);
+  if(!wrap)return;
+  wrap.hidden=(lbSortMode!=='arena');
+  wrap.querySelectorAll('[data-lbamode]').forEach(b=>b.classList.toggle('active',b.dataset.lbamode===lbArenaMode));
+ });
+}
+
+function bindUppercaseNameInput(inp){
+ if(!inp)return;
+ let composing=false;
+ const applyUpper=()=>{
+  const raw=inp.value||'';
+  const up=raw.toLocaleUpperCase('vi-VN');
+  if(up!==raw){
+   const s=inp.selectionStart, e=inp.selectionEnd;
+   inp.value=up;
+   try{if(s!==null&&e!==null)inp.setSelectionRange(s,e);}catch(_){}
+  }
+ };
+ inp.addEventListener('compositionstart',()=>{composing=true;});
+ inp.addEventListener('compositionend',()=>{composing=false;applyUpper();});
+ inp.addEventListener('input',()=>{if(!composing)applyUpper();});
+ inp.addEventListener('blur',()=>{applyUpper();});
+}
+
+async function saveGuestArenaRecord(nameRaw, runScore, runStreak, runAcc){
+ if(!currentUser||!currentUser.isTrial)return null;
+ const upperName=String(nameRaw||'').trim().replace(/\s+/g,' ').toLocaleUpperCase('vi-VN');
+ if(upperName.length<2){
+  throw new Error('Vui lòng nhập họ tên tối thiểu 2 ký tự!');
+ }
+ currentUser.guestDisplayName=upperName;
+ currentUser.fullName=upperName;
+ const slug=cleanKey(upperName).slice(0,22)||'khach';
+ const sid=currentUser.guestSessionId||('g'+Date.now().toString(36));
+ currentUser.guestSessionId=sid;
+ const gKey=`guest_${sid}_${slug}`;
+ currentUser.guestBoardKey=gKey;
+
+ let prevRec=null;
+ try{prevRec=await dbGet(`arena_global/${gKey}`);}catch(e){}
+ const sum=calcProgressSummary(progress);
+ const bestScore=Math.max(Number(prevRec?.arenaBest)||0,Number(sum.arenaBest)||0,Number(runScore)||0);
+ const bestStreak=Math.max(Number(prevRec?.arenaStreak)||0,Number(sum.arenaStreak)||0,Number(runStreak)||0);
+ const totalPlays=Math.max(Number(prevRec?.arenaPlays)||0,Number(sum.arenaPlays)||0,1);
+ const totalAttempts=Math.max(Number(prevRec?.attempts)||0,Number(sum.attempts)||0,1);
+ const bSet=new Set([...(Array.isArray(prevRec?.badges)?prevRec.badges:[]),...(Array.isArray(sum.badges)?sum.badges:[])]);
+ const mergedByMode=mergeNumericMap(prevRec?.arenaByMode,sum.arenaByMode);
+ mergedByMode[arenaMode]=Math.max(Number(mergedByMode[arenaMode])||0,Number(runScore)||0);
+ const mergedStreakByMode=mergeNumericMap(prevRec?.arenaStreakByMode,sum.arenaStreakByMode);
+ mergedStreakByMode[arenaMode]=Math.max(Number(mergedStreakByMode[arenaMode])||0,Number(runStreak)||0);
+ const rec={
+  key:gKey,
+  username:gKey,
+  fullName:upperName,
+  role:'guest',
+  isTrial:true,
+  className:'Dùng thử',
+  arenaBest:bestScore,
+  arenaStreak:bestStreak,
+  arenaPlays:totalPlays,
+  arenaByMode:mergedByMode,
+  arenaStreakByMode:mergedStreakByMode,
+  attempts:totalAttempts,
+  accuracy:Number(sum.accuracy)||Number(runAcc)||0,
+  doneCount:Number(sum.doneCount)||0,
+  badges:[...bSet],
+  lastScore:Number(runScore)||0,
+  updatedAt:new Date().toISOString()
+ };
+ await dbPut(`arena_global/${gKey}`,rec);
+ return rec;
+}
+
 async function finishArenaGame(){
  stopArenaGame(false);
  $('#arenaLive').hidden=true;
- const acc=arenaTotal?Math.round(arenaRight/arenaTotal*100):0;
+ const runScore=arenaScore, runRight=arenaRight, runTotal=arenaTotal, runStreak=arenaBestRunStreak;
+ const acc=runTotal?Math.round(runRight/runTotal*100):0;
  const prevBadges=new Set(computeEarnedBadges(progress));
  if(!progress.arena)progress.arena={bestScore:0,bestStreak:0,totalPlays:0,totalCorrect:0,byMode:{}};
- const isNewRecord=arenaScore>(progress.arena.bestScore||0);
- progress.arena.bestScore=Math.max(progress.arena.bestScore||0,arenaScore);
- progress.arena.bestStreak=Math.max(progress.arena.bestStreak||0,arenaBestRunStreak);
+ const isNewRecord=runScore>(progress.arena.bestScore||0);
+ progress.arena.bestScore=Math.max(progress.arena.bestScore||0,runScore);
+ progress.arena.bestStreak=Math.max(progress.arena.bestStreak||0,runStreak);
  progress.arena.totalPlays=(progress.arena.totalPlays||0)+1;
- progress.arena.totalCorrect=(progress.arena.totalCorrect||0)+arenaRight;
+ progress.arena.totalCorrect=(progress.arena.totalCorrect||0)+runRight;
  if(!progress.arena.byMode)progress.arena.byMode={};
- progress.arena.byMode[arenaMode]=Math.max(progress.arena.byMode[arenaMode]||0,arenaScore);
+ progress.arena.byMode[arenaMode]=Math.max(progress.arena.byMode[arenaMode]||0,runScore);
+ if(!progress.arena.streakByMode)progress.arena.streakByMode={};
+ progress.arena.streakByMode[arenaMode]=Math.max(progress.arena.streakByMode[arenaMode]||0,runStreak);
 
  const modeNames={addsub20:'Cộng trừ trong 20',muldiv29:'Bảng nhân chia 2–9',addsub100:'Nhẩm trong 100',mixed:'Hỗn hợp siêu tốc'};
- const score10=Number(Math.min(10,arenaTotal?(arenaRight/arenaTotal*10):0).toFixed(1));
- if(arenaTotal>0){
+ const score10=Number(Math.min(10,runTotal?(runRight/runTotal*10):0).toFixed(1));
+ if(runTotal>0){
   progress.history.push({
    date:new Date().toISOString(),
    grade:Number($('#globalGrade').value)||3,
    book:1,
    lessonId:`arena-${arenaMode}`,
-   lesson:`Đấu trường 60s (${modeNames[arenaMode]}) · ${arenaScore} điểm`,
-   total:arenaTotal,correct:arenaRight,score:score10,
+   lesson:`Đấu trường 60s (${modeNames[arenaMode]}) · ${runScore} điểm`,
+   total:runTotal,correct:runRight,score:score10,
    mode:'Đấu trường tính nhẩm 60s'
   });
   progress.history=progress.history.slice(-250);
@@ -10447,64 +11041,323 @@ async function finishArenaGame(){
  saveStore(true);
  updateHomeStats();
  renderArenaOverview();
- // Đồng bộ ngay kết quả lên Cloud (cho cả HS & GV) rồi tải mới BXH toàn lớp tức thì
- (async()=>{
-  try{
-   await syncProgressToCloud(arenaScore);
-  }catch(e){}
-  await loadClassLeaderboard(true,true);
- })();
+ // Đồng bộ ngay kết quả lên Cloud (cho HS, GV, Admin) rồi tải mới BXH tức thì
+ if(!currentUser?.isTrial){
+  (async()=>{
+   try{
+    await syncProgressToCloud(runScore);
+   }catch(e){}
+   await loadClassLeaderboard(true,true);
+  })();
+ }else{
+  loadClassLeaderboard(true,true);
+ }
 
  const newBadges=computeEarnedBadges(progress).filter(id=>!prevBadges.has(id));
  const newBadgeHtml=newBadges.length?`<div style="margin:10px 0;padding:10px 14px;border-radius:12px;background:#fef3c7;border:1.5px solid #f59e0b;color:#78350f;font-weight:800">🎉 Mở khóa huy hiệu mới: ${newBadges.map(id=>{const m=APP_BADGES.find(x=>x.id===id);return m?`${m.icon} ${m.name}`:'';}).join(' · ')}</div>`:'';
 
- playCelebrationFx(arenaScore>=120?95:(acc>=60?65:40));
+ const guestBoxHtml=currentUser?.isTrial?`<div class="guest-name-box" id="guestArenaSaveBox">
+  <label for="guestArenaNameInput">🏅 Nhập họ tên của bạn để ghi danh lên Bảng xếp hạng (tự động viết IN HOA):</label>
+  <div class="guest-name-row">
+   <input type="text" id="guestArenaNameInput" class="guest-upper-input" maxlength="50" autocomplete="off" placeholder="VD: NGUYỄN MINH KHÔI" value="${esc(currentUser.guestDisplayName||'')}">
+   <button type="button" class="btn primary" id="btnSaveGuestArenaScore">💾 Lưu điểm lên BXH</button>
+  </div>
+  <div class="guest-save-status" id="guestArenaSaveStatus">${currentUser.guestDisplayName?'Tên đã điền sẵn ở trên · Bấm <b>Lưu điểm lên BXH</b> để cập nhật điểm mới nhất.':'Chữ bạn nhập sẽ tự động viết IN HOA hoàn toàn.'}</div>
+ </div>`:'';
+
+ playCelebrationFx(runScore>=120?95:(acc>=60?65:40));
  const resBox=$('#arenaResult');
  resBox.hidden=false;
  resBox.innerHTML=`<div class="arena-result-card fx-pop-correct">
   <div class="kicker" style="color:#ea580c">${isNewRecord?'🏆 KỶ LỤC CÁ NHÂN MỚI!':'⏱️ HẾT 60 GIÂY!'}</div>
   <h4>Kết quả Đấu trường tính nhẩm</h4>
-  <div class="arena-res-score">${arenaScore} điểm</div>
-  <p style="margin:0 0 8px;font-size:15.5px;color:#334155">Đúng <b>${arenaRight}/${arenaTotal}</b> câu (${acc}%) · Chuỗi đúng dài nhất: <b>🔥 x${arenaBestRunStreak}</b></p>
+  <div class="arena-res-score">${runScore} điểm</div>
+  <p style="margin:0 0 8px;font-size:15.5px;color:#334155">Đúng <b>${runRight}/${runTotal}</b> câu (${acc}%) · Chuỗi đúng dài nhất: <b>🔥 x${runStreak}</b></p>
   ${newBadgeHtml}
+  ${guestBoxHtml}
   <div class="actions" style="justify-content:center;margin-bottom:0;margin-top:12px">
    <button type="button" class="btn gamebtn" id="btnArenaAgain">🔄 Đấu lại 60 giây</button>
    <button type="button" class="btn light" id="btnArenaChangeMode">⚙️ Đổi chế độ</button>
   </div>
  </div>`;
+
+ if(currentUser?.isTrial){
+  const gInp=$('#guestArenaNameInput');
+  const gBtn=$('#btnSaveGuestArenaScore');
+  const gSt=$('#guestArenaSaveStatus');
+  bindUppercaseNameInput(gInp);
+  const doSaveGuest=async()=>{
+   if(!gInp||!gBtn)return;
+   const upper=(gInp.value||'').trim().replace(/\s+/g,' ').toLocaleUpperCase('vi-VN');
+   gInp.value=upper;
+   if(upper.length<2){
+    if(gSt){gSt.className='guest-save-status is-err';gSt.textContent='⚠️ Vui lòng nhập họ tên tối thiểu 2 ký tự để lưu lên bảng xếp hạng.';}
+    gInp.focus();
+    return;
+   }
+   gBtn.disabled=true;
+   gBtn.textContent='⏳ Đang lưu…';
+   try{
+    const saved=await saveGuestArenaRecord(upper,runScore,runStreak,acc);
+    if(gSt){gSt.className='guest-save-status is-ok';gSt.innerHTML=`✅ Đã ghi danh <b>${esc(saved.fullName)}</b> (${saved.arenaBest} điểm) lên Bảng xếp hạng Toàn hệ thống!`;}
+    gBtn.textContent='✅ Đã lưu BXH';
+    lbScope='all';
+    syncLeaderboardScopeUI();
+    await loadClassLeaderboard(true,true);
+    showToast(`🏆 Đã lưu điểm của ${saved.fullName} lên Bảng xếp hạng!`);
+   }catch(ex){
+    if(gSt){gSt.className='guest-save-status is-err';gSt.textContent='⚠️ Không lưu được: '+(ex.message||'Lỗi kết nối');}
+    gBtn.disabled=false;
+    gBtn.textContent='💾 Lưu điểm lên BXH';
+   }
+  };
+  if(gBtn)gBtn.onclick=doSaveGuest;
+  if(gInp){
+   gInp.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();doSaveGuest();}});
+   setTimeout(()=>{try{gInp.focus();}catch(_){}},60);
+  }
+ }
+
  $('#btnArenaAgain').onclick=startArenaGame;
  $('#btnArenaChangeMode').onclick=()=>{resBox.hidden=true;$('#arenaSetup').hidden=false;};
 }
 
+function renderHomeLeaderboard(rows, scopeLabel, showClassCol, syncTime){
+ const sub=$('#homeLbSubtitle'), podium=$('#homeLbPodium'), grid=$('#homeLbBody');
+ if(!grid)return;
+ const modeTxt=lbSortMode==='arena'?(ARENA_MODE_LABELS[lbArenaMode]||'Tất cả chế độ'):'Top Chăm chỉ';
+ if(sub)sub.textContent=`${scopeLabel} · ${modeTxt} · Top ${Math.min(rows.length,25)}/${rows.length} · Cập nhật ${syncTime}`;
+ if(!rows.length){
+  if(podium){podium.hidden=true;podium.innerHTML='';}
+  const emptyMsg=(lbSortMode==='arena'&&lbArenaMode!=='all')
+   ?`Chưa có kỷ lục nào ở chế độ <b>${esc(ARENA_MODE_LABELS[lbArenaMode])}</b>.<br>Hãy bấm <b>⚡ Vào đấu ngay</b> để trở thành người đầu tiên dẫn đầu!`
+   :'Chưa có dữ liệu xếp hạng theo bộ lọc này.<br>Hãy bấm <b>⚡ Vào đấu ngay</b> để ghi tên lên Bảng Vàng!';
+  grid.innerHTML=`<div class="empty" style="grid-column:1/-1">${emptyMsg}</div>`;
+  return;
+ }
+ const top25=rows.slice(0,25);
+ const hasScorer=top25.some(r=>(lbSortMode==='arena'?r.effScore>0:r.attempts>0));
+ const makeTag=r=>{
+  if(r.isGuest)return '<span class="lb-role-guest">✨ Dùng thử</span>';
+  if(r.isTeacher)return '<span class="lb-role-gv">👩‍🏫 Giáo viên</span>';
+  if(r.isAdmin)return '<span class="lb-role-gv" style="background:#fee2e2;color:#b91c1c">🛡️ Admin</span>';
+  if(showClassCol&&r.className)return `<span class="lb-cls-tag">Lớp ${esc(r.className)}</span>`;
+  return '';
+ };
+ const initials=name=>{
+  const pts=String(name||'HS').trim().split(/\s+/);
+  return (pts.length>=2?(pts[pts.length-2][0]+pts[pts.length-1][0]):(pts[0]||'HS').slice(0,2)).toUpperCase();
+ };
+ let startIdx=0;
+ if(podium&&hasScorer&&top25.length>=1){
+  const p3=top25.slice(0,3);
+  startIdx=p3.length;
+  // Sắp xếp hiển thị bục vinh quang: Hạng 2 bên trái, Hạng 1 ở giữa cao nhất, Hạng 3 bên phải
+  const slots=p3.length===1?[0]:(p3.length===2?[1,0]:[1,0,2]);
+  podium.hidden=false;
+  podium.innerHTML=slots.map(idx=>{
+   const r=p3[idx];
+   const rank=idx+1;
+   const medal=rank===1?'🥇':rank===2?'🥈':'🥉';
+   const crown=rank===1?'<div class="podium-crown" aria-hidden="true">👑</div>':'';
+   const scoreTxt=lbSortMode==='arena'?`${r.effScore} đ`:`${r.attempts} lượt`;
+   const subStat=lbSortMode==='arena'?`Chuỗi 🔥 x${r.effStreak}`:`Đúng ${r.accuracy}% · ${r.doneCount} bài`;
+   const tag=makeTag(r);
+   return `<div class="podium-card podium-r${rank} ${r.isMe?'is-me':''}">
+    ${crown}
+    <div class="podium-medal">${medal} Hạng ${rank}</div>
+    <div class="podium-avatar">${r.isTeacher?'👩‍🏫':r.isGuest?'✨':esc(initials(r.fullName))}</div>
+    <div class="podium-name" title="${esc(r.fullName)}">${esc(r.fullName)}${r.isMe?' (Bạn)':''}</div>
+    ${tag?`<div class="podium-tag">${tag}</div>`:''}
+    <div class="podium-score">${scoreTxt}</div>
+    <div class="podium-sub">${subStat}</div>
+   </div>`;
+  }).join('');
+ }else if(podium){
+  podium.hidden=true;
+  podium.innerHTML='';
+ }
+ const rest=top25.slice(startIdx);
+ if(!rest.length){
+  grid.innerHTML='';
+  grid.hidden=true;
+  return;
+ }
+ grid.hidden=false;
+ grid.innerHTML=rest.map((r,idx)=>{
+  const rank=startIdx+idx+1;
+  const medal=rank===1?'🥇':rank===2?'🥈':rank===3?'🥉':String(rank);
+  const topCls=rank===1?'top-1':rank===2?'top-2':rank===3?'top-3':'';
+  const roleTag=makeTag(r);
+  const mainStat=lbSortMode==='arena'?`<b>${r.effScore} đ</b><small>Chuỗi x${r.effStreak}</small>`:`<b>${r.attempts} lượt</b><small>Đúng ${r.accuracy}%</small>`;
+  const subInfo=r.isGuest?`Khách trải nghiệm · ${r.attempts||1} lượt · Đúng ${r.accuracy||0}%`:`${r.doneCount} bài luyện · ${r.attempts} lượt · Đúng ${r.accuracy}%`;
+  return `<div class="lb-row ${topCls} ${r.isMe?'is-me':''} ${r.isTeacher?'is-teacher':''} ${r.isGuest?'is-guest':''}">
+   <div class="lb-rank">${medal}</div>
+   <div class="lb-info">
+    <b>${esc(r.fullName)}${r.isMe?' (Bạn)':''}${roleTag?' '+roleTag:''}</b>
+    <small>${subInfo}</small>
+   </div>
+   <div class="lb-score-col">${mainStat}</div>
+  </div>`;
+ }).join('');
+}
+
 async function loadClassLeaderboard(silent=false,force=false){
- const body=$('#leaderboardBody'), sub=$('#lbSubtitle'), sel=$('#lbClassSelect');
- if(!body)return;
+ const body=$('#leaderboardBody'), sub=$('#lbSubtitle');
+ const selCls=$('#lbClassSelect'), selGv=$('#lbTeacherSelect');
+ const hSelCls=$('#homeLbClassSelect'), hSelGv=$('#homeLbTeacherSelect');
+ if(!body&&!$('#homeLbBody'))return;
+ syncLeaderboardScopeUI();
+ const syncSelectPair=(elA,elB,show,htmlOpts,val)=>{
+  [elA,elB].forEach(el=>{
+   if(!el)return;
+   el.hidden=!show;
+   if(show){
+    el.innerHTML=htmlOpts;
+    if(val!==undefined&&[...el.options].some(o=>o.value===val))el.value=val;
+   }
+  });
+ };
  let rows=[];
- let clsLabel='';
+ let scopeLabel='';
  let showClassCol=false;
  const mergeSummary=(sm,ab)=>{
   const s=sm||{}, a=ab||{};
   const bSet=new Set([...(Array.isArray(s.badges)?s.badges:[]),...(Array.isArray(a.badges)?a.badges:[])]);
+  const byMode=mergeNumericMap(s.arenaByMode||s.byMode,a.arenaByMode||a.byMode);
+  const streakByMode=mergeNumericMap(s.arenaStreakByMode||s.streakByMode,a.arenaStreakByMode||a.streakByMode);
+  const maxModeScore=Object.values(byMode).reduce((m,v)=>Math.max(m,Number(v)||0),0);
+  const maxModeStreak=Object.values(streakByMode).reduce((m,v)=>Math.max(m,Number(v)||0),0);
   return {
-   arenaBest:Math.max(Number(s.arenaBest)||0,Number(a.arenaBest)||0),
-   arenaStreak:Math.max(Number(s.arenaStreak)||0,Number(a.arenaStreak)||0),
+   arenaBest:Math.max(Number(s.arenaBest)||0,Number(a.arenaBest)||0,maxModeScore),
+   arenaStreak:Math.max(Number(s.arenaStreak)||0,Number(a.arenaStreak)||0,maxModeStreak),
    arenaPlays:Math.max(Number(s.arenaPlays)||0,Number(a.arenaPlays)||0),
+   arenaByMode:byMode,
+   arenaStreakByMode:streakByMode,
    attempts:Math.max(Number(s.attempts)||0,Number(a.attempts)||0),
    accuracy:(Number(a.attempts)||0)>=(Number(s.attempts)||0)&&a.accuracy!==undefined?(Number(a.accuracy)||0):(Number(s.accuracy)||0),
    doneCount:Math.max(Number(s.doneCount)||0,Number(a.doneCount)||0),
    badges:[...bSet]
   };
  };
+
+ const fetchGlobalAll=async(forceNow)=>{
+  const need=forceNow||!lbGlobalLastFetch||(Date.now()-lbGlobalLastFetch>10000)||!lbGlobalCache;
+  if(need){
+   const [gObj,bObj,sObj,tObj]=await Promise.all([
+    dbGet('arena_global').catch(()=>null),
+    dbGet('arena_board').catch(()=>null),
+    dbGet('students').catch(()=>null),
+    dbGet('teachers').catch(()=>null)
+   ]);
+   lbGlobalLastFetch=Date.now();
+   lbGlobalCache=gObj&&typeof gObj==='object'?gObj:{};
+   lbAllBoardsCache=bObj&&typeof bObj==='object'?bObj:{};
+   lbAllStudentsCache=sObj&&typeof sObj==='object'?sObj:{};
+   lbTeachersCache=tObj&&typeof tObj==='object'?tObj:{};
+  }
+ };
+
  try{
   const needFetch=force||!silent||!lbLastFetch||(Date.now()-lbLastFetch>10000);
-  if(currentUser?.role==='student'){
-   sel.hidden=true;
+
+  if(lbScope==='all'){
+   syncSelectPair(selCls,hSelCls,false);
+   syncSelectPair(selGv,hSelGv,false);
+   showClassCol=true;
+   scopeLabel='Tất cả tài khoản & Khách dùng thử';
+   await fetchGlobalAll(force||!silent);
+   const map=new Map();
+   const upsert=(key,entry)=>{
+    const cur=map.get(key);
+    if(!cur){
+     map.set(key,entry);
+    }else{
+     const m=mergeSummary(cur,entry);
+     map.set(key,{
+      ...cur,
+      ...entry,
+      fullName:entry.fullName||cur.fullName,
+      className:entry.className||cur.className,
+      teacherName:entry.teacherName||cur.teacherName,
+      isTeacher:!!(cur.isTeacher||entry.isTeacher),
+      isGuest:!!(cur.isGuest||entry.isGuest),
+      isAdmin:!!(cur.isAdmin||entry.isAdmin),
+      isMe:!!(cur.isMe||entry.isMe),
+      ...m
+     });
+    }
+   };
+
+   const tMap=lbTeachersCache||{};
+   Object.entries(lbAllStudentsCache||{}).forEach(([tid,stuGroup])=>{
+    if(!stuGroup||typeof stuGroup!=='object')return;
+    const tName=tMap[tid]?.fullName||tid;
+    Object.values(stuGroup).forEach(s=>{
+     if(!s||!s.username||s.active===false)return;
+     const sm=mergeSummary(s.summary,{});
+     upsert(`u_${s.username}`,{
+      username:s.username,fullName:s.fullName||s.username,
+      isMe:!!(!currentUser?.isTrial&&currentUser?.username===s.username),
+      isTeacher:false,isGuest:false,isAdmin:false,
+      className:s.className||'',teacherName:s.teacherName||tName,
+      ...sm
+     });
+    });
+   });
+
+   Object.entries(lbAllBoardsCache||{}).forEach(([tid,bGroup])=>{
+    if(!bGroup||typeof bGroup!=='object')return;
+    Object.values(bGroup).forEach(b=>{
+     if(!b||!b.username)return;
+     const isGv=(b.role==='teacher'||b.username===tid);
+     upsert(`u_${b.username}`,{
+      username:b.username,fullName:b.fullName||b.username,
+      isMe:!!(!currentUser?.isTrial&&currentUser?.username===b.username),
+      isTeacher:isGv,isGuest:false,isAdmin:b.role==='admin',
+      className:isGv?'':(b.className==='__TEACHER__'?'':(b.className||'')),
+      teacherName:b.teacherName||tMap[tid]?.fullName||'',
+      ...mergeSummary({},b)
+     });
+    });
+   });
+
+   Object.entries(lbGlobalCache||{}).forEach(([k,g])=>{
+    if(!g||typeof g!=='object')return;
+    const isGuest=(g.role==='guest'||g.isTrial||String(k).startsWith('guest_'));
+    const uname=g.username||k;
+    const mapKey=isGuest?k:`u_${String(uname).replace(/^u_/,'')}`;
+    const dispName=isGuest?String(g.fullName||'KHÁCH DÙNG THỬ').toLocaleUpperCase('vi-VN'):(g.fullName||uname);
+    upsert(mapKey,{
+     username:uname,fullName:dispName,
+     isMe:isGuest?!!(currentUser?.isTrial&&currentUser.guestBoardKey===k):!!(!currentUser?.isTrial&&currentUser?.username===String(uname).replace(/^u_/,'')),
+     isTeacher:g.role==='teacher',isGuest,isAdmin:g.role==='admin',
+     className:isGuest?'Dùng thử':(g.className==='__TEACHER__'?'':(g.className||'')),
+     teacherName:g.teacherName||'',
+     ...mergeSummary({},g)
+    });
+   });
+
+   if(currentUser&&!currentUser.isTrial){
+    const mySm=calcProgressSummary(progress);
+    upsert(`u_${currentUser.username}`,{
+     username:currentUser.username,fullName:currentUser.fullName||currentUser.username,
+     isMe:true,isTeacher:currentUser.role==='teacher',isGuest:false,isAdmin:currentUser.role==='admin',
+     className:currentUser.role==='student'?(currentUser.className||''):'',
+     teacherName:currentUser.role==='student'?(currentUser.teacherName||''):'',
+     ...mySm
+    });
+   }
+   rows=[...map.values()];
+
+  }else if(currentUser?.role==='student'){
+   syncSelectPair(selCls,hSelCls,false);
+   syncSelectPair(selGv,hSelGv,false);
    let tid=currentUser.teacherId;
    if(!tid){
     tid=await dbGet(`student_index/${currentUser.username}`);
     if(tid)currentUser.teacherId=tid;
    }
-   clsLabel=currentUser.className?`Lớp ${currentUser.className}`:'Lớp của em';
    if(tid){
     if(needFetch||!lbStudentsCache.length){
      const [sObj,aObj]=await Promise.all([
@@ -10516,36 +11369,32 @@ async function loadClassLeaderboard(silent=false,force=false){
      lbArenaMap=aObj&&typeof aObj==='object'?aObj:{};
     }
     const myNormCls=normClassKey(currentUser.className);
-    const peers=lbStudentsCache.filter(s=>s&&s.active!==false&&(!myNormCls||normClassKey(s.className)===myNormCls));
-    const seen=new Set();
+    const sameClassOnly=(lbScope==='class');
+    showClassCol=!sameClassOnly;
+    scopeLabel=sameClassOnly?(currentUser.className?`Cùng lớp ${currentUser.className}`:'Cùng lớp của em'):`Tất cả học sinh của ${currentUser.teacherName||'Giáo viên'}`;
+    const peers=lbStudentsCache.filter(s=>s&&s.active!==false&&(!sameClassOnly||!myNormCls||normClassKey(s.className)===myNormCls));
     peers.forEach(s=>{
-     seen.add(s.username);
      const isMe=(s.username===currentUser.username);
      const ab=lbArenaMap[s.username]||{};
      const sm=isMe?mergeSummary(calcProgressSummary(progress),ab):mergeSummary(s.summary,ab);
      rows.push({
-      username:s.username,fullName:s.fullName||s.username,isMe,isTeacher:false,className:s.className||'',
+      username:s.username,fullName:s.fullName||s.username,isMe,isTeacher:false,isGuest:false,className:s.className||'',
       ...sm
      });
     });
-    // Đồng bộ cả kết quả của Thầy/Cô nếu Thầy/Cô có tham gia Đấu trường 60s cùng lớp
     const gvBoard=lbArenaMap[tid];
     if(gvBoard&&(Number(gvBoard.arenaBest)>0||Number(gvBoard.arenaPlays)>0)){
      rows.push({
       username:tid,
       fullName:gvBoard.fullName||currentUser.teacherName||'Giáo viên',
-      isMe:false,isTeacher:true,className:'GV',
-      arenaBest:Number(gvBoard.arenaBest)||0,
-      arenaStreak:Number(gvBoard.arenaStreak)||0,
-      arenaPlays:Number(gvBoard.arenaPlays)||0,
-      attempts:Number(gvBoard.attempts)||0,
-      accuracy:Number(gvBoard.accuracy)||0,
-      doneCount:Number(gvBoard.doneCount)||0,
-      badges:Array.isArray(gvBoard.badges)?gvBoard.badges:[]
+      isMe:false,isTeacher:true,isGuest:false,className:'',
+      ...mergeSummary({},gvBoard)
      });
     }
    }
+
   }else if(currentUser?.role==='teacher'){
+   syncSelectPair(selGv,hSelGv,false);
    const tid=currentUser.username;
    if(needFetch||!teacherStudentsCache.length){
     const [_,aObj]=await Promise.all([
@@ -10556,82 +11405,143 @@ async function loadClassLeaderboard(silent=false,force=false){
     lbArenaMap=aObj&&typeof aObj==='object'?aObj:{};
    }
    const classes=[...new Set(teacherStudentsCache.map(s=>s.className).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'vi'));
-   const prev=sel.value;
-   if(classes.length){
-    sel.hidden=false;
-    sel.innerHTML=(classes.length>1?'<option value="__ALL__">🏆 Tất cả các lớp của tôi</option>':'')+classes.map(c=>`<option value="${esc(c)}">🏫 Bảng xếp hạng Lớp ${esc(c)}</option>`).join('');
-    if(prev&&[...sel.options].some(o=>o.value===prev))sel.value=prev;
-    else sel.value=classes.length>1?'__ALL__':classes[0];
-    const chosen=sel.value;
-    showClassCol=(chosen==='__ALL__');
-    clsLabel=chosen==='__ALL__'?'Tất cả các lớp':`Lớp ${chosen}`;
-    teacherStudentsCache.filter(s=>s&&s.active!==false&&(chosen==='__ALL__'||normClassKey(s.className)===normClassKey(chosen))).forEach(s=>{
+   if(lbScope==='class'&&classes.length){
+    const chosen=classes.includes(lbSelectedClass)?lbSelectedClass:classes[0];
+    lbSelectedClass=chosen;
+    const optsHtml=classes.map(c=>`<option value="${esc(c)}">🏫 Lớp ${esc(c)}</option>`).join('');
+    syncSelectPair(selCls,hSelCls,true,optsHtml,chosen);
+    showClassCol=false;
+    scopeLabel=`Trong cùng Lớp ${chosen}`;
+    teacherStudentsCache.filter(s=>s&&s.active!==false&&normClassKey(s.className)===normClassKey(chosen)).forEach(s=>{
      const ab=lbArenaMap[s.username]||{};
-     const sm=mergeSummary(s.summary,ab);
      rows.push({
-      username:s.username,fullName:s.fullName||s.username,isMe:false,isTeacher:false,className:s.className||'',
-      ...sm
+      username:s.username,fullName:s.fullName||s.username,isMe:false,isTeacher:false,isGuest:false,className:s.className||'',
+      ...mergeSummary(s.summary,ab)
      });
     });
    }else{
-    sel.hidden=true;
-    clsLabel='Lớp của bạn';
+    syncSelectPair(selCls,hSelCls,false);
+    showClassCol=true;
+    scopeLabel='Tất cả học sinh của tôi';
+    teacherStudentsCache.filter(s=>s&&s.active!==false).forEach(s=>{
+     const ab=lbArenaMap[s.username]||{};
+     rows.push({
+      username:s.username,fullName:s.fullName||s.username,isMe:false,isTeacher:false,isGuest:false,className:s.className||'',
+      ...mergeSummary(s.summary,ab)
+     });
+    });
    }
-   // Giáo viên cũng tham gia xếp hạng trực tiếp cùng học sinh!
    const mySm=mergeSummary(calcProgressSummary(progress),lbArenaMap[tid]);
    rows.push({
-    username:tid,
-    fullName:currentUser.fullName||tid,
-    isMe:true,isTeacher:true,className:'GV',
+    username:tid,fullName:currentUser.fullName||tid,
+    isMe:true,isTeacher:true,isGuest:false,className:'',
     ...mySm
    });
-  }else{
-   sel.hidden=true;
-   clsLabel=currentUser?.isTrial?'Bảng minh họa (Dùng thử)':'Bảng xếp hạng mẫu';
-   const mySum=calcProgressSummary(progress);
-   rows=[
-    {username:'me',fullName:currentUser?.fullName||'Em (Đang chơi)',isMe:true,isTeacher:false,arenaBest:mySum.arenaBest,arenaStreak:mySum.arenaStreak,attempts:mySum.attempts,accuracy:mySum.accuracy,doneCount:mySum.doneCount,badges:mySum.badges},
-    {username:'demo1',fullName:'Nguyễn Minh An (Mẫu)',isMe:false,isTeacher:false,arenaBest:180,arenaStreak:12,attempts:8,accuracy:92,doneCount:6,badges:['mental_king','diligent_bee']},
-    {username:'demo2',fullName:'Trần Ngọc Bảo (Mẫu)',isMe:false,isTeacher:false,arenaBest:140,arenaStreak:9,attempts:6,accuracy:88,doneCount:5,badges:['iq_detective','diligent_bee']},
-    {username:'demo3',fullName:'Lê Gia Hân (Mẫu)',isMe:false,isTeacher:false,arenaBest:110,arenaStreak:7,attempts:4,accuracy:85,doneCount:4,badges:['iq_detective']}
-   ];
+
+  }else if(currentUser?.role==='admin'){
+   await fetchGlobalAll(force||!silent);
+   const tList=Object.values(lbTeachersCache||{}).filter(t=>t&&t.username).sort((a,b)=>(a.fullName||a.username).localeCompare(b.fullName||b.username,'vi'));
+   if(tList.length){
+    const tid=tList.some(t=>t.username===lbSelectedTeacher)?lbSelectedTeacher:tList[0].username;
+    lbSelectedTeacher=tid;
+    const gvOpts=tList.map(t=>`<option value="${esc(t.username)}">👩‍🏫 GV: ${esc(t.fullName||t.username)}</option>`).join('');
+    syncSelectPair(selGv,hSelGv,true,gvOpts,tid);
+    const tObj=tList.find(t=>t.username===tid);
+    const stuList=Object.values((lbAllStudentsCache||{})[tid]||{}).filter(s=>s&&s.active!==false);
+    const bMap=(lbAllBoardsCache||{})[tid]||{};
+    const classes=[...new Set(stuList.map(s=>s.className).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'vi'));
+    if(lbScope==='class'&&classes.length){
+     const chosenC=classes.includes(lbSelectedClass)?lbSelectedClass:classes[0];
+     lbSelectedClass=chosenC;
+     const clsOpts=classes.map(c=>`<option value="${esc(c)}">🏫 Lớp ${esc(c)}</option>`).join('');
+     syncSelectPair(selCls,hSelCls,true,clsOpts,chosenC);
+     showClassCol=false;
+     scopeLabel=`Lớp ${chosenC} (GV ${tObj?.fullName||tid})`;
+     stuList.filter(s=>normClassKey(s.className)===normClassKey(chosenC)).forEach(s=>{
+      rows.push({username:s.username,fullName:s.fullName||s.username,isMe:false,isTeacher:false,isGuest:false,className:s.className||'',...mergeSummary(s.summary,bMap[s.username])});
+     });
+    }else{
+     syncSelectPair(selCls,hSelCls,false);
+     showClassCol=true;
+     scopeLabel=`Tất cả HS của GV ${tObj?.fullName||tid}`;
+     stuList.forEach(s=>{
+      rows.push({username:s.username,fullName:s.fullName||s.username,isMe:false,isTeacher:false,isGuest:false,className:s.className||'',...mergeSummary(s.summary,bMap[s.username])});
+     });
+    }
+    const gvB=bMap[tid];
+    if(gvB&&(Number(gvB.arenaBest)>0||Number(gvB.arenaPlays)>0)){
+     rows.push({username:tid,fullName:gvB.fullName||tObj?.fullName||tid,isMe:false,isTeacher:true,isGuest:false,className:'',...mergeSummary({},gvB)});
+    }
+   }else{
+    syncSelectPair(selGv,hSelGv,false);
+    syncSelectPair(selCls,hSelCls,false);
+    scopeLabel='Chưa có giáo viên trong hệ thống';
+   }
   }
  }catch(e){
   if(!silent)showToast('Không tải được bảng xếp hạng: '+e.message,'err');
  }
- const syncTime=new Date().toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
- if(sub)sub.textContent=`${clsLabel} · Đồng bộ HS & GV · Cập nhật ${syncTime}`;
- if(!rows.length){
-  body.innerHTML='<div class="empty">Chưa có dữ liệu xếp hạng cho lớp này.<br>Hãy chơi Đấu trường 60 giây hoặc luyện tập để ghi tên lên bảng vàng!</div>';
-  return;
+
+ // Tính điểm & chuỗi hiệu lực theo chế độ đấu đang chọn để đảm bảo công bằng
+ rows=rows.map(r=>{
+  const isSpecific=(lbSortMode==='arena'&&lbArenaMode!=='all');
+  const effScore=isSpecific?(Number(r.arenaByMode?.[lbArenaMode])||0):(Number(r.arenaBest)||0);
+  const effStreak=isSpecific?(Number(r.arenaStreakByMode?.[lbArenaMode])||0):(Number(r.arenaStreak)||0);
+  return {...r,effScore,effStreak};
+ });
+ if(lbScope==='all'&&lbSortMode==='arena'&&lbArenaMode!=='all'){
+  rows=rows.filter(r=>r.effScore>0);
  }
  rows.sort((a,b)=>{
   if(lbSortMode==='arena'){
-   return (b.arenaBest-a.arenaBest)||(b.arenaStreak-a.arenaStreak)||(b.attempts-a.attempts);
+   return (b.effScore-a.effScore)||(b.effStreak-a.effStreak)||(b.arenaBest-a.arenaBest)||(b.attempts-a.attempts);
   }
   return (b.attempts-a.attempts)||(b.accuracy-a.accuracy)||(b.doneCount-a.doneCount);
  });
- body.innerHTML=rows.slice(0,25).map((r,i)=>{
+
+ const top25=rows.slice(0,25);
+ const syncTime=new Date().toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+ const modeTxt=lbSortMode==='arena'?(ARENA_MODE_LABELS[lbArenaMode]||'Tất cả chế độ'):'Top Chăm chỉ';
+
+ // 1. Cập nhật Bảng Vàng ngoài Trang chủ
+ renderHomeLeaderboard(rows, scopeLabel, showClassCol, syncTime);
+
+ // 2. Cập nhật Bảng xếp hạng trong tab Đấu trường 60s (chỉ hiện Top 25)
+ if(sub)sub.textContent=`${scopeLabel} · ${modeTxt} · Top ${top25.length}/${rows.length} · ${syncTime}`;
+ if(!body)return;
+ if(!top25.length){
+  const emptyMsg=(lbSortMode==='arena'&&lbArenaMode!=='all')
+   ?`Chưa có kỷ lục nào ở chế độ <b>${esc(ARENA_MODE_LABELS[lbArenaMode])}</b>.<br>Hãy đấu 60 giây chế độ này để trở thành người đầu tiên dẫn đầu!`
+   :'Chưa có dữ liệu xếp hạng theo bộ lọc này.<br>Hãy chơi Đấu trường 60 giây để ghi tên lên bảng vàng!';
+  body.innerHTML=`<div class="empty">${emptyMsg}</div>`;
+  return;
+ }
+ body.innerHTML=top25.map((r,i)=>{
   const medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':String(i+1);
   const topCls=i===0?'top-1':i===1?'top-2':i===2?'top-3':'';
   const badgePills=(r.badges||[]).slice(0,3).map(id=>{
    const b=APP_BADGES.find(x=>x.id===id);
    return b?`<span class="lb-medal-pill">${b.icon} ${esc(b.name)}</span>`:'';
   }).join('');
-  const roleTag=r.isTeacher?' <span class="lb-role-gv">👩‍🏫 Giáo viên</span>':(showClassCol&&r.className?` <span class="lb-cls-tag">${esc(r.className)}</span>`:'');
-  const leadTag=(i===0&&((lbSortMode==='arena'&&r.arenaBest>0)||(lbSortMode!=='arena'&&r.attempts>0)))?' <span class="lb-lead-tag">👑 Dẫn đầu</span>':'';
-  const mainStat=lbSortMode==='arena'?`<b>${r.arenaBest} đ</b><small>Chuỗi x${r.arenaStreak}</small>`:`<b>${r.attempts} lượt</b><small>Đúng ${r.accuracy}%</small>`;
-  return `<div class="lb-row ${topCls} ${r.isMe?'is-me':''} ${r.isTeacher?'is-teacher':''}">
+  let roleTag='';
+  if(r.isGuest)roleTag=' <span class="lb-role-guest">✨ Dùng thử</span>';
+  else if(r.isTeacher)roleTag=' <span class="lb-role-gv">👩‍🏫 Giáo viên</span>';
+  else if(r.isAdmin)roleTag=' <span class="lb-role-gv" style="background:#fee2e2;color:#b91c1c">🛡️ Admin</span>';
+  else if(showClassCol&&r.className)roleTag=` <span class="lb-cls-tag">Lớp ${esc(r.className)}</span>`;
+  const leadTag=(i===0&&((lbSortMode==='arena'&&r.effScore>0)||(lbSortMode!=='arena'&&r.attempts>0)))?' <span class="lb-lead-tag">👑 Dẫn đầu</span>':'';
+  const mainStat=lbSortMode==='arena'?`<b>${r.effScore} đ</b><small>Chuỗi x${r.effStreak}</small>`:`<b>${r.attempts} lượt</b><small>Đúng ${r.accuracy}%</small>`;
+  const subInfo=r.isGuest?`Khách trải nghiệm · ${r.attempts||1} lượt · Đúng ${r.accuracy||0}%`:`${r.doneCount} bài luyện · ${r.attempts} lượt · Đúng ${r.accuracy}%`;
+  return `<div class="lb-row ${topCls} ${r.isMe?'is-me':''} ${r.isTeacher?'is-teacher':''} ${r.isGuest?'is-guest':''}">
    <div class="lb-rank">${medal}</div>
    <div class="lb-info">
     <b>${esc(r.fullName)}${r.isMe?' (Bạn)':''}${roleTag}${leadTag}</b>
-    <small>${r.doneCount} bài luyện · ${r.attempts} lượt · Đúng ${r.accuracy}%</small>
+    <small>${subInfo}</small>
     ${badgePills?`<div class="lb-medals">${badgePills}</div>`:''}
    </div>
    <div class="lb-score-col">${mainStat}</div>
   </div>`;
  }).join('');
- if(!silent)showToast('Đã đồng bộ bảng xếp hạng mới nhất!');
+ if(!silent)showToast('Đã đồng bộ bảng xếp hạng Top 25 mới nhất!');
 }
 
 // --- C. SỔ TAY "CÂU LÀM SAI" TỰ ĐỘNG ---
@@ -10852,6 +11762,9 @@ function startGuestTrial(){
   grade:3,
   className:'Dùng thử',
   isTrial:true,
+  guestSessionId:'g'+Date.now().toString(36)+rand(10,99),
+  guestDisplayName:'',
+  guestBoardKey:'',
   trialExpiresAt:Date.now()+durationMs
  };
  $('#loginErr').hidden=true;
@@ -11025,13 +11938,47 @@ function setupV17Features(){
   }
  });
 
- $$('#lbSortMode .opt').forEach(b=>b.onclick=()=>{
-  $$('#lbSortMode .opt').forEach(x=>x.classList.toggle('active',x===b));
-  lbSortMode=b.dataset.lbsort;
-  loadClassLeaderboard(true);
+ const bindLbScopeGroup=sel=>$$(sel+' .opt').forEach(b=>b.onclick=()=>{
+  lbScope=b.dataset.lbscope||'class';
+  syncLeaderboardScopeUI();
+  loadClassLeaderboard(true,true);
  });
- if($('#lbClassSelect'))$('#lbClassSelect').onchange=()=>loadClassLeaderboard(true,false);
+ const bindLbSortGroup=sel=>$$(sel+' .opt').forEach(b=>b.onclick=()=>{
+  lbSortMode=b.dataset.lbsort||'arena';
+  syncLeaderboardScopeUI();
+  loadClassLeaderboard(true,false);
+ });
+ const bindLbModeGroup=sel=>$$(sel+' .opt').forEach(b=>b.onclick=()=>{
+  lbArenaMode=b.dataset.lbamode||'all';
+  lbSortMode='arena';
+  syncLeaderboardScopeUI();
+  loadClassLeaderboard(true,false);
+ });
+ bindLbScopeGroup('#lbScopeMode');
+ bindLbScopeGroup('#homeLbScopeMode');
+ bindLbSortGroup('#lbSortMode');
+ bindLbSortGroup('#homeLbSortMode');
+ bindLbModeGroup('#lbArenaModeRow');
+ bindLbModeGroup('#homeLbModeRow');
+
+ ['#lbTeacherSelect','#homeLbTeacherSelect'].forEach(sel=>{
+  const el=$(sel);
+  if(el)el.onchange=()=>{lbSelectedTeacher=el.value;lbSelectedClass='';loadClassLeaderboard(true,false);};
+ });
+ ['#lbClassSelect','#homeLbClassSelect'].forEach(sel=>{
+  const el=$(sel);
+  if(el)el.onchange=()=>{lbSelectedClass=el.value;loadClassLeaderboard(true,false);};
+ });
  if($('#btnRefreshLeaderboard'))$('#btnRefreshLeaderboard').onclick=()=>loadClassLeaderboard(false,true);
+ if($('#homeLbRefresh'))$('#homeLbRefresh').onclick=()=>loadClassLeaderboard(false,true);
+ if($('#homeLbPlayNow'))$('#homeLbPlayNow').onclick=()=>{
+  if(lbArenaMode&&lbArenaMode!=='all'){
+   arenaMode=lbArenaMode;
+   $$('#arenaModeRow .arena-mode-btn').forEach(x=>x.classList.toggle('active',x.dataset.amode===arenaMode));
+  }
+  go('practice');
+  switchPracticeTab('arena');
+ };
 
  $$('#wbFilterRow .opt').forEach(b=>b.onclick=()=>{
   $$('#wbFilterRow .opt').forEach(x=>x.classList.toggle('active',x===b));
