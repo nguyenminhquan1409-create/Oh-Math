@@ -10424,13 +10424,230 @@ async function deleteTeacherAccount(username){
  }catch(e){showToast('Lỗi xóa GV: '+e.message,'err');}
 }
 
-// ===== XUẤT EXCEL (CSV UTF-8 BOM) =====
-function downloadCsv(filename,headers,rows){
- const cell=v=>'"'+String(v??'').replace(/"/g,'""')+'"';
- const csv='\uFEFF'+[headers.map(cell).join(','),...rows.map(r=>r.map(cell).join(','))].join('\r\n');
- const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
- const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=filename;document.body.appendChild(a);a.click();a.remove();
- setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+// ===== XUẤT EXCEL CHUẨN .XLSX (CHIA CỘT RIÊNG RẼ, KHÔNG LỖI FONT, HOẠT ĐỘNG OFFLINE) =====
+const XLSX_CRC_TABLE=(()=>{
+ const t=new Uint32Array(256);
+ for(let i=0;i<256;i++){
+  let c=i;
+  for(let k=0;k<8;k++)c=(c&1)?(0xEDB88320^(c>>>1)):(c>>>1);
+  t[i]=c>>>0;
+ }
+ return t;
+})();
+function xlsxCrc32(bytes){
+ let c=0xFFFFFFFF;
+ for(let i=0;i<bytes.length;i++)c=XLSX_CRC_TABLE[(c^bytes[i])&0xFF]^(c>>>8);
+ return (c^0xFFFFFFFF)>>>0;
+}
+function xlsxXmlEsc(v){
+ return String(v??'')
+  .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g,'')
+  .replace(/&/g,'&amp;')
+  .replace(/</g,'&lt;')
+  .replace(/>/g,'&gt;')
+  .replace(/"/g,'&quot;')
+  .replace(/'/g,'&apos;');
+}
+function xlsxColName(idx){
+ let s='',n=idx+1;
+ while(n>0){const r=(n-1)%26;s=String.fromCharCode(65+r)+s;n=Math.floor((n-1)/26);}
+ return s;
+}
+function buildXlsxZipStore(entries){
+ const enc=new TextEncoder();
+ const now=new Date();
+ const dosTime=((now.getHours()&31)<<11)|((now.getMinutes()&63)<<5)|((now.getSeconds()>>1)&31);
+ const dosDate=(((Math.max(1980,now.getFullYear())-1980)&127)<<9)|(((now.getMonth()+1)&15)<<5)|(now.getDate()&31);
+ const locals=[],centrals=[];
+ let offset=0;
+ for(const item of entries){
+  const nameBytes=enc.encode(item.name);
+  const dataBytes=typeof item.data==='string'?enc.encode(item.data):item.data;
+  const crc=xlsxCrc32(dataBytes);
+  const sz=dataBytes.length;
+  const lh=new Uint8Array(30+nameBytes.length);
+  const lv=new DataView(lh.buffer);
+  lv.setUint32(0,0x04034b50,true);
+  lv.setUint16(4,20,true);
+  lv.setUint16(6,0x0800,true);
+  lv.setUint16(8,0,true);
+  lv.setUint16(10,dosTime,true);
+  lv.setUint16(12,dosDate,true);
+  lv.setUint32(14,crc,true);
+  lv.setUint32(18,sz,true);
+  lv.setUint32(22,sz,true);
+  lv.setUint16(26,nameBytes.length,true);
+  lv.setUint16(28,0,true);
+  lh.set(nameBytes,30);
+  locals.push(lh,dataBytes);
+
+  const ch=new Uint8Array(46+nameBytes.length);
+  const cv=new DataView(ch.buffer);
+  cv.setUint32(0,0x02014b50,true);
+  cv.setUint16(4,20,true);
+  cv.setUint16(6,20,true);
+  cv.setUint16(8,0x0800,true);
+  cv.setUint16(10,0,true);
+  cv.setUint16(12,dosTime,true);
+  cv.setUint16(14,dosDate,true);
+  cv.setUint32(16,crc,true);
+  cv.setUint32(20,sz,true);
+  cv.setUint32(24,sz,true);
+  cv.setUint16(28,nameBytes.length,true);
+  cv.setUint16(30,0,true);
+  cv.setUint16(32,0,true);
+  cv.setUint16(34,0,true);
+  cv.setUint16(36,0,true);
+  cv.setUint32(38,0,true);
+  cv.setUint32(42,offset,true);
+  ch.set(nameBytes,46);
+  centrals.push(ch);
+  offset+=lh.length+sz;
+ }
+ const cdSize=centrals.reduce((s,b)=>s+b.length,0);
+ const eocd=new Uint8Array(22);
+ const ev=new DataView(eocd.buffer);
+ ev.setUint32(0,0x06054b50,true);
+ ev.setUint16(4,0,true);
+ ev.setUint16(6,0,true);
+ ev.setUint16(8,entries.length,true);
+ ev.setUint16(10,entries.length,true);
+ ev.setUint32(12,cdSize,true);
+ ev.setUint32(16,offset,true);
+ ev.setUint16(20,0,true);
+ const total=offset+cdSize+22;
+ const out=new Uint8Array(total);
+ let p=0;
+ for(const b of locals){out.set(b,p);p+=b.length;}
+ for(const b of centrals){out.set(b,p);p+=b.length;}
+ out.set(eocd,p);
+ return out;
+}
+function inferXlsxSheetName(filename,explicitName=''){
+ if(explicitName)return explicitName;
+ const f=String(filename||'').toLowerCase();
+ if(f.includes('tai-khoan-hoc-sinh'))return 'Tài khoản học sinh';
+ if(f.includes('tien-do-hoc-sinh'))return 'Tiến độ học sinh';
+ if(f.includes('danh-sach-giao-vien'))return 'Danh sách giáo viên';
+ if(f.includes('cap-quyen'))return 'Quản lý cấp quyền';
+ if(f.includes('nop-bai'))return 'Bảng nộp bài';
+ return 'Danh sách';
+}
+function buildXlsxBytes(headers,rows,sheetName='Danh sách'){
+ const safeSheet=String(sheetName||'Danh sách').replace(/[\\/*?:\[\]]/g,' ').trim().slice(0,31)||'Sheet1';
+ const colCount=Math.max(1,headers.length,...rows.map(r=>Array.isArray(r)?r.length:0));
+ const rowCount=1+rows.length;
+ const dimRef=`A1:${xlsxColName(colCount-1)}${rowCount}`;
+ const leftCols=new Set();
+ headers.forEach((h,ci)=>{
+  const hl=String(h??'').toLowerCase();
+  if((hl.includes('họ')||hl.includes('học sinh')||hl.includes('trường')||hl.includes('đơn vị')||hl.includes('giáo viên')||hl.includes('nhận xét')||hl.includes('hoạt động'))&&!hl.includes('tên đăng nhập')&&!hl.includes('tài khoản')){
+   leftCols.add(ci);
+  }
+ });
+ const colsXml=[];
+ for(let ci=0;ci<colCount;ci++){
+  let mx=String(headers[ci]??'').length+4;
+  for(const r of rows){
+   const s=String((Array.isArray(r)?r[ci]:'')??'');
+   if(s.length+3>mx)mx=s.length+3;
+  }
+  const w=Math.min(44,Math.max(8,mx+2));
+  colsXml.push(`<col min="${ci+1}" max="${ci+1}" width="${w}" customWidth="1"/>`);
+ }
+ const hCells=headers.map((h,ci)=>`<c r="${xlsxColName(ci)}1" t="inlineStr" s="1"><is><t xml:space="preserve">${xlsxXmlEsc(h)}</t></is></c>`).join('');
+ const rowsXml=[`<row r="1" ht="26" customHeight="1">${hCells}</row>`];
+ for(let ri=0;ri<rows.length;ri++){
+  const rnum=ri+2, isOdd=(ri%2===1), r=Array.isArray(rows[ri])?rows[ri]:[];
+  const cells=[];
+  for(let ci=0;ci<colCount;ci++){
+   const ref=`${xlsxColName(ci)}${rnum}`, v=r[ci];
+   if(typeof v==='number'&&Number.isFinite(v)){
+    cells.push(`<c r="${ref}" t="n" s="${isOdd?7:6}"><v>${v}</v></c>`);
+   }else{
+    const st=leftCols.has(ci)?(isOdd?3:2):(isOdd?5:4);
+    cells.push(`<c r="${ref}" t="inlineStr" s="${st}"><is><t xml:space="preserve">${xlsxXmlEsc(v)}</t></is></c>`);
+   }
+  }
+  rowsXml.push(`<row r="${rnum}" ht="21" customHeight="1">${cells.join('')}</row>`);
+ }
+ const sheetXml='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+  +'<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">'
+  +`<dimension ref="${dimRef}"/>`
+  +'<sheetViews><sheetView tabSelected="1" workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews>'
+  +'<sheetFormatPr defaultRowHeight="21"/>'
+  +`<cols>${colsXml.join('')}</cols>`
+  +`<sheetData>${rowsXml.join('')}</sheetData>`
+  +`<autoFilter ref="${dimRef}"/>`
+  +'</worksheet>';
+ const stylesXml='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+  +'<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">'
+  +'<fonts count="2">'
+  +'<font><sz val="11"/><color rgb="FF17254F"/><name val="Arial"/></font>'
+  +'<font><b/><sz val="11"/><color rgb="FFFFFFFF"/><name val="Arial"/></font>'
+  +'</fonts>'
+  +'<fills count="5">'
+  +'<fill><patternFill patternType="none"/></fill>'
+  +'<fill><patternFill patternType="gray125"/></fill>'
+  +'<fill><patternFill patternType="solid"><fgColor rgb="FF1E40AF"/><bgColor indexed="64"/></patternFill></fill>'
+  +'<fill><patternFill patternType="solid"><fgColor rgb="FFF1F5FF"/><bgColor indexed="64"/></patternFill></fill>'
+  +'<fill><patternFill patternType="solid"><fgColor rgb="FFFFFFFF"/><bgColor indexed="64"/></patternFill></fill>'
+  +'</fills>'
+  +'<borders count="3">'
+  +'<border><left/><right/><top/><bottom/><diagonal/></border>'
+  +'<border><left style="thin"><color rgb="FFCBD5E1"/></left><right style="thin"><color rgb="FFCBD5E1"/></right><top style="thin"><color rgb="FFCBD5E1"/></top><bottom style="thin"><color rgb="FFCBD5E1"/></bottom><diagonal/></border>'
+  +'<border><left style="thin"><color rgb="FF1E3A8A"/></left><right style="thin"><color rgb="FF1E3A8A"/></right><top style="thin"><color rgb="FF1E3A8A"/></top><bottom style="thin"><color rgb="FF1E3A8A"/></bottom><diagonal/></border>'
+  +'</borders>'
+  +'<cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>'
+  +'<cellXfs count="8">'
+  +'<xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/>'
+  +'<xf numFmtId="49" fontId="1" fillId="2" borderId="2" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf>'
+  +'<xf numFmtId="49" fontId="0" fillId="4" borderId="1" xfId="0" applyNumberFormat="1" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="left" vertical="center" wrapText="1"/></xf>'
+  +'<xf numFmtId="49" fontId="0" fillId="3" borderId="1" xfId="0" applyNumberFormat="1" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="left" vertical="center" wrapText="1"/></xf>'
+  +'<xf numFmtId="49" fontId="0" fillId="4" borderId="1" xfId="0" applyNumberFormat="1" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf>'
+  +'<xf numFmtId="49" fontId="0" fillId="3" borderId="1" xfId="0" applyNumberFormat="1" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf>'
+  +'<xf numFmtId="0" fontId="0" fillId="4" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf>'
+  +'<xf numFmtId="0" fontId="0" fillId="3" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf>'
+  +'</cellXfs>'
+  +'<cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles>'
+  +'</styleSheet>';
+ const contentTypes='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+  +'<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">'
+  +'<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>'
+  +'<Default Extension="xml" ContentType="application/xml"/>'
+  +'<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>'
+  +'<Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>'
+  +'<Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>'
+  +'</Types>';
+ const rels='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+  +'<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
+  +'<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/>'
+  +'</Relationships>';
+ const workbookXml='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+  +'<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">'
+  +`<sheets><sheet name="${xlsxXmlEsc(safeSheet)}" sheetId="1" r:id="rId1"/></sheets>`
+  +'</workbook>';
+ const wbRels='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+  +'<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
+  +'<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/>'
+  +'<Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>'
+  +'</Relationships>';
+ return buildXlsxZipStore([
+  {name:'[Content_Types].xml',data:contentTypes},
+  {name:'_rels/.rels',data:rels},
+  {name:'xl/workbook.xml',data:workbookXml},
+  {name:'xl/_rels/workbook.xml.rels',data:wbRels},
+  {name:'xl/styles.xml',data:stylesXml},
+  {name:'xl/worksheets/sheet1.xml',data:sheetXml}
+ ]);
+}
+function downloadCsv(filename,headers,rows,sheetName=''){
+ const outName=String(filename||'du-lieu.xlsx').replace(/\.csv$/i,'.xlsx');
+ const finalName=/\.xlsx$/i.test(outName)?outName:(outName+'.xlsx');
+ const bytes=buildXlsxBytes(headers,rows,inferXlsxSheetName(finalName,sheetName));
+ const blob=new Blob([bytes],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+ const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=finalName;document.body.appendChild(a);a.click();a.remove();
+ setTimeout(()=>URL.revokeObjectURL(a.href),1500);
 }
 
 // ===== CÀI ĐẶT SỰ KIỆN ĐĂNG NHẬP, QUẢN TRỊ & GIÁO VIÊN =====
@@ -10569,14 +10786,15 @@ function setupAuthAndManagement(){
  $('#btnRefreshTeacherStudents').onclick=()=>loadTeacherStudents(false,true);
  $('#btnExportTeacherAcc').onclick=()=>{
   if(!teacherStudentsCache.length){showToast('Chưa có học sinh để xuất.','err');return;}
-  downloadCsv(`tai-khoan-hoc-sinh-${currentUser.username}.csv`,
+  downloadCsv(`tai-khoan-hoc-sinh-${currentUser.username}.xlsx`,
    ['STT','Họ và tên','Lớp','Khối','Tên đăng nhập','Mật khẩu','Trạng thái'],
-   teacherStudentsCache.map((s,i)=>[i+1,s.fullName,s.className,s.grade,s.username,s.password,s.active===false?'Đã khóa':'Hoạt động'])
+   teacherStudentsCache.map((s,i)=>[i+1,String(s.fullName??''),String(s.className??''),Number(s.grade)||1,String(s.username??''),String(s.password??''),s.active===false?'Đã khóa':'Hoạt động']),
+   'Tài khoản học sinh'
   );
  };
  $('#btnExportTeacherProg').onclick=()=>{
   if(!teacherStudentsCache.length){showToast('Chưa có học sinh để xuất.','err');return;}
-  downloadCsv(`tien-do-hoc-sinh-${currentUser.username}.csv`,
+  downloadCsv(`tien-do-hoc-sinh-${currentUser.username}.xlsx`,
    ['STT','Họ và tên','Tài khoản','Lớp','Khối','Lượt làm','Bài đã luyện','Bài đạt vững','Độ chính xác (%)','Điểm TB','Hoạt động gần nhất'],
    teacherStudentsCache.map((s,i)=>{const sm=s.summary||{};return [i+1,s.fullName,s.username,s.className,s.grade,sm.attempts||0,sm.doneCount||0,sm.masteredCount||0,sm.accuracy||0,sm.avgScore||0,sm.lastActive?new Date(sm.lastActive).toLocaleString('vi-VN'):'Chưa luyện'];})
   );
@@ -10595,14 +10813,14 @@ function setupAuthAndManagement(){
  $('#btnExportTeachers').onclick=()=>{
   if(!adminTeachersCache.length){showToast('Chưa có giáo viên để xuất.','err');return;}
   const cnt={};adminStudentsCache.forEach(s=>{cnt[s.teacherId]=(cnt[s.teacherId]||0)+1;});
-  downloadCsv('danh-sach-giao-vien.csv',
+  downloadCsv('danh-sach-giao-vien.xlsx',
    ['STT','Họ tên GV','Tài khoản','Mật khẩu','Trường/Đơn vị','Số HS đã cấp','Định mức HS','Hạn sử dụng','Trạng thái'],
    adminTeachersCache.map((t,i)=>[i+1,t.fullName,t.username,t.password,t.school||'',cnt[t.username]||0,t.maxStudents||'Không giới hạn',t.expireDate||'Vĩnh viễn',t.active===false?'Đã khóa':'Hoạt động'])
   );
  };
  $('#btnExportAudit').onclick=()=>{
   if(!adminStudentsCache.length){showToast('Chưa có dữ liệu học sinh để xuất.','err');return;}
-  downloadCsv('admin-danh-sach-gv-cap-quyen-hs.csv',
+  downloadCsv('admin-danh-sach-gv-cap-quyen-hs.xlsx',
    ['STT','Học sinh','Tài khoản HS','Lớp','Khối','Giáo viên cấp quyền','Tài khoản GV','Lượt làm','Bài đã luyện','Bài vững','Độ chính xác (%)','Điểm TB','Trạng thái'],
    adminStudentsCache.map((s,i)=>{const sm=s.summary||{};return [i+1,s.fullName,s.username,s.className||'',s.grade||1,s.teacherName||'',s.teacherId||'',sm.attempts||0,sm.doneCount||0,sm.masteredCount||0,sm.accuracy||0,sm.avgScore||0,s.active===false?'Đã khóa':'Hoạt động'];})
   );
@@ -12676,7 +12894,7 @@ function setupHomeworkModule(){
  $('#adExportCsv').onclick=()=>{
   const a=teacherAssignmentsCache.find(x=>x.id===activeDetailAssignId);if(!a)return;
   const targets=getTargetStudentsForAssign(a), subMap=teacherSubsCache[a.id]||{};
-  downloadCsv(`nop-bai-${a.id}.csv`,
+  downloadCsv(`nop-bai-${a.id}.xlsx`,
    ['STT','Họ và tên','Tài khoản','Lớp','Trạng thái','Số câu đúng','Tổng câu','Điểm (/10)','Nhận xét GV','Thời gian nộp'],
    targets.map((s,i)=>{
     const sub=subMap[s.username];
